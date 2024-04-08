@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es2022", // Target ECMAScript 2022 for compatibility.
+    "module": "commonjs", // Generate CommonJS modules for backend.
+    "moduleResolution": "node", // Use Node.js resolution strategy.
+    "outDir": "./dist", // Output directory for emitted files.
+    "esModuleInterop": true, // Simplify interoperability with CommonJS modules.
+    "forceConsistentCasingInFileNames": true, // Enforce consistent casing in imports.
+    "strict": true, // Enable all strict type-checking options.
+    "skipLibCheck": true, // Skip type checking all .d.ts files.
+    "sourceMap": true, // Generate source maps for better debugging.
+    "rootDir": "./", // Specify the root folder within your source files.
+    "resolveJsonModule": true, // Enable importing .json files.
+    "declaration": true, // Generate .d.ts files for better TypeScript support.
+    "noEmitOnError": true, // Disable emitting files if any type checking errors are reported.
+    "noUnusedLocals": true, // Enable error reporting when local variables aren't read.
+    "noUnusedParameters": true, // Raise an error when a function parameter isn't read.
+    "noImplicitReturns": true, // Enable error reporting for codepaths that do not explicitly return in a function.
+    "noFallthroughCasesInSwitch": true, // Enable error reporting for fallthrough cases in switch statements.
+    "strictNullChecks": true // When type checking, take into account 'null' and 'undefined'.
+  },
+
+  "include": ["src/**/*"] // Include all TypeScript files in the src directory.
+}
