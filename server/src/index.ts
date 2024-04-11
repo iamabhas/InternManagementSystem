@@ -1,7 +1,7 @@
-import App from "./app";
+import App from "./server";
 import envConfig from "./config/env.config";
 
-const app = new App(5000);
-console.log(envConfig.serverPort);
+const serverPort = envConfig.serverPort;
+const app = new App(serverPort);
 
 app.listen();
