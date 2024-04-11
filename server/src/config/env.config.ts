@@ -3,8 +3,9 @@ import path from "path";
 import Logger from "../lib/logger";
 
 const result = dotenv.config();
+const isNotLoaded = result.error;
 
-if (result.error) {
+if (isNotLoaded) {
   Logger.error(`'.env' file could not be loaded : ${result.error}`);
   throw result.error;
 }
