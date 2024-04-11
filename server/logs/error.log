@@ -1,0 +1,5 @@
+ [31merror[39m: [31m'.env' file could not be loaded : Error: ENOENT: no such file or directory, open 'C:\Users\abhas\Documents\InternManagementSystem\server\.env'[39m
+ [31merror[39m: [31mconnect ECONNREFUSED ::1:27017[39m
+ [31merror[39m: [31mconnect ECONNREFUSED ::1:27017[39m
+ [31merror[39m: [31mconnect ECONNREFUSED ::1:27017[39m
+ [31merror[39m: [31mconnect ECONNREFUSED ::1:27017[39m
