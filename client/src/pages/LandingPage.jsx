@@ -7,41 +7,45 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   return (
-    <Grid
-      container
-      spacing={2}
-      direction="column"
-      alignItems="center"
-      sx={{ mt: 4 }}
-    >
-      <Typography variant="h4" sx={{ mb: 2 }}>
-        Intern Management System
-      </Typography>
-      <Stack direction="row" spacing={2}>
-        {!isLoggedIn ? (
-          <Button
-            onClick={() => {
-              navigate("/dashboard");
-            }}
-            variant="contained"
-          >
-            Dashboard
-          </Button>
-        ) : (
-          <>
+    <main className="landing-page">
+      <Grid
+        container
+        spacing={2}
+        direction="column"
+        alignItems="center"
+        sx={{ mt: 4 }}
+      >
+        <Typography variant="h3" sx={{ mb: 2 }} color="white">
+          Intern Management System
+        </Typography>
+        <Typography variant="h5" sx={{ mb: 2 }} color="white">
+          Making intern management simple !
+        </Typography>
+        <Stack direction="row" spacing={2}>
+          {!isLoggedIn ? (
             <Button
-              variant="contained"
               onClick={() => {
-                navigate("/login");
+                navigate("/dashboard");
               }}
-              color="secondary"
+              variant="contained"
             >
-              Log in
+              Dashboard
             </Button>
-          </>
-        )}
-      </Stack>
-    </Grid>
+          ) : (
+            <>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
+                Log in
+              </Button>
+            </>
+          )}
+        </Stack>
+      </Grid>
+    </main>
   );
 };
 
