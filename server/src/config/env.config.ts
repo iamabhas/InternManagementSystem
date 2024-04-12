@@ -15,6 +15,8 @@ dotenv.config({ path: path.resolve(__dirname, "../config/.env") });
 const envConfig = {
   serverPort: process.env.SERVER_PORT,
   mongodbConnectionString: process.env.MONGODB_CONNECTION_STRING,
+  ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
+  REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
 };
 
 export default envConfig;
