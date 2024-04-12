@@ -1,6 +1,7 @@
 import { Application } from "express";
 import testRouter from "./test.routes";
 import { statusConstants } from "../constants/statusConstants";
+import userRouter from "./user.route";
 const { ERROR, SUCCESS } = statusConstants;
 
 export const initializeRoutes = (expressApplication: Application) => {
@@ -10,7 +11,7 @@ export const initializeRoutes = (expressApplication: Application) => {
   });
 
   //app routes
-  expressApplication.use("/api/", [testRouter]);
+  expressApplication.use("/api/", [testRouter, userRouter]);
 
   //error route
   expressApplication.get("*", (_, res) => {
