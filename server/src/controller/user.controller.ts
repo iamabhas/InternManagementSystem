@@ -1,17 +1,19 @@
+import { userNameValidation } from "./../../utils/checklength";
 import { AccessToken } from "./../../utils/JWT/token";
-import { EmailValidation } from "./../../utils/checklength";
+
 import { UserRequestBody } from "./../../@types/interface/RequestBody";
 import { Request, Response } from "express";
 import { statusConstants } from "../constants/statusConstants";
 import user from "../database/schema/user.schema";
 import { Role } from "../constants/roleEnum";
 import { CookieInterface } from "./../../@types/interface/RequestBody";
+
 export const loginController = async (
   req: Request<Required<UserRequestBody>>,
   res: Response
 ): Promise<any> => {
-  const { email, password }: Required<UserRequestBody> = req.body;
-  if ((!email && email === null) || (!password && password === null)) {
+  const { username, password }: Required<UserRequestBody> = req.body;
+  if ((!username && username === null) || (!password && password === null)) {
     return res.status(404).json({
       error: statusConstants.FAIL,
       message: "Missing Credentials, Email and Password is Not Provided",
@@ -35,10 +37,14 @@ export const loginController = async (
     default:
   }
 
-  await EmailValidation(email)
+  await userNameValidation(username)
     .then(async (response: boolean | string): Promise<any> => {
-      const User = await user.findOne({ email: email });
-      if (!User || (await user.find({ email: email }).countDocuments()) === 0) {
+      const User = await user.findOne({ username: username });
+      console.log(User);
+      if (
+        !User ||
+        (await user.find({ username: username }).countDocuments()) === 0
+      ) {
         return res.status(404).json({
           error: statusConstants.ERROR,
           message: "Email Not Found , Please Contact Super Admin",
@@ -56,7 +62,7 @@ export const loginController = async (
         ) {
           const accesstoken = await AccessToken(
             User._id,
-            User.email,
+            User.username,
             User.role
           );
 
@@ -76,7 +82,7 @@ export const loginController = async (
             error: statusConstants.SUCCESS,
             message: "Access Token Generated and set In Headers",
             access_token: accesstoken,
-            user_email: User.email,
+            user_Name: User.username,
             user_role: User.role,
             user_id: User.id,
           });

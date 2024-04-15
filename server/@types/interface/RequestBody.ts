@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 export interface UserRequestBody {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -10,7 +10,7 @@ export interface UserRole extends UserRequestBody {
 
 export interface payloadInterface {
   user_id: mongoose.Types.ObjectId;
-  email: string;
+  username: string;
   role: string;
 }
 
