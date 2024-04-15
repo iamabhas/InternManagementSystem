@@ -1,4 +1,3 @@
-import React from "react";
 import { Typography, Button, Stack, Grid } from "@mui/material";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
@@ -25,11 +24,11 @@ const LandingPage = () => {
           {!isLoggedIn ? (
             <Button
               onClick={() => {
-                navigate("/dashboard");
+                navigate("/login");
               }}
               variant="contained"
             >
-              Dashboard
+              Login
             </Button>
           ) : (
             <>
