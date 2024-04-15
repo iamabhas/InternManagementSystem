@@ -14,7 +14,9 @@ import { LockOutlined as LockOutlinedIcon } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Swal from "sweetalert2";
 import BackToHome from "../utils/BackToHome";
+import { useNavigate } from "react-router";
 
+import { loginFunction } from "../../services/Api";
 function Copyright(props) {
   return (
     <Typography
@@ -36,6 +38,19 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 function LoginComponent() {
+  const navigate = useNavigate();
+  const [inputs, setInputs] = React.useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -45,9 +60,28 @@ function LoginComponent() {
       text: "You are Logged In !",
     });
     console.log({
-      email: data.get("email"),
+      username: data.get("username"),
       password: data.get("password"),
     });
+
+    sendRequest().then((data) => {
+      localStorage.setItem("accessToken", data.access_token);
+      localStorage.setItem("userName", data.user_Name);
+      localStorage.setItem("userId", data.user_id);
+      localStorage.setItem("role", data.user_role);
+      switch (data.user_role) {
+        case "user":
+          navigate("/test");
+          break;
+      }
+    });
+  };
+
+  const sendRequest = async () => {
+    const response = await loginFunction(inputs);
+    console.log(response);
+    console.log(response.data);
+    return response.data;
   };
 
   return (
@@ -103,6 +137,8 @@ function LoginComponent() {
                 autoComplete="username"
                 autoFocus
                 variant="standard"
+                value={inputs.username}
+                onChange={handleChange}
               />
               <TextField
                 margin="normal"
@@ -114,6 +150,8 @@ function LoginComponent() {
                 id="password"
                 autoComplete="current-password"
                 variant="standard"
+                value={inputs.password}
+                onChange={handleChange}
               />
               <Button
                 type="submit"
