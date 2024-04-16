@@ -1,5 +1,5 @@
-import { userNameValidation } from "./../../utils/checklength";
-import { AccessToken } from "./../../utils/JWT/token";
+import { userNameValidation } from "../../utils/schemaUtils/checklength";
+import { AccessToken } from "../../utils/jwtUtils/token";
 import { IUserRequestBody } from "./../../@types/interface/RequestBody";
 import { Request, Response } from "express";
 import { statusConstants } from "../constants/statusConstants";
