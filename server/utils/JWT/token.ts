@@ -1,4 +1,4 @@
-import { payloadInterface } from "./../../@types/interface/RequestBody";
+import { IPayload } from "./../../@types/interface/RequestBody";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
@@ -11,7 +11,7 @@ export const AccessToken = async (
   username: string,
   role: string
 ): Promise<string> => {
-  const payload: Required<payloadInterface> = {
+  const payload: Required<IPayload> = {
     user_id: user_id,
     username: username,
     role: role,
