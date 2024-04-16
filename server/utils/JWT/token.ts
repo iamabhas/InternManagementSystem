@@ -8,12 +8,12 @@ dotenv.config();
 
 export const AccessToken = async (
   user_id: mongoose.Types.ObjectId,
-  email: string,
+  username: string,
   role: string
 ): Promise<string> => {
   const payload: Required<payloadInterface> = {
     user_id: user_id,
-    email: email,
+    username: username,
     role: role,
   };
 
@@ -26,7 +26,7 @@ export const AccessToken = async (
   };
 
   try {
-    const token = await jwt.sign(payload, secretKey, options);
+    const token = jwt.sign(payload, secretKey, options);
     return token;
   } catch (error) {
     if (error instanceof JsonWebTokenError) {

@@ -1,25 +1,25 @@
 import mongoose from "mongoose";
-export interface UserRequestBody {
-  email: string;
+export interface IUserRequestBody {
+  username: string;
   password: string;
 }
 
-export interface UserRole extends UserRequestBody {
+export interface IUserRole extends IUserRequestBody {
   role: string;
 }
 
-export interface payloadInterface {
+export interface IPayload {
   user_id: mongoose.Types.ObjectId;
-  email: string;
+  username: string;
   role: string;
 }
 
-export type optionsInterface = {
+export type IOptions = {
   issuer: string;
   expiresIn: Date;
 };
 
-export interface CookieInterface {
+export interface ICookie {
   path?: string;
   domain?: string;
   maxAge?: number;

@@ -1,3 +1,5 @@
+import user from "../src/database/schema/user.schema";
+
 export const EmailValidation: (email: string) => Promise<any> = async (
   email: string
 ): Promise<any> => {
@@ -11,5 +13,21 @@ export const EmailValidation: (email: string) => Promise<any> = async (
     } else {
       resolve(true);
     }
+  });
+};
+
+export const userNameValidation: (username: string) => Promise<any> = (
+  username: string
+) => {
+  return new Promise(async (resolve, reject) => {
+    await user.findOne({ username: username }).then((result) => {
+      if (result?.username !== username) {
+        reject("Invalid Username , Please Try Again");
+      }
+
+      const check: boolean = username.length > 5 ? true : false;
+
+      resolve(check);
+    });
   });
 };
