@@ -1,11 +1,11 @@
-import { userNameValidation } from "../../utils/schemaUtils/checklength";
-import { AccessToken } from "../../utils/jwtUtils/token";
-import { IUserRequestBody } from "./../../@types/interface/RequestBody";
+import { userNameValidation } from "../utils/schemaUtils/checklength";
+import { AccessToken } from "../utils/jwtUtils/token";
+import { IUserRequestBody } from "./../@types/interface/RequestBody";
 import { Request, Response } from "express";
 import { statusConstants } from "../constants/statusConstants";
 import user from "../database/schema/user.schema";
 import { roleConstants } from "../constants/roleConstants";
-import { ICookie } from "./../../@types/interface/RequestBody";
+import { ICookie } from "./../@types/interface/RequestBody";
 
 const { ADMIN, USER, SUPER_ADMIN } = roleConstants;
 

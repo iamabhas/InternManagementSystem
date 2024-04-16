@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { fieldCannotBeEmpty } from "../../../utils/schemaUtils/userschemaMessage";
+import { fieldCannotBeEmpty } from "../../utils/schemaUtils/userSchemaMessage";
 import { roleConstants } from "../../constants/roleConstants";
 
 const { ADMIN, SUPER_ADMIN, USER } = roleConstants;

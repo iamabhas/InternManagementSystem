@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import envConfig from "../config/env.config";
 import user from "../database/schema/user.schema.js";
 import { NextFunction, Response } from "express";
-import { IAuthRequest } from "./../../@types/interface/CustomRequest";
+import { IAuthRequest } from "./../@types/interface/CustomRequest";
 
 const validateToken = async (
   req: IAuthRequest,
