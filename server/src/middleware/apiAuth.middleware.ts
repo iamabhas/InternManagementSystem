@@ -22,7 +22,7 @@ const validateToken = async (
       .json({ status: "fail", message: "Token not provided." });
   }
 
-  if (!envConfig.ACCESS_TOKEN_SECRET) {
+  if (!envConfig.accessTokenSecret) {
     return res.status(500).json({
       status: "error",
       message: "Server misconfiguration: Access token secret is not set.",
@@ -32,7 +32,7 @@ const validateToken = async (
   try {
     const decoded = jwt.verify(
       token,
-      envConfig.ACCESS_TOKEN_SECRET
+      envConfig.accessTokenSecret
     ) as jwt.JwtPayload;
     const myUser = await user.findOne({ _id: decoded.id }).select("_id");
 

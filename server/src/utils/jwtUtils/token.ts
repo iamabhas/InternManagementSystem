@@ -1,10 +1,8 @@
 import { IPayload } from "../../@types/interface/RequestBody";
-import dotenv from "dotenv";
+import envConfig from "../../config/env.config";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { JsonWebTokenError } from "jsonwebtoken";
-
-dotenv.config();
 
 export const AccessToken = async (
   user_id: mongoose.Types.ObjectId,
@@ -17,7 +15,7 @@ export const AccessToken = async (
     role: role,
   };
 
-  const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
+  const secretKey = envConfig.accessTokenSecret as string;
   const expiratonTimeInSeconds = 30 * 60; // 30 minutes in seconds
 
   const options: jwt.SignOptions = {
