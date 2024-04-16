@@ -1,18 +1,19 @@
 import { userNameValidation } from "./../../utils/checklength";
 import { AccessToken } from "./../../utils/JWT/token";
-
-import { UserRequestBody } from "./../../@types/interface/RequestBody";
+import { IUserRequestBody } from "./../../@types/interface/RequestBody";
 import { Request, Response } from "express";
 import { statusConstants } from "../constants/statusConstants";
 import user from "../database/schema/user.schema";
-import { Role } from "../constants/roleEnum";
-import { CookieInterface } from "./../../@types/interface/RequestBody";
+import { roleConstants } from "../constants/roleConstants";
+import { ICookie } from "./../../@types/interface/RequestBody";
+
+const { ADMIN, USER, SUPER_ADMIN } = roleConstants;
 
 export const loginController = async (
-  req: Request<Required<UserRequestBody>>,
+  req: Request<Required<IUserRequestBody>>,
   res: Response
 ): Promise<any> => {
-  const { username, password }: Required<UserRequestBody> = req.body;
+  const { username, password }: Required<IUserRequestBody> = req.body;
   if ((!username && username === null) || (!password && password === null)) {
     return res.status(404).json({
       error: statusConstants.FAIL,
@@ -51,9 +52,9 @@ export const loginController = async (
         });
       }
 
-      // const UserRole : Pick<UserRequestBody, "role"> = User;
-      const Roles: string[] = [Role.Admin, Role.User, Role.SuperAdmin];
-      const UserRole: string | Partial<UserRequestBody> = User.role;
+      // const UserRole : Pick<IUserRequestBody, "role"> = User;
+      const Roles: string[] = [ADMIN, USER, SUPER_ADMIN];
+      const UserRole: string | Partial<IUserRequestBody> = User.role;
 
       if (Roles.includes(UserRole)) {
         if (
@@ -66,7 +67,7 @@ export const loginController = async (
             User.role
           );
 
-          const CookieOptions: CookieInterface = {
+          const CookieOptions: ICookie = {
             path: "/",
             maxAge: 3600,
             expires: new Date(Date.now() + 3600000),
