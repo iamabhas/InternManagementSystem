@@ -1,21 +1,25 @@
 import axios from "axios";
 
-export const commonRequest = async (methods, url, body, header) => {
+export const commonRequest = async (method, url, body, headers) => {
   let config = {
-    method: methods,
-    url,
-    headers: header
-      ? header
-      : {
-          "Content-Type": "application/json",
-        },
-    data: body ? body : "",
+    method: method,
+    url: url,
+    headers: headers || {
+      "Content-Type": "application/json",
+    },
+    data: body || {},
   };
-  return axios(config)
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      return error;
-    });
+
+  try {
+    const response = await axios(config);
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.message || "Something went wrong");
+    } else if (error.request) {
+      throw new Error("No response from server");
+    } else {
+      throw new Error("Error setting up request");
+    }
+  }
 };
