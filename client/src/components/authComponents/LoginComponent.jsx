@@ -12,11 +12,13 @@ import {
 } from "@mui/material";
 import { LockOutlined as LockOutlinedIcon } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Swal from "sweetalert2";
 import BackToHome from "../utils/BackToHome";
 import { useNavigate } from "react-router";
-
+import { useDispatch } from "react-redux";
 import { loginFunction } from "../../services/Api";
+import { loginReducer } from "../../redux/authSlice";
+import Swal from "sweetalert2";
+
 function Copyright(props) {
   return (
     <Typography
@@ -39,6 +41,8 @@ const defaultTheme = createTheme();
 
 function LoginComponent() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [inputs, setInputs] = React.useState({
     email: "",
     password: "",
@@ -51,30 +55,29 @@ function LoginComponent() {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    Swal.fire({
-      icon: "success",
-      title: "Success !",
-      text: "You are Logged In !",
-    });
-    console.log({
-      username: data.get("username"),
-      password: data.get("password"),
-    });
+    try {
+      const userData = await loginFunction(inputs);
+      console.log(userData);
 
-    sendRequest().then((data) => {
-      localStorage.setItem("accessToken", data.access_token);
-      localStorage.setItem("userName", data.user_Name);
-      localStorage.setItem("userId", data.user_id);
-      localStorage.setItem("role", data.user_role);
-      switch (data.user_role) {
-        case "user":
-          navigate("/test");
-          break;
-      }
-    });
+      dispatch(
+        loginReducer({
+          access_token: userData.access_token,
+          user_id: userData.user_id,
+          user_Name: userData.user_Name,
+          user_role: userData.user_role,
+        })
+      );
+
+      navigate("/dashboard");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message || "Login Failed!",
+      });
+    }
   };
 
   const sendRequest = async () => {
