@@ -8,10 +8,10 @@ type functionParam = (
   statusCode: number,
   Status: boolean,
   error: string,
-  access_token: string,
-  username: string,
-  userRole: string,
-  user_id: string
+  access_token?: string,
+  username?: string,
+  userRole?: string,
+  user_id?: string
 ) => any;
 export const handleTwoErrorResponse: functionParam = (
   res: Response,
