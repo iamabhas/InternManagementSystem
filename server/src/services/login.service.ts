@@ -78,7 +78,7 @@ export const loginService = async (
           // );
           return res.status(201).json({
             Status: response,
-            error: statusConstants.SUCCESS,
+            error: SUCCESS,
             message: "Access Token Generated and set In Headers",
             access_token: accesstoken,
             user_Name: User.username,

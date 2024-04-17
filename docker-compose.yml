@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  mongo_db:
+    container_name: database_container
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo_db:/data/db
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5001
+    depends_on:
+      - mongo_db
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3001"
+
+volumes:
+  mongo_db:
