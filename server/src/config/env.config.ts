@@ -14,6 +14,7 @@ dotenv.config({ path: path.resolve(__dirname, "../config/.env") });
 
 const envConfig = {
   serverPort: process.env.SERVER_PORT,
+  clientPort: process.env.CLIENT_PORT,
   mongodbConnectionString: process.env.MONGODB_CONNECTION_STRING,
   accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
 };

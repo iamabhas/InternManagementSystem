@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
-
-export const TestController = async (req: Request, res: Response) => {
-  console.log(req.body);
-  return res.status(200).json({
-    message: "Test Controller",
-  });
+import { handleFourStatusError } from "../utils/Errors/CommonFourResponseError";
+import { handleTwoErrorResponse } from "../utils/Errors/CommonoTwoResponseError";
+export const TestController = async (_req: Request, res: Response) => {
+  handleTwoErrorResponse(res, 201, true, "Middleware verify token Passed");
 };

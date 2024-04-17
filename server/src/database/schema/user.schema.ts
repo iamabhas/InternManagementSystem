@@ -4,6 +4,12 @@ import { roleConstants } from "../../constants/roleConstants";
 
 const { ADMIN, SUPER_ADMIN, USER } = roleConstants;
 
+export interface IUser {
+  _id: string;
+  username: string;
+  role: string;
+}
+
 const userSchema = new mongoose.Schema(
   {
     username: {

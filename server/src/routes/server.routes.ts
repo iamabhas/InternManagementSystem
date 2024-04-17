@@ -1,7 +1,7 @@
 import { Application } from "express";
 import testRouter from "./test.routes";
 import { statusConstants } from "../constants/statusConstants";
-import userRouter from "./user.routes";
+import userRouter from "./auth.routes";
 const { ERROR, SUCCESS } = statusConstants;
 
 export const initializeRoutes = (expressApplication: Application) => {
