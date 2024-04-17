@@ -1,3 +1,5 @@
+import { Request, Response, NextFunction } from "express";
+
 export interface IUserData {
   id: string;
   username: string;
@@ -20,3 +22,15 @@ export interface Ipayload {
   exp: number;
   iss: string;
 }
+
+export interface IMentorRequest {
+  mentorName: string;
+  email: string;
+  expertise: string[];
+  role: string;
+}
+export type functionReq = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => void;
