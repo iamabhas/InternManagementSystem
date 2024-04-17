@@ -1,5 +1,6 @@
 import { Application } from "express";
 import testRouter from "./test.routes";
+import mentorRouter from "./mentor.routes";
 import { statusConstants } from "../constants/statusConstants";
 import userRouter from "./auth.routes";
 const { ERROR, SUCCESS } = statusConstants;
@@ -11,7 +12,7 @@ export const initializeRoutes = (expressApplication: Application) => {
   });
 
   //app routes
-  expressApplication.use("/api/", [testRouter, userRouter]);
+  expressApplication.use("/api/", [testRouter, userRouter, mentorRouter]);
 
   //error route
   expressApplication.get("*", (_, res) => {
