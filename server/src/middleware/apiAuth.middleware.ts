@@ -1,72 +1,69 @@
-import jwt from "jsonwebtoken";
-import envConfig from "../config/env.config";
-import user from "../database/schema/user.schema.js";
-import { NextFunction, Response } from "express";
-import { IAuthRequest } from "./../@types/interface/CustomRequest";
+import { Request, Response, NextFunction } from "express";
+import { handleFourStatusError } from "../utils/Errors/CommonFourResponseError";
+import { statusConstants } from "../constants/statusConstants";
+import { verifyAccesToken } from "../utils/jwtUtils/verifyaccesstoken";
+import user from "../database/schema/user.schema";
+import { fail } from "assert";
+const { FAIL, SUCCESS, ERROR } = statusConstants;
 
-const validateToken = async (
-  req: IAuthRequest,
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any;
+    }
+  }
+}
+
+type functionParan = (req: Request, res: Response, next: NextFunction) => void;
+export const validateToken: functionParan = (
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  let token: string | undefined;
-  const authorization = req.headers.authorization;
-
-  if (authorization && authorization.startsWith("Bearer ")) {
-    token = authorization.split(" ")[1];
-  }
-
-  if (!token) {
-    return res
-      .status(401)
-      .json({ status: "fail", message: "Token not provided." });
-  }
-
-  if (!envConfig.accessTokenSecret) {
-    return res.status(500).json({
-      status: "error",
-      message: "Server misconfiguration: Access token secret is not set.",
-    });
+  const authToken =
+    req.headers.authorization && req.headers.authorization.split(" ")[1];
+  console.log(authToken);
+  if (!authToken || typeof authToken !== "string") {
+    return handleFourStatusError(
+      res,
+      404,
+      ERROR,
+      "Invalid Authorization Token"
+    );
   }
 
   try {
-    const decoded = jwt.verify(
-      token,
-      envConfig.accessTokenSecret
-    ) as jwt.JwtPayload;
-    const myUser = await user.findOne({ _id: decoded.id }).select("_id");
+    verifyAccesToken(authToken).then(async (decodedtoken: any) => {
+      if (!decodedtoken || typeof decodedtoken === null || undefined) {
+        return handleFourStatusError(res, 404, FAIL, "Payload Failed");
+      }
+      const existingUser = await user.findOne({ _id: decodedtoken.user_id });
 
-    if (!myUser) {
-      return res
-        .status(401)
-        .json({ status: "fail", message: "No user found with this ID." });
-    }
+      if (!existingUser) {
+        return handleFourStatusError(res, 404, FAIL, "User Not Found");
+      } else {
+        console.log(decodedtoken);
 
-    req.user = {
-      id: decoded.id,
-      username: decoded.username,
-      role: decoded.role,
-    };
-    next();
-  } catch (err: any) {
-    switch (err.name) {
-      case "JsonWebTokenError":
-        return res.status(403).json({
-          status: "fail",
-          message: "Invalid token. Please log in again!",
-        });
-      case "TokenExpiredError":
-        return res.status(403).json({
-          status: "fail",
-          message: "Your token has expired. Please log in again!",
-        });
+        req.user = decodedtoken;
+        next();
+      }
+    });
+  } catch (error: any) {
+    switch (error.name) {
+      case "JsonWebTokenError": {
+        return handleFourStatusError(
+          res,
+          404,
+          FAIL,
+          "Invalid Token Please Log In again"
+        );
+      }
+
+      case "TokenExpiredError": {
+        return handleFourStatusError(res, 404, ERROR, "Token has Been Expired");
+      }
       default:
-        return res.status(500).json({
-          status: "error",
-          message: "An error occurred during authentication. Please try again!",
-        });
+        return handleFourStatusError(res, 500, ERROR, "INTERNAL SERVER ERROR");
     }
   }
 };
-
-export default validateToken;
