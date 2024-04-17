@@ -54,10 +54,13 @@ function LoginComponent() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-
+    Swal.fire({
+      icon: "success",
+      title: "Success !",
+      text: "You are Logged In !",
+    });
     console.log({
       username: data.get("username"),
-      password: data.get("password"),
     });
 
     sendRequest().then((data) => {
@@ -67,11 +70,6 @@ function LoginComponent() {
       localStorage.setItem("role", data.user_role);
       switch (data.user_role) {
         case "user":
-          Swal.fire({
-            icon: "success",
-            title: "Success !",
-            text: "You are Logged In !",
-          });
           navigate("/test");
           break;
       }
