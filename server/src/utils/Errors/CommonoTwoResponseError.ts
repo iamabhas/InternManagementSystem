@@ -8,20 +8,14 @@ type functionParam = (
   statusCode: number,
   Status: boolean,
   error: string,
-  access_token?: string,
-  username?: string,
-  userRole?: string,
-  user_id?: string
+  id?: any
 ) => any;
 export const handleTwoErrorResponse: functionParam = (
   res: Response,
   statusCode: number,
   Status: boolean,
   error: string,
-  access_token?: string,
-  username?: string,
-  userRole?: string,
-  user_id?: string
+  id?: any
 ) => {
   if (
     typeof error !== "string" ||
@@ -37,35 +31,31 @@ export const handleTwoErrorResponse: functionParam = (
 
   switch (statusCode) {
     case OK: {
-      return res.json({
-        status: statusCode,
+      return res.status(statusCode).json({
         title: "OK",
         Status: Status,
-        access_token: access_token,
-        user_name: username,
-        user_role: userRole,
-        user_id: user_id,
         message: error,
       });
     }
     case CREATED: {
-      return res.json({
+      return res.status(statusCode).json({
         status: statusCode,
         title: "CREATED",
         Status: Status,
         message: error,
+        id: id,
       });
     }
     case ACCEPTED: {
-      return res.json({
+      return res.status(statusCode).json({
         status: statusCode,
         title: "Accepted",
-
+        Status: Status,
         message: error,
       });
     }
     case NON_AUTHORITATIVE_INFORMATION: {
-      return res.json({
+      return res.status(statusCode).json({
         status: statusCode,
         title: "NON_AUTHORITATIVE_INFORMATION",
 
@@ -73,16 +63,17 @@ export const handleTwoErrorResponse: functionParam = (
       });
     }
     case NO_CONTENT: {
-      return res.json({
+      return res.status(statusCode).json({
         status: statusCode,
         title: "No_Content",
+        Status: Status,
 
         message: error,
       });
     }
 
     default:
-      return res.json({
+      return res.status(statusCode).json({
         message: "Unmatched Status Code",
       });
   }
