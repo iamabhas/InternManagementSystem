@@ -21,14 +21,14 @@ const LandingPage = () => {
           Making intern management simple !
         </Typography>
         <Stack direction="row" spacing={2}>
-          {!isLoggedIn ? (
+          {isLoggedIn ? (
             <Button
               onClick={() => {
-                navigate("/login");
+                navigate("/dashboard");
               }}
               variant="contained"
             >
-              Login
+              Dashboard
             </Button>
           ) : (
             <>
