@@ -8,6 +8,7 @@ import { AccessToken } from "../utils/jwtUtils/token";
 import { handleFourStatusError } from "../utils/Errors/CommonFourResponseError";
 import { isStrongPassword } from "../utils/password/CheckPassword";
 import user from "../database/schema/user.schema";
+import { sendTokenResponse } from "../utils/Response/TokenResponse";
 const { ERROR, FAIL, SUCCESS } = statusConstants;
 const { ADMIN, USER, SUPER_ADMIN } = roleConstants;
 
@@ -65,16 +66,25 @@ export const loginService = async (
             User.role
           );
 
-          return handleTwoErrorResponse(
-            res,
-            200,
-            response,
-            SUCCESS,
-            accesstoken,
-            User.username,
-            User.role,
-            User.id
-          );
+          // return sendTokenResponse(
+          //   res,
+          //   200,
+          //   response,
+          //   SUCCESS,
+          //   accesstoken,
+          //   User.username,
+          //   User.role,
+          //   User.id
+          // );
+          return res.status(201).json({
+            Status: response,
+            error: statusConstants.SUCCESS,
+            message: "Access Token Generated and set In Headers",
+            access_token: accesstoken,
+            user_Name: User.username,
+            user_role: User.role,
+            user_id: User.id,
+          });
         }
       }
     })
