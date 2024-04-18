@@ -1,6 +1,6 @@
 import Mentor from "../database/schema/mentor.schema";
 import { statusConstants } from "../constants/statusConstants";
-import { handleTwoErrorResponse } from "../utils/Errors/CommonoTwoResponseError";
+import { handleTwoStatusResponse } from "../utils/Errors/CommonoTwoResponseError";
 import { mentorName } from "../constants/mentorConstant";
 import { handleFourStatusError } from "../utils/Errors/CommonFourResponseError";
 const { Prabesh, Subash } = mentorName;
@@ -20,7 +20,7 @@ export const createMentorServicde = async (
   if (!mentorArray.includes(mentorName)) {
     return handleFourStatusError(
       res,
-      401,
+      403,
       ERROR,
       "Mentor You are Trying To Assigned Is not Available"
     );
@@ -34,7 +34,7 @@ export const createMentorServicde = async (
   });
 
   const savedMentor = Mentorr.save();
-  return handleTwoErrorResponse(
+  return handleTwoStatusResponse(
     res,
     201,
     true,
@@ -50,13 +50,13 @@ export const deleteMentorService: (
   if (typeof id === "number") {
     return handleFourStatusError(
       res,
-      404,
+      400,
       ERROR,
       "ID EXCEEDED THE MAXIMUM LENGTH"
     );
   }
   await Mentor.deleteOne({ _id: id }).then((data) => {
-    return handleTwoErrorResponse(res, 204, true, "Delete SuccessFully");
+    return handleTwoStatusResponse(res, 204, true, "Delete SuccessFully");
   });
 };
 
@@ -69,7 +69,7 @@ export const getMentorService: (res: Response, name: string) => void = async (
     typeof name !== "string" ||
     !(name.split(" ").reverse().join(" ") === name)
   ) {
-    return handleFourStatusError(res, 403, ERROR, "Name is not a Valid String");
+    return handleFourStatusError(res, 400, ERROR, "Name is not a Valid String");
   }
   const findMentor = await Mentor.findOne({ mentorName: name });
   const checkBoolean = findMentor?._id === null ? false : true;
@@ -97,7 +97,7 @@ export const updateMentorService: (
 ) => {
   const findMentor = await Mentor.findOne({ mentorName: name });
   if (!findMentor || findMentor === null || undefined) {
-    return handleFourStatusError(res, 404, ERROR, "Mentor is Not Available");
+    return handleFourStatusError(res, 400, ERROR, "Mentor is Not Available");
   }
   await Mentor.updateOne(
     { mentorName: name },
@@ -111,9 +111,9 @@ export const updateMentorService: (
     }
   ).then((data) => {
     if (data.matchedCount === 0) {
-      return handleFourStatusError(res, 404, ERROR, "No Mentor is Matches");
+      return handleFourStatusError(res, 400, ERROR, "No Mentor is Matches");
     } else if (data.modifiedCount === 0) {
-      return handleFourStatusError(res, 404, ERROR, "No Mentor is Modified");
+      return handleFourStatusError(res, 400, ERROR, "No Mentor is Modified");
     } else {
       return data;
     }

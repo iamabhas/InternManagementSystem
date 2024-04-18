@@ -2,13 +2,10 @@ import { Response } from "express";
 import { statusConstants } from "../constants/statusConstants";
 import { userNameValidation } from "../utils/schemaUtils/checklength";
 import { roleConstants } from "../constants/roleConstants";
-import { handleTwoErrorResponse } from "../utils/Errors/CommonoTwoResponseError";
 import { IUserRequestBody } from "../@types/interface/RequestBody";
 import { AccessToken } from "../utils/jwtUtils/token";
 import { handleFourStatusError } from "../utils/Errors/CommonFourResponseError";
-import { isStrongPassword } from "../utils/password/CheckPassword";
 import user from "../database/schema/user.schema";
-import { sendTokenResponse } from "../utils/Response/TokenResponse";
 const { ERROR, FAIL, SUCCESS } = statusConstants;
 const { ADMIN, USER, SUPER_ADMIN } = roleConstants;
 
@@ -76,7 +73,7 @@ export const loginService = async (
           //   User.role,
           //   User.id
           // );
-          return res.status(201).json({
+          return res.status(204).json({
             Status: response,
             error: SUCCESS,
             message: "Access Token Generated and set In Headers",
