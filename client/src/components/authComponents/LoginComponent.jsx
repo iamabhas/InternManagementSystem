@@ -80,13 +80,6 @@ function LoginComponent() {
     }
   };
 
-  // const sendRequest = async () => {
-  //   const response = await loginFunction(inputs);
-  //   console.log(response);
-  //   console.log(response.data);
-  //   return response.data;
-  // };
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: "100vh" }}>
