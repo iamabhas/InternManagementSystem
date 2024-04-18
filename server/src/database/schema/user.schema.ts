@@ -42,6 +42,11 @@ const userSchema = new mongoose.Schema(
       max: 50,
       required: [true, fieldCannotBeEmpty("password")],
     },
+    expertise:{
+      type:String,
+    
+    }
+    
   },
   { timestamps: true }
 );
