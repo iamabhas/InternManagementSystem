@@ -1,6 +1,6 @@
-import { TwoErrorConstant } from "../../constants/200ErrorConstant";
+import { TwoResponseConstant } from "../../constants/200ResponseConstant";
 const { OK, CREATED, ACCEPTED, NON_AUTHORITATIVE_INFORMATION, NO_CONTENT } =
-  TwoErrorConstant;
+  TwoResponseConstant;
 import { Response } from "express";
 
 type functionParam = (
@@ -10,7 +10,7 @@ type functionParam = (
   error: string,
   id?: any
 ) => any;
-export const handleTwoErrorResponse: functionParam = (
+export const handleTwoStatusResponse: functionParam = (
   res: Response,
   statusCode: number,
   Status: boolean,
