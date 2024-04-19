@@ -44,7 +44,7 @@ export const validateToken: functionParan = (
       } else {
         console.log(decodedtoken);
 
-        req.user = decodedtoken;
+        req.user = decodedtoken ? decodedtoken : existingUser;
         next();
       }
     });

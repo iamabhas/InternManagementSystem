@@ -1,6 +1,5 @@
 import { Response } from "express";
-import { FourErrorConstant } from "../../constants/400ErrorConstant";
-
+import { FourErrorConstant } from "../../constants/statusCodeConstant";
 const {
   VALIDATION_ERROR,
   UNAUTHORIZED,

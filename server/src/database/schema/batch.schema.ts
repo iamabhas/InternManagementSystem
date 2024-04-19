@@ -5,16 +5,18 @@ const batchSchema = new mongoose.Schema({
   name: {
     type: String,
     unique: true,
-    required: [true, fieldCannotBeEmpty("name")],
   },
   startDate: {
     type: Date,
-    required: [true, fieldCannotBeEmpty("startDate")],
     default: Date.now(),
   },
   endDate: {
     type: Date,
     required: [true, fieldCannotBeEmpty("endDate")],
+  },
+  completed: {
+    type: Boolean,
+    default: false,
   },
   interns: [
     {
@@ -25,7 +27,7 @@ const batchSchema = new mongoose.Schema({
   mentor: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "mentor",
+      ref: "user",
     },
   ],
 });

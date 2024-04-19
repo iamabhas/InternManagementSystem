@@ -1,4 +1,4 @@
-import { TwoResponseConstant } from "../../constants/200ResponseConstant";
+import { TwoResponseConstant } from "../../constants/statusCodeConstant";
 const { OK, CREATED, ACCEPTED, NON_AUTHORITATIVE_INFORMATION, NO_CONTENT } =
   TwoResponseConstant;
 import { Response } from "express";
