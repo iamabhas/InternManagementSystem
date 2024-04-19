@@ -8,3 +8,9 @@ export const checkRole = async (
     }
   }
 };
+
+export const checkUser = async (role: string) => {
+  if (role === "user") {
+    return true;
+  }
+};
