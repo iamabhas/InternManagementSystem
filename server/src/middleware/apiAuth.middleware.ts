@@ -26,7 +26,7 @@ export const validateToken: functionParan = (
   if (!authToken || typeof authToken !== "string") {
     return handleFourStatusError(
       res,
-      404,
+      401,
       ERROR,
       "Invalid Authorization Token"
     );
@@ -35,16 +35,16 @@ export const validateToken: functionParan = (
   try {
     verifyAccesToken(authToken).then(async (decodedtoken: any) => {
       if (!decodedtoken || typeof decodedtoken === null || undefined) {
-        return handleFourStatusError(res, 404, FAIL, "Payload Failed");
+        return handleFourStatusError(res, 401, FAIL, "Payload Failed");
       }
       const existingUser = await user.findOne({ _id: decodedtoken.user_id });
 
       if (!existingUser) {
-        return handleFourStatusError(res, 404, FAIL, "User Not Found");
+        return handleFourStatusError(res, 401, FAIL, "User Not Found");
       } else {
         console.log(decodedtoken);
 
-        req.user = decodedtoken;
+        req.user = decodedtoken ? decodedtoken : existingUser;
         next();
       }
     });
@@ -53,14 +53,14 @@ export const validateToken: functionParan = (
       case "JsonWebTokenError": {
         return handleFourStatusError(
           res,
-          404,
+          401,
           FAIL,
           "Invalid Token Please Log In again"
         );
       }
 
       case "TokenExpiredError": {
-        return handleFourStatusError(res, 404, ERROR, "Token has Been Expired");
+        return handleFourStatusError(res, 401, ERROR, "Token has Been Expired");
       }
       default:
         return handleFourStatusError(res, 500, ERROR, "INTERNAL SERVER ERROR");

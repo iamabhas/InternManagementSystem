@@ -17,6 +17,8 @@ const envConfig = {
   clientPort: process.env.CLIENT_PORT,
   mongodbConnectionString: process.env.MONGODB_CONNECTION_STRING,
   accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
+  smtpUsername: process.env.USER,
+  smtpPassword: process.env.PASSWORD,
 };
 
 export default envConfig;
