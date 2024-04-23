@@ -1,9 +1,5 @@
 import AppError from "../AppError";
 import { Response } from "express";
-import { nodeEnvironmentConstants } from "../../constants/nodeEnvironmentConstants";
-import envConfig from "../../config/env.config";
-const { DEVELOPMENT, PRODUCTION } = nodeEnvironmentConstants;
-
 export const handleUncaughtException = () => {
   process.on("uncaughtException", (err) => {
     console.log("uncaught exception shutting down...");
@@ -66,9 +62,9 @@ const sendErrorProd = (err: any, res: Response) => {
 export const globalErrorHandler = (err: any, res: Response) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
-  if (envConfig.nodeEnvironment === DEVELOPMENT) {
+  if (process.env.NODE_ENV === "development") {
     sendErrorDev(error, res);
-  } else if (envConfig.nodeEnvironment === PRODUCTION) {
+  } else if (process.env.NODE_ENV === "production") {
     sendErrorProd(err, res);
   }
 };
