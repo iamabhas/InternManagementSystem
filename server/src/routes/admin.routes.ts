@@ -1,5 +1,6 @@
 import e, { Router } from "express";
 import adminController from "../controller/admin.controller";
+import { BatchController } from "../controller/batch.controller";
 import { validateToken } from "../middleware/apiAuth.middleware";
 import { validateRole } from "../middleware/checkRole.middleware";
 import { restrictRole } from "../middleware/RestrictRoles";
@@ -29,4 +30,11 @@ adminRouter.post(
   adminController.registerMentors
 );
 
+adminRouter.get(
+  "/batch",
+  validateToken,
+  validateRole,
+  restrictRole("user", "mentor"),
+  BatchController.getBatchController
+);
 export default adminRouter;

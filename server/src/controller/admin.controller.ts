@@ -1,7 +1,7 @@
 import { AdminService } from "../services/admin/admin.service";
 import { Request, Response, NextFunction } from "express";
 
-class adminController extends AdminService {
+class adminController {
   public static async createBatch(req: Request, res: Response) {
     try {
       const { name, startDate, endDate } = req.body;
