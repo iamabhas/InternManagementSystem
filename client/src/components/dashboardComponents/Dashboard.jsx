@@ -21,6 +21,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { mainListItems } from "./listItems";
 import InternDashboard from "./InternComponents/InternDashboard";
 import AdminDashboard from "./AdminComponents/AdminDashboard";
+import ManageInterns from "./AdminComponents/ManageInterns";
+import ManageMentors from "./AdminComponents/ManageMentors";
 import ErrorPage from "../../pages/ErrorPage";
 import ManageBatch from "./AdminComponents/ManageBatch";
 import { useNavigate } from "react-router-dom";
@@ -141,6 +143,10 @@ export default function Dashboard() {
         return <AdminDashboard />;
       case "ManageBatches":
         return <ManageBatch />;
+      case "ManageInterns":
+        return <ManageInterns />;
+      case "ManageMentors":
+        return <ManageMentors />;
       case "Profile":
         return <UserProfile />;
       default:
