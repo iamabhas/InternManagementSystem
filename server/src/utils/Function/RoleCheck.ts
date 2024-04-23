@@ -14,3 +14,5 @@ export const checkUser = async (role: string) => {
     return true;
   }
 };
+
+export const verifyRole = async (role: string) => {};

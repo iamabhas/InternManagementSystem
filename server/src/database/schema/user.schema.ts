@@ -55,6 +55,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: [SOFTWARE_ENGINEER, SCRUM_MASTER, Quality_Assurance],
     },
+    status: {
+      type: Boolean,
+      default: true,
+    },
+    Batch: {
+      type: mongoose.Types.ObjectId,
+      ref: "Batch",
+    },
   },
   { timestamps: true }
 );
