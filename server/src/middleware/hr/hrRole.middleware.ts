@@ -3,6 +3,8 @@ import { functionReq } from "../../@types/interface/CustomRequest";
 import { handleFourStatusError } from "../../utils/Errors/CommonFourResponseError";
 import { checkUser } from "../../utils/Function/RoleCheck";
 
+//make restrict role take takes in an array to restrict roles
+
 export const hrValidator: functionReq = async (
   req: Request,
   res: Response,

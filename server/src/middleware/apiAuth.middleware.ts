@@ -5,6 +5,7 @@ import { verifyAccesToken } from "../utils/jwtUtils/verifyaccesstoken";
 import user from "../database/schema/user.schema";
 import { fail } from "assert";
 const { FAIL, SUCCESS, ERROR } = statusConstants;
+//If not using destructured element don't import
 
 declare global {
   namespace Express {
@@ -16,6 +17,7 @@ declare global {
 
 type functionParan = (req: Request, res: Response, next: NextFunction) => void;
 export const validateToken: functionParan = (
+  //Use function request Type from @types in all places
   req: Request,
   res: Response,
   next: NextFunction

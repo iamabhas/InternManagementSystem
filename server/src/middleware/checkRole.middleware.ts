@@ -33,7 +33,7 @@ export const validateRole: functionReq = async (
       res,
       FORBIDDEN,
       FAIL,
-      "Role is not Accessiable"
+      "Role is not Accessible" //Replace with there does not exist this type of role
     );
   }
 };
