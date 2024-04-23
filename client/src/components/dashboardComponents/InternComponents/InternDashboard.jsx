@@ -3,7 +3,7 @@ import { Typography } from "@mui/material";
 const InternDashboard = () => {
   return (
     <main>
-      <Typography variant="h6">Welcome to Dashboard !</Typography>
+      <Typography variant="h6">Intern Dashboard</Typography>
     </main>
   );
 };

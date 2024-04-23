@@ -1,23 +1,10 @@
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import MainDashboard from "../components/dashboardComponents/MainDashboard";
-import DashboardNav from "../components/dashboardComponents/DashboardNav";
+import React from "react";
+import Dashboard from "../components/dashboardComponents/Dashboard";
 
 const DashboardPage = () => {
-  const navigate = useNavigate();
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/login");
-    }
-  }, [isLoggedIn, navigate]);
-
   return (
     <div>
-      <DashboardNav />
-      <MainDashboard />
+      <Dashboard></Dashboard>
     </div>
   );
 };
