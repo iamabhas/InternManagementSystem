@@ -1,80 +1,30 @@
-import AppError from "../AppError";
-import { Response } from "express";
-export const handleUncaughtException =()=>{
-process.on('uncaughtException',err =>{
-    console.log('uncaught exception shutting down...')
-    console.log(err.name,err.message);
-    process.exit(1)
+import {Request, Response ,NextFunction} from 'express'
+import AppError from './../AppError'
+interface CustomError extends Error {
+    statusCode?: any;
+    status?:string;
+    path?:any;
+    value?:any
+
+  }
+
+//   const handleCastErrorDB = (error:CustomError) => {
+//     const message = `Invalid ${error.path}: ${error.value}.`;
+//     return new AppError(message, 400);
+//   };
+  const sendErrorDev = (error:CustomError,res:Response)=>{
+    res.status(error.statusCode).json({
+        status:error.statusCode,
+        message:error.message,
+        stack: error.stack
+       })
+  }
+
   
-  })
-}
 
-
-export const  handelUnhandledRejection= ()=>{
-    process.on('unhandledRejection',err =>{
-        console.log('uncaught exception shutting down...')
-        console.log(err instanceof Error,err,) ;
-        process.exit(1)
-      
-      })
-}
-
-interface errorData{
-    statusCode:any,
-    error:String,    
-}
-
-const sendErrorDev = (err:any ,res:Response)=>{
-    try{
-
-   res.status(err.statusCode).json({
-    status:err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack
-  })
-}catch(err){
-    console.log(err)
-}
+export const globalErrorHandler = (error:CustomError,req:Request,res:Response,next:NextFunction)=>{
+   error.statusCode = error.statusCode || 500
+   error.status = error.status || 'error'
+    sendErrorDev(error, res)
 
 }
-
-const error: errorData = {
-    statusCode:404,
-    error: 'Route Not defined',
-
-};
-
-const sendErrorProd = (err:any, res:Response)=>{
-    try{
-    if(err.isOperational){
- res.status(err.statusCode).json({
-        status:err.status,
-        error:err,
-        message:err.message
-    })
-}else {
-    console.log('error',err)
-    res.status(500).json({
-        status: 'error',
-        message: 'Something went very wrong!'
-      });
-}
-}catch(err){
-    console.log(err)
-}
-}
-
-
-
-export const globalErrorHandler =(err:any, res:Response)=>{
-    err.statusCode = err.statusCode || 500;
-    err.status = err.status || 'error';
-    if( process.env.NODE_ENV === 'development'){
-     sendErrorDev(error ,res)
-    }else if(process.env.NODE_ENV === 'production'){
-         sendErrorProd(err,res)
-    }
-}
-
-
