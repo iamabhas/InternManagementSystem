@@ -68,10 +68,7 @@ export class AdminService {
       );
     }
     const password = "admin1234";
-    const minLength = 8;
     const lowercaseRegex = /[a-z]/;
-    const uppercaseRegex = /[A-Z]/;
-    const digitRegex = /\d/;
 
     if (lowercaseRegex.test(password) && password.length > 8) {
       console.log("true");
