@@ -1,3 +1,6 @@
+import { roleConstants } from "./../../constants/roleConstants";
+const { USER } = roleConstants;
+
 export const checkRole = async (
   roleArry: string[] | Array<String>,
   role: string
@@ -10,7 +13,7 @@ export const checkRole = async (
 };
 
 export const checkUser = async (role: string) => {
-  if (role === "user") {
+  if (role === USER) {
     return true;
   }
 };

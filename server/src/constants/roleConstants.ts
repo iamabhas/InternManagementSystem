@@ -1,6 +1,6 @@
 export enum roleConstants {
   ADMIN = "admin",
-  USER = "user",
+  USER = "intern",
   SUPER_ADMIN = "superadmin",
   MENTOR = "mentor",
 }
