@@ -15,6 +15,7 @@ export const createBatchServices = async (res: Response, body: any) => {
   try {
     const savedBatch = new Batch({
       name: name,
+      startDate : startDate,
       endDate: endDate,
       interns: interns,
       mentor: mentor,
@@ -98,3 +99,33 @@ export const getBatchService = async (res: Response, id: string) => {
     });
   }
 };
+
+
+export const getBatchByIdService = async (res: Response, id: string) => {
+  try {
+    const batch = await Batch.findOne({ _id: id })
+      .populate({
+        path: "interns",
+        select: "fullname role",
+      })
+      .populate({
+        path: "mentor",
+        select: "fullname position",
+      });
+
+    if (!batch) {
+      return handleFourStatusError(res, 404, "ERROR", "Batch not found");
+    }
+
+    return res.status(200).json({
+      message: "Batch found",
+      data: batch,
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      status: 500,
+      message: "INTERNAL SERVER ERROR",
+    });
+  }
+};
+
