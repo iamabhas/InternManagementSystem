@@ -1,7 +1,7 @@
 import bcryptjs from "bcrypt";
 import { NextFunction, Request, Response } from "express";
-import { handleFourStatusError } from "../utils/Errors/CommonFourResponseError";
-import { functionReq } from "../@types/interface/CustomRequest";
+import { handleFourStatusError } from "../utils/errorUtils/commonFourResponseError";
+import { functionReq } from "../@types/interface/customRequest";
 import user from "../database/schema/user.schema";
 import { statusConstants } from "../constants/statusConstants";
 import validator from "validator";

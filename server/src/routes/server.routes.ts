@@ -6,7 +6,7 @@ import userRouter from "./auth.routes";
 import adminRouter from "./admin.routes";
 import leaveManagementRouter from "./leaveManagement.routes";
 const { ERROR, SUCCESS } = statusConstants;
-import { globalErrorHandler } from "../utils/Errors/errorHandlers";
+import { globalErrorHandler } from "../utils/errorUtils/errorHandlers";
 
 export const initializeRoutes = (expressApplication: Application) => {
   //landing route

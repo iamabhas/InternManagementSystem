@@ -1,4 +1,4 @@
-import { IPayload } from "../../@types/interface/RequestBody";
+import { IPayload } from "../../@types/interface/requestBody";
 import envConfig from "../../config/env.config";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";

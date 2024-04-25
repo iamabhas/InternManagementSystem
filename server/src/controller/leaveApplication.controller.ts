@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { LeaveApplicationService } from "../services/leaveApplication/leaveApplication.service";
+import { LeaveApplicationService } from "../services/leaveApplicationServices/leaveApplication.service";
 
 export class leaveApplicationController {
   public static async createLeaveApplicationController(

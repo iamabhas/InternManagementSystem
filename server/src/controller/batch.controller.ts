@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { BatchService } from "../services/batch/batch.service";
+import { BatchService } from "../services/batchServices/batch.service";
 import mongoose from "mongoose";
 export class BatchController {
   public static async getBatchController(req: Request, res: Response) {

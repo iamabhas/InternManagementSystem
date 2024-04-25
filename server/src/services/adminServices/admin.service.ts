@@ -3,7 +3,7 @@ import Batch from "../../database/schema/batch.schema";
 import { Response } from "express";
 import validator from "validator";
 import { sendEmail } from "../../utils/smtpServer/smtpEmail";
-import { handleFourStatusError } from "../../utils/Errors/CommonFourResponseError";
+import { handleFourStatusError } from "../../utils/errorUtils/commonFourResponseError";
 
 import mongoose from "mongoose";
 

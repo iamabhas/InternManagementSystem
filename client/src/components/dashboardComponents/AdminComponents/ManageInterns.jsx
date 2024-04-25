@@ -23,8 +23,9 @@ import {
 import PropTypes from "prop-types";
 import Swal from "sweetalert2";
 import { IoMdAddCircle } from "react-icons/io";
-import { batchData } from "../../../data/testData";
+import { internData } from "../../../data/testData";
 import { registerIntern } from "../../../services/Api";
+import { IoFilter } from "react-icons/io5";
 
 function LinearProgressWithLabel(props) {
   return (
@@ -47,7 +48,7 @@ LinearProgressWithLabel.propTypes = {
 
 export default function ManageInterns() {
   const [open, setOpen] = React.useState(false);
-  const [data, setData] = React.useState(batchData);
+  const [data, setData] = React.useState(internData);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [progress, setProgress] = React.useState(10);
@@ -122,11 +123,13 @@ export default function ManageInterns() {
         >
           Add Intern
         </Button>
-      </Box>
-
-      <Box textAlign="center">
-        <Button variant="outlined" color="warning" sx={{ m: 1 }}>
-          All Interns
+        <Button
+          variant="outlined"
+          color="warning"
+          sx={{ m: 1 }}
+          startIcon={<IoFilter />}
+        >
+          Filter Interns
         </Button>
       </Box>
 
@@ -135,11 +138,11 @@ export default function ManageInterns() {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Intern Name</TableCell>
-                <TableCell align="center">Start Date</TableCell>
-                <TableCell align="center">End Date</TableCell>
+                <TableCell>Full Name</TableCell>
+                <TableCell align="center">User Name</TableCell>
+                <TableCell align="center">Phone No</TableCell>
+                <TableCell align="center">Email</TableCell>
                 <TableCell align="center">Batch</TableCell>
-                <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -152,16 +155,12 @@ export default function ManageInterns() {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {row.batchName}
+                      {row.fullname}
                     </TableCell>
-                    <TableCell align="center">{row.startDate}</TableCell>
-                    <TableCell align="center">{row.endDate}</TableCell>
-                    <TableCell align="center">
-                      <LinearProgressWithLabel value={progress} />
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button>View Detail</Button>
-                    </TableCell>
+                    <TableCell align="center">{row.username}</TableCell>
+                    <TableCell align="center">{row.phoneNo}</TableCell>
+                    <TableCell align="center">{row.email}</TableCell>
+                    <TableCell align="center">{row.batch}</TableCell>
                   </TableRow>
                 ))}
             </TableBody>
