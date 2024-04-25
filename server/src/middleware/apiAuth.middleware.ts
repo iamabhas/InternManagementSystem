@@ -42,8 +42,7 @@ export const validateToken: functionParan = (
       if (!existingUser) {
         return handleFourStatusError(res, 401, FAIL, "User Not Found");
       } else {
-        console.log(decodedtoken);
-
+        console.log("The decoded token : " + decodedtoken);
         req.user = decodedtoken ? decodedtoken : existingUser;
         next();
       }
