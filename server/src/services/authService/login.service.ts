@@ -3,7 +3,7 @@ import { statusConstants } from "../../constants/statusConstants";
 import { userNameValidation } from "../../utils/schemaUtils/checklength";
 import { roleConstants } from "../../constants/roleConstants";
 import { IUserRequestBody } from "../../@types/interface/requestBody";
-import { AccessToken } from "../../utils/jwtUtils/token";
+import { AccessToken } from "../../utils/jwtUtils/generateAccessToken";
 import { handleFourStatusError } from "../../utils/errorUtils/commonFourResponseError";
 import user from "../../database/schema/user.schema";
 import bcryptjs from "bcrypt";
