@@ -14,6 +14,9 @@ export class LeaveApplicationService {
   ) {
     try {
       const currentDate = new Date();
+      console.log(leaveFromDate);
+      console.log(leaveFromDate > currentDate);
+      console.log(currentDate);
       if (leaveFromDate < currentDate) {
         return handleFourStatusError(
           res,

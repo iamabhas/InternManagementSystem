@@ -13,7 +13,7 @@ leaveManagementRouter.post(
   "/send-leave-application",
   validateToken,
   validateRole,
-  // restrictRole(ADMIN, MENTOR),
+  restrictRole(MENTOR),
   leaveApplicationController.createLeaveApplicationController
 );
 
@@ -21,7 +21,7 @@ leaveManagementRouter.get(
   "/get-leave-applications",
   // validateToken,
   // validateRole,
-  // restrictRole(USER, MENTOR)
+  // restrictRole(ADMINs, MENTOR)
   leaveApplicationController.getApplications
 );
 

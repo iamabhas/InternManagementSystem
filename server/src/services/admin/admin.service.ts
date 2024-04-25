@@ -97,6 +97,17 @@ export class AdminService {
           new: true,
         }
       );
+      await user.updateOne(
+        {
+          _id: dbUser._id,
+        },
+        {
+          $set: { Batch: BatchId },
+        },
+        {
+          new: true,
+        }
+      );
       return res.status(201).json({
         data: dbUser,
       });
