@@ -9,11 +9,11 @@ export class BatchService {
       const batchList = await Batch.find({})
         .populate({
           path: "interns",
-          select: "fullname role ",
+          select: " -_id fullname role ",
         })
         .populate({
           path: "mentor",
-          select: "fullname expertise position",
+          select: " -_id fullname expertise position",
         });
 
       const computeInternSize = await Batch.aggregate([
@@ -56,6 +56,7 @@ export class BatchService {
         },
         {
           $project: {
+            _id: 0,
             numberOfInterns: 1,
           },
         },
@@ -71,6 +72,7 @@ export class BatchService {
         },
         {
           $project: {
+            _id: 0,
             numberOfMentor: 1,
           },
         },
@@ -107,11 +109,11 @@ export class BatchService {
       const existBatch = await Batch.findOne({ _id: id })
         .populate({
           path: "interns",
-          select: "fullname",
+          select: "-_id fullname",
         })
         .populate({
           path: "mentor",
-          select: "fullname expertise position",
+          select: "-_id fullname expertise position",
         });
 
       return res.status(200).json({
