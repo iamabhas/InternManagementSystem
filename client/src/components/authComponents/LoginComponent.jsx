@@ -58,6 +58,7 @@ function LoginComponent() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      console.log(inputs);
       const userData = await loginFunction(inputs);
       console.log(userData);
 
@@ -79,13 +80,6 @@ function LoginComponent() {
       });
     }
   };
-
-  // const sendRequest = async () => {
-  //   const response = await loginFunction(inputs);
-  //   console.log(response);
-  //   console.log(response.data);
-  //   return response.data;
-  // };
 
   return (
     <ThemeProvider theme={defaultTheme}>

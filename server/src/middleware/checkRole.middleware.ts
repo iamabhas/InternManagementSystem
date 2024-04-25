@@ -33,7 +33,7 @@ export const validateRole: functionReq = async (
       res,
       FORBIDDEN,
       FAIL,
-      "Role is not Accessiable"
+      `${role} Does not Exists `
     );
   }
 };

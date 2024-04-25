@@ -39,10 +39,21 @@ export const loginService = async (
       }
       const Roles: string[] = [MENTOR, USER, ADMIN, SUPER_ADMIN];
       const UserRole: string | Partial<IUserRequestBody> = User.role;
-      const checkPassword = await bcryptjs.compare(password, User.password);
+      // const checkPassword = await bcryptjs.compare(password, User.password);
+      const checkPasswordAgain = password === User.password ? true : false;
+      if (
+        typeof checkPasswordAgain !== "boolean" ||
+        checkPasswordAgain == false
+      ) {
+        return res.status(403).json({
+          error: ERROR,
+          status: 403,
+          message: "The Password You Entered Is Incorrect",
+        });
+      }
       if (Roles.includes(UserRole)) {
-        console.log(checkPassword);
-        if (checkPassword && typeof checkPassword === "boolean") {
+        console.log(checkPasswordAgain);
+        if (checkPasswordAgain && typeof checkPasswordAgain === "boolean") {
           const accesstoken = await AccessToken(
             User._id,
             User.username,

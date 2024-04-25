@@ -1,12 +1,11 @@
 import user from "../database/schema/user.schema";
 import Batch from "../database/schema/batch.schema";
-import { todayDate } from "../utils/Date/date";
 import { Response } from "express";
 import { handleFourStatusError } from "../utils/Errors/CommonFourResponseError";
 
 export const createBatchServices = async (res: Response, body: any) => {
   const { name, startDate, endDate, completed, interns, mentor } = body;
-  const date = todayDate();
+
 
   const mentorChecked = await user.findOne({ _id: mentor });
   if (mentorChecked?._id != mentor[0]) {
@@ -125,6 +124,27 @@ export const getBatchByIdService = async (res: Response, id: string) => {
     return res.status(500).json({
       status: 500,
       message: "INTERNAL SERVER ERROR",
+    });
+  }
+};
+
+export const getUserByIdService = async (res: Response , id: string) => {
+  try {
+    const User = await user.findOne ({ _id: id});
+
+    if (!user) {
+      return handleFourStatusError (res , 404, "ERROR", "User not found");
+    }
+
+    return res.status(200).json({
+      message: "User found",
+      data : user,
+    });
+  }
+  catch (err: any){
+    return res.status(500).json({
+      status : 500,
+      message : "INTERNAL SERVER ERROR",
     });
   }
 };

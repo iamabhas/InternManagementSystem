@@ -3,13 +3,13 @@ import { handleFourStatusError } from "../utils/Errors/CommonFourResponseError";
 import { statusConstants } from "../constants/statusConstants";
 import { verifyAccesToken } from "../utils/jwtUtils/verifyaccesstoken";
 import user from "../database/schema/user.schema";
-import { fail } from "assert";
-const { FAIL, SUCCESS, ERROR } = statusConstants;
+const { FAIL, ERROR } = statusConstants;
 
 declare global {
   namespace Express {
     interface Request {
       user?: any;
+      reqRole?: any;
     }
   }
 }

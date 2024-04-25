@@ -26,38 +26,35 @@ export const testSignUpController: functionReq = async (
     );
   }
 
-  const password = generator.generate({
-    length: 10,
-    numbers: true,
-  });
+  // const password = generator.generate({
+  //   length: 10,
+  //   numbers: true,
+  // });
+
+  const password = "admin1234";
 
   const minLength = 8;
   const lowercaseRegex = /[a-z]/;
   const uppercaseRegex = /[A-Z]/;
   const digitRegex = /\d/;
 
-  if (
-    lowercaseRegex.test(password) &&
-    uppercaseRegex.test(password) &&
-    digitRegex.test(password) &&
-    password.length > 8
-  ) {
+  if (lowercaseRegex.test(password) && password.length > 8) {
     console.log("true");
     const subject = "Password Authentication ";
     const text = `Password for ${username}`;
     const html = `<h1>Dear ${username}, Your Current Password is ${password} Please Contact the Admin (HR) if you Forget your Password</h1> `;
 
     await sendEmail(email, subject, text, html);
-    const salt = await bcryptjs.genSalt(10);
-    const hashPass = await bcryptjs.hash(password, salt);
-    if (hashPass !== null || typeof hashPass !== null || undefined) {
+    // const salt = await bcryptjs.genSalt(10);
+    // const hashPass = await bcryptjs.hash(password, salt);
+    if (password !== null || typeof password !== null || undefined) {
       const newUser = new user({
         username: username,
         fullname: fullname,
         email: email,
         phoneNo: phoneNo,
         role: role,
-        password: hashPass,
+        password: password,
         expertise: expertise,
         position: position,
       });
