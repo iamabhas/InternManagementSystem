@@ -29,7 +29,7 @@ const sendErrorProd = (error: CustomError, res: Response) => {
         })
     } else{
         res.status(500).json({
-            status:'message',
+            status:'error',
             message:'something went very wrong'
         })
     }
@@ -44,12 +44,6 @@ export const globalErrorHandler = (err: CustomError, req: Request, res: Response
     err.status = err.status || 'error'
     switch(process.env.NODE_ENV){
         case 'development':
-
-        if(err.name === 'CastError'){
-            return res.status(500).json({
-                status:'fail'
-            })
-         }
          sendErrorDev(err, res)
         break;
         case 'production':
