@@ -1,6 +1,6 @@
-import { IUserRequestBody } from "../@types/interface/RequestBody";
+import { IUserRequestBody } from "../@types/interface/requestBody";
 import { Request, Response } from "express";
-import { loginService } from "../services/login.service";
+import { loginService } from "../services/authService/login.service";
 
 export const loginController = async (
   req: Request<Required<IUserRequestBody>>,

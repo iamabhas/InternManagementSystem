@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import LeaveApplication from "../../database/schema/leaveApplication.schema";
-import { handleFourStatusError } from "../../utils/Errors/CommonFourResponseError";
+import { handleFourStatusError } from "../../utils/errorUtils/commonFourResponseError";
 import { Response, Request } from "express";
 
 export class LeaveApplicationService {

@@ -1,4 +1,4 @@
-import { AdminService } from "../services/admin/admin.service";
+import { AdminService } from "../services/adminServices/admin.service";
 import { Request, Response, NextFunction } from "express";
 
 class adminController {

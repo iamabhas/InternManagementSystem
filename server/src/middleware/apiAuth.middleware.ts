@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { handleFourStatusError } from "../utils/Errors/CommonFourResponseError";
+import { handleFourStatusError } from "../utils/errorUtils/commonFourResponseError";
 import { statusConstants } from "../constants/statusConstants";
 import { verifyAccesToken } from "../utils/jwtUtils/verifyaccesstoken";
 import user from "../database/schema/user.schema";

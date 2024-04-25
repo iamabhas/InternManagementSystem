@@ -1,11 +1,11 @@
 import { Response } from "express";
-import { statusConstants } from "../constants/statusConstants";
-import { userNameValidation } from "../utils/schemaUtils/checklength";
-import { roleConstants } from "../constants/roleConstants";
-import { IUserRequestBody } from "../@types/interface/RequestBody";
-import { AccessToken } from "../utils/jwtUtils/token";
-import { handleFourStatusError } from "../utils/Errors/CommonFourResponseError";
-import user from "../database/schema/user.schema";
+import { statusConstants } from "../../constants/statusConstants";
+import { userNameValidation } from "../../utils/schemaUtils/checklength";
+import { roleConstants } from "../../constants/roleConstants";
+import { IUserRequestBody } from "../../@types/interface/requestBody";
+import { AccessToken } from "../../utils/jwtUtils/token";
+import { handleFourStatusError } from "../../utils/errorUtils/commonFourResponseError";
+import user from "../../database/schema/user.schema";
 import bcryptjs from "bcrypt";
 const { ERROR, FAIL, SUCCESS } = statusConstants;
 const { ADMIN, USER, MENTOR, SUPER_ADMIN } = roleConstants;
