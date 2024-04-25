@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { handleFourStatusError } from "../utils/errorUtils/commonFourResponseError";
 import { statusConstants } from "../constants/statusConstants";
-import { verifyAccesToken } from "../utils/jwtUtils/verifyaccesstoken";
+import { JwtService } from "../services/jwtServices/jwt.service";
 import user from "../database/schema/user.schema";
+import AppError from "../utils/errorUtils/appError";
+import App from "../server";
 const { FAIL, ERROR } = statusConstants;
 
 declare global {
@@ -24,23 +25,18 @@ export const validateToken: functionParan = (
     req.headers.authorization && req.headers.authorization.split(" ")[1];
   console.log(authToken);
   if (!authToken || typeof authToken !== "string") {
-    return handleFourStatusError(
-      res,
-      401,
-      ERROR,
-      "Invalid Authorization Token"
-    );
+    return next(new AppError("Invalid Authorization Token", 401));
   }
 
   try {
-    verifyAccesToken(authToken).then(async (decodedtoken: any) => {
+    JwtService.verifyAccessToken(authToken).then(async (decodedtoken: any) => {
       if (!decodedtoken || typeof decodedtoken === null || undefined) {
-        return handleFourStatusError(res, 401, FAIL, "Payload Failed");
+        return next(new AppError("Payload Failed", 401));
       }
       const existingUser = await user.findOne({ _id: decodedtoken.user_id });
 
       if (!existingUser) {
-        return handleFourStatusError(res, 401, FAIL, "User Not Found");
+        return next(new AppError("User Not Found", 401));
       } else {
         console.log("The decoded token : " + decodedtoken);
         req.user = decodedtoken ? decodedtoken : existingUser;
@@ -50,19 +46,14 @@ export const validateToken: functionParan = (
   } catch (error: any) {
     switch (error.name) {
       case "JsonWebTokenError": {
-        return handleFourStatusError(
-          res,
-          401,
-          FAIL,
-          "Invalid Token Please Log In again"
-        );
+        return next(new AppError("Invalid Token, Please Log In", 401));
       }
 
       case "TokenExpiredError": {
-        return handleFourStatusError(res, 401, ERROR, "Token has Been Expired");
+        return next(new AppError("Token Has Been Expired", 401));
       }
       default:
-        return handleFourStatusError(res, 500, ERROR, "INTERNAL SERVER ERROR");
+        return next(new AppError("INTERNAL SERVER ERROR", 500));
     }
   }
 };

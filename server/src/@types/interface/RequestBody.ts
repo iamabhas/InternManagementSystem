@@ -1,16 +1,11 @@
 import mongoose from "mongoose";
+import { NextFunction } from "express";
 export interface IUserRequestBody {
   username: string;
   password: string;
 }
 
 export interface IUserRole extends IUserRequestBody {
-  role: string;
-}
-
-export interface IPayload {
-  user_id: mongoose.Types.ObjectId;
-  username: string;
   role: string;
 }
 
@@ -28,3 +23,8 @@ export interface ICookie {
   httpOnly?: boolean;
   sameSite?: boolean | "strict" | "lax" | "none"; // Adjusted sameSite property
 }
+export type functionReq = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => void;

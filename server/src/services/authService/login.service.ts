@@ -1,25 +1,24 @@
-import { Response } from "express";
+import { NextFunction, Response } from "express";
 import { statusConstants } from "../../constants/statusConstants";
-import { userNameValidation } from "../../utils/schemaUtils/checklength";
 import { roleConstants } from "../../constants/roleConstants";
 import { IUserRequestBody } from "../../@types/interface/requestBody";
-import { AccessToken } from "../../utils/jwtUtils/token";
-import { handleFourStatusError } from "../../utils/errorUtils/commonFourResponseError";
+import AppError from "../../utils/errorUtils/appError";
 import user from "../../database/schema/user.schema";
-import bcryptjs from "bcrypt";
+import { JwtService } from "../jwtServices/jwt.service";
+import { userNameValidation } from "../../utils/schemaUtils/checklength";
 const { ERROR, FAIL, SUCCESS } = statusConstants;
 const { ADMIN, USER, MENTOR, SUPER_ADMIN } = roleConstants;
 
 export const loginService = async (
-  username: string,
-  password: string,
-  res: Response
+  res: Response,
+  body: any,
+  next: NextFunction
 ): Promise<any> => {
+  const { username, password }: Required<IUserRequestBody> = body;
   if ((!username && username === null) || (!password && password === null)) {
-    return res.status(404).json({
-      error: FAIL,
-      message: "Missing Credentials, Email and Password is Not Provided",
-    });
+    return next(
+      new AppError("Missing Credentials,Email and Password is Required", 400)
+    );
   }
   await userNameValidation(username)
     .then(async (response: boolean): Promise<any> => {
@@ -30,11 +29,8 @@ export const loginService = async (
         !User ||
         (await user.find({ username: username }).countDocuments()) === 0
       ) {
-        return handleFourStatusError(
-          res,
-          404,
-          FAIL,
-          "Email Not Found , Please Contact Super Admin"
+        return next(
+          new AppError("Username Does not Exists,Please Try Again", 400)
         );
       }
       const Roles: string[] = [MENTOR, USER, ADMIN, SUPER_ADMIN];
@@ -45,20 +41,17 @@ export const loginService = async (
         typeof checkPasswordAgain !== "boolean" ||
         checkPasswordAgain == false
       ) {
-        return res.status(403).json({
-          error: ERROR,
-          status: 403,
-          message: "The Password You Entered Is Incorrect",
-        });
+        return next(new AppError("The Password You Entered Is Incorrect", 403));
       }
       if (Roles.includes(UserRole)) {
         console.log(checkPasswordAgain);
         if (checkPasswordAgain && typeof checkPasswordAgain === "boolean") {
-          const accesstoken = await AccessToken(
-            User._id,
-            User.username,
-            User.role
-          );
+          const object = {
+            userId: User._id,
+            username: User.username,
+            userRole: User.role,
+          };
+          const accesstoken = await JwtService.generateAccessToken(object);
           return res.status(203).json({
             Status: response,
             error: SUCCESS,
@@ -72,12 +65,10 @@ export const loginService = async (
       }
     })
     .catch((error: any) => {
-      return res.status(404).json({
-        error: ERROR,
-        errormessage: error,
-        message:
-          "Minimum RequiredMent Failed, Please Enter UpperCase, LowerCase and A Number",
-      });
+      throw new AppError(
+        "Minimum Requirement Failed,Please Enter UpperCase,LowerCase and A Number",
+        403
+      );
     });
   // };
 };

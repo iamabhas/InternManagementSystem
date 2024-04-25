@@ -1,11 +1,14 @@
 import { IUserRequestBody } from "../@types/interface/requestBody";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { loginService } from "../services/authService/login.service";
 
-export const loginController = async (
-  req: Request<Required<IUserRequestBody>>,
-  res: Response
-): Promise<any> => {
-  const { username, password }: Required<IUserRequestBody> = req.body;
-  loginService(username, password, res);
-};
+export class loginController {
+  public static async login(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    const body = req.body;
+    loginService(res, body, next);
+  }
+}

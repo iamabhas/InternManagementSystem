@@ -4,8 +4,8 @@ import { Request, Response } from "express";
 
 const userRouter: Router = Router();
 
-userRouter.post("/login", loginController);
-userRouter.get;
+userRouter.post("/login", loginController.login);
+
 userRouter.get("/testing", (_req: Request, res: Response) => {
   return res.json({
     message: "Testing Controller",

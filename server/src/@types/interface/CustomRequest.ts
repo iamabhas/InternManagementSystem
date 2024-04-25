@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-
+import mongoose from "mongoose";
 export interface IUserData {
   id: string;
   username: string;
@@ -14,13 +14,10 @@ export type IAuthRequest = CustomRequest & {
   headers: { authorization: string };
 };
 
-export interface Ipayload {
-  user_id: string;
+export interface IPayload {
+  user_id: mongoose.Types.ObjectId;
   username: string;
   role: string;
-  iat: number;
-  exp: number;
-  iss: string;
 }
 
 export interface IMentorRequest {
@@ -29,8 +26,3 @@ export interface IMentorRequest {
   expertise: string[];
   role: string;
 }
-export type functionReq = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => void;

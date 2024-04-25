@@ -3,7 +3,7 @@ import morganMiddleware from "./morgan.middleware";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { corsOptionsConfig } from "../config/corsOptions.config";
-
+import { errorHandler } from "./errorHandler";
 export const initializeMiddlewares = (
   expressApplication: Application
 ): void => {
