@@ -3,8 +3,11 @@ import { Request, Response, NextFunction } from "express";
 import {
   createBatchServices,
   getBatchService,
+  getBatchByIdService,
+  getUserByIdService
 } from "../services/admin.service";
 import { handleFourStatusError } from "../utils/Errors/CommonFourResponseError";
+import { functionReq } from "../@types/interface/CustomRequest";
 
 export const createBatch: functionReq = (
   req: Request,
@@ -25,3 +28,37 @@ export const getBatch: functionReq = (
   }
   return getBatchService(res, id);
 };
+
+
+export const getBatchById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const id: string = req.params.id;
+  try {
+    const result = await getBatchByIdService(res, id);
+    return result; 
+  } catch (error) {
+    console.error('Error in getBatchById controller:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+export const getUserById = async (
+  req: Request,
+  res: Response
+) => {
+  const id : string = req.params.id ;
+  try {
+    const result = await getUserByIdService (res, id);
+    return result ;
+  } catch (error) {
+    console.log('Error in getUserById controller :' , error);
+    return res.status(500).json ({
+      error : 'Internal server error'
+    });
+  }
+};
+
