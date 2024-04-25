@@ -7,9 +7,9 @@ export class leaveApplicationController {
     res: Response
   ) {
     try {
-      const { userId, subject, applicationBody, leaveFromDate, leaveToDate } =
-        req.body;
-
+      const { subject, applicationBody, leaveFromDate, leaveToDate } = req.body;
+      const userId = req.user.user_id;
+      console.log(userId);
       await LeaveApplicationService.createLeaveApplication(
         res,
         userId,
@@ -24,7 +24,7 @@ export class leaveApplicationController {
       });
     }
   }
-  public static async getApplications(res: Response) {
+  public static async getApplications(req: Request, res: Response) {
     try {
       await LeaveApplicationService.getAllApplications(res);
     } catch (error: any) {
