@@ -16,7 +16,7 @@ export const AccessToken = async (
   };
 
   const secretKey = envConfig.accessTokenSecret as string;
-  const expiratonTimeInSeconds = 30 * 60; // 30 minutes in seconds
+  const expiratonTimeInSeconds = 24 * 60 * 60; // 30 minutes in seconds
 
   const options: jwt.SignOptions = {
     issuer: "Inter Management System",

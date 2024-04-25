@@ -1,11 +1,11 @@
-import e, { Router } from "express";
+import { Router } from "express";
 import adminController from "../controller/admin.controller";
 import { roleConstants } from "../constants/roleConstants";
 import { BatchController } from "../controller/batch.controller";
 import { validateToken } from "../middleware/apiAuth.middleware";
 import { validateRole } from "../middleware/checkRole.middleware";
 import { restrictRole } from "../middleware/RestrictRoles";
-const { USER, ADMIN, MENTOR } = roleConstants;
+const { USER, MENTOR } = roleConstants;
 const adminRouter = Router();
 
 adminRouter.post(
