@@ -5,7 +5,7 @@ import { functionReq } from "../@types/interface/CustomRequest";
 import user from "../database/schema/user.schema";
 import { statusConstants } from "../constants/statusConstants";
 import validator from "validator";
-import generator from "generate-password";
+import generator from "generate-password"
 import { sendEmail } from "../utils/smtpServer/smtpEmail";
 const { ERROR, SUCCESS, FAIL } = statusConstants;
 

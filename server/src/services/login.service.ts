@@ -65,7 +65,7 @@ export const loginService = async (
         error: ERROR,
         errormessage: error,
         message:
-          "Minimum RequiredMent Failed, Please Enter UpperCase, LowerCase and A Number",
+         "Failed !",
       });
     });
   // };
