@@ -58,6 +58,7 @@ function LoginComponent() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      console.log(inputs);
       const userData = await loginFunction(inputs);
       console.log(userData);
 
