@@ -22,6 +22,10 @@ const leaveApplicationSchema = new mongoose.Schema({
     type: Date,
     required: [true, fieldCannotBeEmpty("endDate")],
   },
+  approveStatus: {
+    type: Boolean,
+    default: false,
+  },
   User: {
     type: mongoose.Types.ObjectId,
     ref: "user",
