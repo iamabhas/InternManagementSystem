@@ -11,8 +11,8 @@ const leaveManagementRouter = Router();
 
 leaveManagementRouter.post(
   "/send-leave-application",
-  // validateToken,
-  // validateRole,
+  validateToken,
+  validateRole,
   // restrictRole(ADMIN, MENTOR),
   leaveApplicationController.createLeaveApplicationController
 );
