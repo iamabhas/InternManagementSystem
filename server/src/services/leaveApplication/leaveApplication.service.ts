@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import LeaveApplication from "../../database/schema/leaveApplication.schema";
 import { handleFourStatusError } from "../../utils/Errors/CommonFourResponseError";
-import { Response } from "express";
+import { Response, Request } from "express";
 
 export class LeaveApplicationService {
   public static async createLeaveApplication(
     res: Response,
-    userId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId | string,
     subject: string,
     applicationBody: string,
     leaveFromDate: Date,
