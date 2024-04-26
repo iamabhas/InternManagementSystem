@@ -9,13 +9,9 @@ class adminController {
   ) {
     try {
       const body = req.body;
-      await AdminService.createService(res, body, next);
+      await AdminService.createBatchService(res, body, next);
     } catch (err: any) {
-      console.log(err);
-      return res.status(500).json({
-        message: "Failed To Create Batch",
-        error: err.message,
-      });
+      next(err);
     }
   }
 
@@ -26,13 +22,10 @@ class adminController {
   ) {
     try {
       const body = req.body;
-      await AdminService.registerService(res, body, next);
+      await AdminService.registerInternService(res, body, next);
     } catch (err: any) {
       console.log(err);
-      return res.status(500).json({
-        message: "Failed To Register Intern",
-        error: err.message,
-      });
+      next(err);
     }
   }
 
@@ -46,11 +39,7 @@ class adminController {
 
       await AdminService.registerMentorService(res, body, next);
     } catch (err: any) {
-      console.log(err);
-      return res.status(500).json({
-        message: "Failed To Register Intern",
-        error: err.message,
-      });
+      next(err);
     }
   }
 }

@@ -25,4 +25,11 @@ leaveManagementRouter.get(
   leaveApplicationController.getApplications
 );
 
+leaveManagementRouter.patch(
+  "/verify/:id",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  leaveApplicationController.verifiedLeave
+);
 export default leaveManagementRouter;

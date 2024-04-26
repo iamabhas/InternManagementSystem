@@ -1,5 +1,4 @@
 import { validateToken } from "../middleware/apiAuth.middleware";
-
 import { Router } from "express";
 import { loginController } from "../controller/auth.controller";
 import { Request, Response } from "express";

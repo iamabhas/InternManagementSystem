@@ -4,10 +4,10 @@ import { NextFunction, Response } from "express";
 import validator from "validator";
 import { sendEmail } from "../../utils/smtpServerUtils/smtpEmail";
 import AppError from "../../utils/errorUtils/appError";
-import mongoose from "mongoose";
+import { sendResponse } from "../../helpers/customResponse";
 
 export class AdminService {
-  public static async createService(
+  public static async createBatchService(
     res: Response,
     body: any,
     next: NextFunction
@@ -17,30 +17,17 @@ export class AdminService {
     if (startDate > endDate) {
       throw new AppError("Start Date Must Be Greater than End Date", 400);
     }
-    try {
-      console.log("Hi");
 
-      const batch = new Batch({
-        name: name,
-        startDate: startDate,
-        endDate: endDate,
-      });
-      await batch.save();
-      return res.status(201).json({
-        message: "Batch Saved SuccessFully",
-        data: batch,
-      });
-    } catch (err: any) {
-      console.log(err);
-      if (err.message === "TokenExpiredError") {
-        return next(new AppError("JWT TOKEN EXPIRED", 403));
-      } else {
-        return next(new AppError("Batch Cannot Be Saved", 403));
-      }
-    }
+    const batch = new Batch({
+      name: name,
+      startDate: startDate,
+      endDate: endDate,
+    });
+    await batch.save();
+    sendResponse(res, 201, "Batch Saved SuccessFully");
   }
 
-  public static async registerService(
+  public static async registerInternService(
     res: Response,
     body: any,
     next: NextFunction
@@ -48,19 +35,16 @@ export class AdminService {
     const { username, fullname, email, phoneNo, role, BatchId } = body;
     const existingBatch = await Batch.findOne({ _id: BatchId });
     if (!existingBatch) {
-      return next(new AppError("Fail,Batch Is Not Available", 401));
+      throw new AppError("Fail,Batch Is Not Available", 401);
     }
     if (!validator.isEmail(email)) {
-      return next(
-        new AppError(
-          "The Email you have Provided is not a valid Email, Please Provide A valid Email",
-          400
-        )
+      throw new AppError(
+        "The Email you have Provided is not a valid Email, Please Provide A valid Email",
+        400
       );
     }
     const password = "admin1234";
     const lowercaseRegex = /[a-z]/;
-
     if (lowercaseRegex.test(password) && password.length > 8) {
       console.log("true");
       const subject = "Password Authentication ";
@@ -99,9 +83,8 @@ export class AdminService {
           new: true,
         }
       );
-      return res.status(201).json({
-        data: dbUser,
-      });
+
+      sendResponse(res, 201, "Intern Registed SuccessFully", dbUser);
     }
   }
 
@@ -122,14 +105,12 @@ export class AdminService {
     } = body;
     const existingBatch = await Batch.findOne({ _id: BatchId });
     if (!existingBatch) {
-      return next(new AppError("Batch is not Available", 401));
+      throw new AppError("Batch is not Available", 401);
     }
     if (!validator.isEmail(email)) {
-      return next(
-        new AppError(
-          "The Email you have provided is not valid Email, Please Provide A valid Email",
-          400
-        )
+      throw new AppError(
+        "The Email you have provided is not valid Email, Please Provide A valid Email",
+        400
       );
     }
     const password = "admin1234";
@@ -182,9 +163,7 @@ export class AdminService {
         }
       );
 
-      return res.status(201).json({
-        data: dbUser,
-      });
+      sendResponse(res, 201, "Mentor Assigned SuccessFully", dbUser);
     }
   }
 }

@@ -1,10 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { statusConstants } from "../constants/statusConstants";
 import { JwtService } from "../services/jwtServices/jwt.service";
 import user from "../database/schema/user.schema";
 import AppError from "../utils/errorUtils/appError";
-import App from "../server";
-const { FAIL, ERROR } = statusConstants;
 
 declare global {
   namespace Express {

@@ -1,11 +1,12 @@
 import { Application } from "express";
-
+import { Request, Response, NextFunction } from "express";
 import { statusConstants } from "../constants/statusConstants";
 import userRouter from "./auth.routes";
 import adminRouter from "./admin.routes";
 import leaveManagementRouter from "./leaveManagement.routes";
 const { ERROR, SUCCESS } = statusConstants;
-import { globalErrorHandler } from "../utils/errorUtils/errorHandlers";
+import AppError from "../utils/errorUtils/appError";
+import { errorHandler } from "../middleware/errorHandler";
 
 export const initializeRoutes = (expressApplication: Application) => {
   //landing route
@@ -20,5 +21,13 @@ export const initializeRoutes = (expressApplication: Application) => {
     leaveManagementRouter,
   ]);
 
-  expressApplication.use(globalErrorHandler);
+  interface error extends Error {
+    status?: any;
+    statusCode?: any;
+  }
+  expressApplication.all("*", (req, res, next) => {
+    next(new AppError(`Cannot find ${req.originalUrl}`, 404));
+  });
+
+  expressApplication.use(errorHandler);
 };
