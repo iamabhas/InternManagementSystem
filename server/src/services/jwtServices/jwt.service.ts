@@ -12,11 +12,11 @@ export class JwtService {
     };
 
     const secretKey = envConfig.accessTokenSecret as string;
-    const expiratonTimeInSeconds = 24 * 60 * 60; // 30 minutes in seconds
+    const expirationTimeInSeconds = 24 * 60 * 60; // 1 day in seconds
 
     const options: jwt.SignOptions = {
-      issuer: "Inter Management System",
-      expiresIn: expiratonTimeInSeconds,
+      issuer: "Intern Management System",
+      expiresIn: expirationTimeInSeconds,
     };
 
     try {

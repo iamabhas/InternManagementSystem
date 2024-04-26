@@ -1,11 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import AppError from "./appError";
-interface CustomError extends Error {
-  statusCode?: any;
-  status?: string;
-  path?: any;
-  value?: any;
-}
+import { CustomError } from "../../@types/interface/customError";
 
 const sendErrorDev = (error: CustomError, res: Response) => {
   res.status(error.statusCode).json({

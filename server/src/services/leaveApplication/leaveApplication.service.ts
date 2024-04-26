@@ -31,14 +31,14 @@ export class LeaveApplicationService {
           )
         );
       }
-
-      const leaveApplication = new LeaveApplication({
+      const newLeaveApplication = {
         User: userId,
         subject: subject,
         applicationBody: applicationBody,
         leaveFromDate: leaveFromDate,
         leaveToDate: leaveToDate,
-      });
+      };
+      const leaveApplication = new LeaveApplication(newLeaveApplication);
 
       await leaveApplication.save();
 

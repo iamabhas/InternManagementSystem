@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request } from "express";
 import mongoose from "mongoose";
 export interface IUserData {
   id: string;
