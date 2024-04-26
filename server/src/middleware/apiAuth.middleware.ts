@@ -21,9 +21,12 @@ export const validateToken: functionParan = (
   res: Response,
   next: NextFunction
 ) => {
-  const authToken = req.headers["authorization"];
-  // const authToken =
-  //   req.headers.authorization && req.headers.authorization.split(" ")[1];
+  const { authorization } = req.headers;
+  let authToken = authorization;
+  if (authorization && authorization.startsWith("Bearer ")) {
+    authToken = req.headers.authorization?.split(" ")[1];
+  }
+
   if (!authToken || typeof authToken !== "string") {
     return next(new AppError("Invalid Authorization Token", 401));
   }
