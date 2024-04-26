@@ -1,7 +1,7 @@
 import React from "react";
 import { data01, data02 } from "../../../data/testData";
 import { PieChart, Pie, Legend, Tooltip, Cell } from "recharts";
-import { generateColors } from "../../utils/GenerateColors";
+import { generateColors } from "../../../utils/GenerateColors";
 import { Typography, Box, Divider } from "@mui/material";
 const Admin = () => {
   const colors = generateColors(data01);

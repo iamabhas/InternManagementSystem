@@ -27,6 +27,7 @@ import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { formatDate } from "../../../utils/dateFormatter";
 
 function LinearProgressWithLabel(props) {
   return (
@@ -45,6 +46,22 @@ function LinearProgressWithLabel(props) {
 
 LinearProgressWithLabel.propTypes = {
   value: PropTypes.number.isRequired,
+};
+
+const calculateProgress = (startDate, endDate) => {
+  startDate = new Date(startDate);
+  endDate = new Date(endDate);
+  let today = new Date();
+
+  let quotient = Math.abs(today - startDate);
+  let divider = Math.abs(endDate - startDate);
+  let finalProgress = Math.round((quotient / divider) * 100);
+
+  if (finalProgress >= 100) {
+    return 100;
+  } else {
+    return finalProgress;
+  }
 };
 
 export default function ManageBatch() {
@@ -75,6 +92,7 @@ export default function ManageBatch() {
       [key]: date,
     }));
   };
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -83,8 +101,6 @@ export default function ManageBatch() {
             Authorization: accesstoken,
           },
         });
-        console.log(response.data); // No need for .json(), Axios handles it
-        console.log(response.data.data);
         setData(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -92,8 +108,6 @@ export default function ManageBatch() {
     };
     fetchData();
   }, []);
-
-  console.log(inputs);
 
   const handleSubmit = async () => {
     try {
@@ -106,8 +120,6 @@ export default function ManageBatch() {
           },
         }
       );
-      console.log(response);
-      console.log(response.data); // No need for .json(), Axios handles it
       if (response.data !== null) {
         Swal.fire({
           icon: "success",
@@ -117,7 +129,6 @@ export default function ManageBatch() {
       }
       setData((...prev) => [...prev, response.data]);
     } catch (error) {
-      console.error("Error fetching data:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -197,10 +208,21 @@ export default function ManageBatch() {
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="center">{row.startDate}</TableCell>
-                    <TableCell align="center">{row.endDate}</TableCell>
                     <TableCell align="center">
-                      <LinearProgressWithLabel value={progress} />
+                      {formatDate(row.startDate)}
+                    </TableCell>
+                    <TableCell align="center">
+                      {formatDate(row.endDate)}
+                    </TableCell>
+                    <TableCell align="center">
+                      <LinearProgressWithLabel
+                        color={
+                          calculateProgress(row.startDate, row.endDate) === 100
+                            ? "success"
+                            : "error"
+                        }
+                        value={calculateProgress(row.startDate, row.endDate)}
+                      />
                     </TableCell>
                     <TableCell align="center">
                       <Button>View Detail</Button>
