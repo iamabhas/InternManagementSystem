@@ -1,33 +1,34 @@
 import mongoose from "mongoose";
 import LeaveApplication from "../../database/schema/leaveApplication.schema";
-import { handleFourStatusError } from "../../utils/errorUtils/commonFourResponseError";
-import { Response, Request } from "express";
+import { Response, Request, NextFunction } from "express";
+import AppError from "../../utils/errorUtils/appError";
+import { error } from "console";
 
 export class LeaveApplicationService {
   public static async createLeaveApplication(
     res: Response,
     userId: mongoose.Types.ObjectId | string,
-    subject: string,
-    applicationBody: string,
-    leaveFromDate: Date,
-    leaveToDate: Date
+    body: any,
+    next: NextFunction
   ) {
     try {
+      const { subject, applicationBody, leaveFromDate, leaveToDate } = body;
       const currentDate = new Date();
-      if (leaveFromDate < currentDate) {
-        return handleFourStatusError(
-          res,
-          400,
-          "ERROR",
-          "Start of leave date must be on or after the current date."
+      const leaveDate = new Date(leaveFromDate);
+      if (leaveDate < currentDate) {
+        return next(
+          new AppError(
+            "Start of leave date must be on or after the current date",
+            400
+          )
         );
       }
-      if (leaveFromDate >= leaveToDate) {
-        return handleFourStatusError(
-          res,
-          400,
-          "ERROR",
-          "Start of leave Date must be earlier than End of leave Date."
+      if (leaveDate >= leaveToDate) {
+        return next(
+          new AppError(
+            "Start of leave Date must be  earlier than End of leave Date",
+            400
+          )
         );
       }
 
@@ -46,11 +47,11 @@ export class LeaveApplicationService {
         data: leaveApplication,
       });
     } catch (error: any) {
-      handleFourStatusError(res, 500, "ERROR", error.message);
+      return next(new AppError(error.message, 500));
     }
   }
 
-  public static async getAllApplications(res: Response) {
+  public static async getAllApplications(res: Response, next: NextFunction) {
     try {
       const applications = await LeaveApplication.find({}).populate(
         "User",
@@ -58,7 +59,7 @@ export class LeaveApplicationService {
       );
       res.json(applications);
     } catch (error: any) {
-      return handleFourStatusError(res, 500, "ERROR", error.message);
+      return next(new AppError(error.message, 400));
     }
   }
 }

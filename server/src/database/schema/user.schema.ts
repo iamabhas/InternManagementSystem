@@ -60,8 +60,8 @@ const userSchema = new mongoose.Schema(
       default: true,
     },
     Batch: {
-      type: mongoose.Types.ObjectId,
-      ref: "Batch",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "batch",
     },
   },
   { timestamps: true }

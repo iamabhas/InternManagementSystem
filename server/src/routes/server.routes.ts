@@ -1,5 +1,4 @@
 import { Application } from "express";
-import testRouter from "./test.routes";
 
 import { statusConstants } from "../constants/statusConstants";
 import userRouter from "./auth.routes";
@@ -16,7 +15,6 @@ export const initializeRoutes = (expressApplication: Application) => {
 
   //app routes
   expressApplication.use("/api/", [
-    testRouter,
     userRouter,
     adminRouter,
     leaveManagementRouter,

@@ -1,26 +1,22 @@
 import user from "../../database/schema/user.schema";
 import Batch from "../../database/schema/batch.schema";
-import { Response } from "express";
+import { NextFunction, Response } from "express";
 import validator from "validator";
-import { sendEmail } from "../../utils/smtpServer/smtpEmail";
-import { handleFourStatusError } from "../../utils/errorUtils/commonFourResponseError";
-
+import { sendEmail } from "../../utils/smtpServerUtils/smtpEmail";
+import AppError from "../../utils/errorUtils/appError";
 import mongoose from "mongoose";
 
 export class AdminService {
   public static async createService(
     res: Response,
-    name: string,
-    startDate: Date,
-    endDate: Date
+    body: any,
+    next: NextFunction
   ) {
+    const { name, startDate, endDate } = body;
     console.log(name, startDate, endDate);
     if (startDate > endDate) {
-      return handleFourStatusError(
-        res,
-        400,
-        "ERROR",
-        "Start Date must be Lesser than End Date"
+      return next(
+        new AppError("Start Date Must Be Greater than End Date", 400)
       );
     }
     try {
@@ -39,32 +35,29 @@ export class AdminService {
     } catch (err: any) {
       console.log(err);
       if (err.message === "TokenExpiredError") {
-        return handleFourStatusError(res, 403, "FAIL", "JWT TOKEN EXPIRED");
+        return next(new AppError("JWT TOKEN EXPIRED", 403));
       } else {
-        return handleFourStatusError(res, 401, "FAIL", "Batch Cannot Be Saved");
+        return next(new AppError("Batch Cannot Be Saved", 403));
       }
     }
   }
 
   public static async registerService(
     res: Response,
-    username: string | undefined,
-    fullname: string | undefined,
-    email: string,
-    phoneNo: number,
-    role: string | undefined,
-    BatchId: string | mongoose.Types.ObjectId
+    body: any,
+    next: NextFunction
   ) {
+    const { username, fullname, email, phoneNo, role, BatchId } = body;
     const existingBatch = await Batch.findOne({ _id: BatchId });
     if (!existingBatch) {
-      return handleFourStatusError(res, 401, "FAIL", "Batch is not Available");
+      return next(new AppError("Fail,Batch Is Not Available", 401));
     }
     if (!validator.isEmail(email)) {
-      return handleFourStatusError(
-        res,
-        400,
-        "FAIL",
-        "The Email you have Provided is not a valid Email, Please Provide A valid Email"
+      return next(
+        new AppError(
+          "The Email you have Provided is not a valid Email, Please Provide A valid Email",
+          400
+        )
       );
     }
     const password = "admin1234";
@@ -97,6 +90,17 @@ export class AdminService {
           new: true,
         }
       );
+      await user.updateOne(
+        {
+          _id: dbUser._id,
+        },
+        {
+          $set: { Batch: BatchId },
+        },
+        {
+          new: true,
+        }
+      );
       return res.status(201).json({
         data: dbUser,
       });
@@ -105,25 +109,29 @@ export class AdminService {
 
   public static async registerMentorService(
     res: Response,
-    username: string | undefined,
-    fullname: string | undefined,
-    email: string,
-    phoneNo: number,
-    role: string | undefined,
-    expertise: string[],
-    position: string,
-    BatchId: string | mongoose.Types.ObjectId
+    body: any,
+    next: NextFunction
   ) {
+    const {
+      username,
+      fullname,
+      email,
+      phoneNo,
+      role,
+      expertise,
+      position,
+      BatchId,
+    } = body;
     const existingBatch = await Batch.findOne({ _id: BatchId });
     if (!existingBatch) {
-      return handleFourStatusError(res, 401, "FAIL", "Batch is not Available");
+      return next(new AppError("Batch is not Available", 401));
     }
     if (!validator.isEmail(email)) {
-      return handleFourStatusError(
-        res,
-        400,
-        "FAIL",
-        "The Email you have Provided is not a valid Email, Please Provide A valid Email"
+      return next(
+        new AppError(
+          "The Email you have provided is not valid Email, Please Provide A valid Email",
+          400
+        )
       );
     }
     const password = "admin1234";
@@ -161,6 +169,21 @@ export class AdminService {
           new: true,
         }
       );
+
+      await user.updateOne(
+        {
+          _id: dbUser._id,
+        },
+        {
+          $set: {
+            Batch: BatchId,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+
       return res.status(201).json({
         data: dbUser,
       });
