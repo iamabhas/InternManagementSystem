@@ -26,6 +26,9 @@ import { IoMdAddCircle } from "react-icons/io";
 import { internData } from "../../../data/testData";
 import { registerIntern } from "../../../services/Api";
 import { IoFilter } from "react-icons/io5";
+import axios from "axios";
+import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 
 function LinearProgressWithLabel(props) {
   return (
@@ -47,11 +50,38 @@ LinearProgressWithLabel.propTypes = {
 };
 
 export default function ManageInterns() {
+  const navigate = useNavigate();
+  const dispatch = useNavigate();
+
   const [open, setOpen] = React.useState(false);
-  const [data, setData] = React.useState(internData);
+  const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [progress, setProgress] = React.useState(10);
+  const accesstoken = useSelector((state) => state.auth.token);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/batchintern",
+          {
+            headers: {
+              Authorization: accesstoken,
+            },
+          }
+        );
+        console.log(response);
+        console.log(response.data); // No need for .json(), Axios handles it
+        console.log(response.data.internList);
+
+        setData(response.data.internList);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const [inputs, setInputs] = React.useState({
     username: "",
@@ -60,6 +90,7 @@ export default function ManageInterns() {
     phoneNo: "",
     role: "",
   });
+  console.log(data[1]);
 
   const handleChange = (e) => {
     setInputs((prev) => ({
@@ -107,6 +138,8 @@ export default function ManageInterns() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const nobatch = "Not In A Batch";
 
   return (
     <React.Fragment>
@@ -157,10 +190,10 @@ export default function ManageInterns() {
                     <TableCell component="th" scope="row">
                       {row.fullname}
                     </TableCell>
-                    <TableCell align="center">{row.username}</TableCell>
+                    <TableCell align="center">{row.fullname}</TableCell>
                     <TableCell align="center">{row.phoneNo}</TableCell>
                     <TableCell align="center">{row.email}</TableCell>
-                    <TableCell align="center">{row.batch}</TableCell>
+                    <TableCell align="center">{row.Batch.name}</TableCell>
                   </TableRow>
                 ))}
             </TableBody>

@@ -21,8 +21,8 @@ export const validateToken: functionParan = (
   res: Response,
   next: NextFunction
 ) => {
-  const authToken =
-    req.headers.authorization && req.headers.authorization.split(" ")[1];
+  const authToken = req.headers["authorization"];
+
   console.log(authToken);
   if (!authToken || typeof authToken !== "string") {
     return next(new AppError("Invalid Authorization Token", 401));

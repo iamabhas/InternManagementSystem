@@ -22,7 +22,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import PropTypes from "prop-types";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { IoMdAddCircle } from "react-icons/io";
-import { batchData } from "../../../data/testData";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function LinearProgressWithLabel(props) {
   return (
@@ -44,12 +48,85 @@ LinearProgressWithLabel.propTypes = {
 };
 
 export default function ManageBatch() {
+  const [inputs, setInputs] = React.useState({
+    name: "",
+    startDate: null,
+    endDate: null,
+  });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
-  const [data, setData] = React.useState(batchData);
+  const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [progress, setProgress] = React.useState(10);
+  const accesstoken = useSelector((state) => state.auth.token);
 
+  const handleChange = (e) => {
+    setInputs((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleDateChange = (key, date) => {
+    setInputs((prev) => ({
+      ...prev,
+      [key]: date,
+    }));
+  };
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/batch", {
+          headers: {
+            Authorization: accesstoken,
+          },
+        });
+        console.log(response.data); // No need for .json(), Axios handles it
+        console.log(response.data.data);
+        setData(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  console.log(inputs);
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/batch",
+        inputs,
+        {
+          headers: {
+            Authorization: accesstoken,
+          },
+        }
+      );
+      console.log(response);
+      console.log(response.data); // No need for .json(), Axios handles it
+      if (response.data !== null) {
+        Swal.fire({
+          icon: "success",
+          title: "Registered",
+          text: "Batch Register SuccessFully!",
+        });
+      }
+      setData((...prev) => [...prev, response.data]);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message || "Batch Register Failed!",
+      });
+    }
+  };
+
+  console.log(data);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -114,11 +191,11 @@ export default function ManageBatch() {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => (
                   <TableRow
-                    key={row.id}
+                    key={row._id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {row.batchName}
+                      {row.name}
                     </TableCell>
                     <TableCell align="center">{row.startDate}</TableCell>
                     <TableCell align="center">{row.endDate}</TableCell>
@@ -160,36 +237,51 @@ export default function ManageBatch() {
         }}
         fullWidth
       >
-        <DialogTitle>Add Batch</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="name"
-            name="email"
-            label="Batch Name"
-            type="email"
-            fullWidth
-          />
+        <Box component="form" noValidate onSubmit={handleSubmit}>
+          <DialogTitle>Add Batch</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="name"
+              name="name"
+              onChange={handleChange}
+              value={inputs.name}
+              label="Batch Name"
+              type="email"
+              fullWidth
+            />
 
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker label="Start Date" sx={{ m: 1 }} fullWidth />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Start Date"
+                sx={{ m: 1 }}
+                fullWidth
+                value={inputs.startDate}
+                onChange={(date) => handleDateChange("startDate", date)}
+              />
 
-            <DatePicker label="End Date" sx={{ m: 1 }} />
-          </LocalizationProvider>
-          <Box textAlign="center" sx={{ m: 1 }}>
-            <Button variant="contained" color="secondary">
-              Add Batch
+              <DatePicker
+                label="End Date"
+                sx={{ m: 1 }}
+                value={inputs.endDate}
+                onChange={(date) => handleDateChange("endDate", date)}
+              />
+            </LocalizationProvider>
+            <Box textAlign="center" sx={{ m: 1 }}>
+              <Button type="submit" variant="contained" color="secondary">
+                Add Batch
+              </Button>
+            </Box>
+          </DialogContent>
+
+          <DialogActions>
+            <Button onClick={handleClose} color="error">
+              Cancel
             </Button>
-          </Box>
-        </DialogContent>
-
-        <DialogActions>
-          <Button onClick={handleClose} color="error">
-            Cancel
-          </Button>
-        </DialogActions>
+          </DialogActions>
+        </Box>
       </Dialog>
     </React.Fragment>
   );
