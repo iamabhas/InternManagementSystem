@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import AppError from "./appError";
-import { CustomError } from "../../@types/interface/customError";
+import { ICustomError } from "../../@types/interface/customError";
 
-const sendErrorDev = (error: CustomError, res: Response) => {
+const sendErrorDev = (error: ICustomError, res: Response) => {
   res.status(error.statusCode).json({
     status: error.statusCode,
     message: error.message,
@@ -11,7 +11,7 @@ const sendErrorDev = (error: CustomError, res: Response) => {
 };
 
 export const globalErrorHandler = (
-  error: CustomError,
+  error: ICustomError,
   req: Request,
   res: Response,
   next: NextFunction
