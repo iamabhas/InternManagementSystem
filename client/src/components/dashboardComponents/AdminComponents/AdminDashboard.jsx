@@ -1,9 +1,77 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { data01, data02 } from "../../../data/testData";
+import { PieChart, Pie, Legend, Tooltip, Cell } from "recharts";
+import { generateColors } from "../../utils/GenerateColors";
+import { Typography, Box, Paper } from "@mui/material";
 const Admin = () => {
+  const colors = generateColors(data01);
   return (
     <main>
-      <Typography variant="h6">Admin Dashboard</Typography>
+      <Typography variant="h4">Ongoing Batches</Typography>
+      <Box display="flex" justifyContent="space-around" alignItems="center">
+        <Box>
+          <PieChart width={400} height={240}>
+            <Pie
+              data={data01}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={80}
+              label
+            >
+              {data01.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={colors[index]} />
+              ))}
+            </Pie>
+
+            <Legend
+              align="right"
+              verticalAlign="middle"
+              layout="vertical"
+              iconSize={10}
+            />
+            <Tooltip />
+          </PieChart>
+          <Typography variant="h6">Node JS 2024</Typography>
+        </Box>
+        <Box>
+          <PieChart width={400} height={240}>
+            <Pie
+              data={data02}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={80}
+              label
+            >
+              {data01.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={colors[index]} />
+              ))}
+            </Pie>
+
+            <Legend
+              align="right"
+              verticalAlign="middle"
+              layout="vertical"
+              iconSize={10}
+            />
+            <Tooltip />
+          </PieChart>
+          <Typography variant="h6">QA 2024</Typography>
+        </Box>
+      </Box>
+
+      <Box
+        display="flex"
+        justifyContent="space-around"
+        alignItems="center"
+        sx={{ m: 5 }}
+      >
+        <Typography variant="h5">Incoming Applications</Typography>
+        <Typography variant="h5">Current Interns on leave</Typography>
+      </Box>
     </main>
   );
 };
