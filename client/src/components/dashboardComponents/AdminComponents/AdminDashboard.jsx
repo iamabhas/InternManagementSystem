@@ -2,12 +2,12 @@ import React from "react";
 import { data01, data02 } from "../../../data/testData";
 import { PieChart, Pie, Legend, Tooltip, Cell } from "recharts";
 import { generateColors } from "../../utils/GenerateColors";
-import { Typography, Box, Paper } from "@mui/material";
+import { Typography, Box, Divider } from "@mui/material";
 const Admin = () => {
   const colors = generateColors(data01);
   return (
     <main>
-      <Typography variant="h4">Ongoing Batches</Typography>
+      <Typography variant="h5">Ongoing Batches</Typography>
       <Box display="flex" justifyContent="space-around" alignItems="center">
         <Box>
           <PieChart width={400} height={240}>
@@ -33,7 +33,7 @@ const Admin = () => {
             />
             <Tooltip />
           </PieChart>
-          <Typography variant="h6">Node JS 2024</Typography>
+          <Typography variant="h7">Node JS 2024</Typography>
         </Box>
         <Box>
           <PieChart width={400} height={240}>
@@ -59,18 +59,17 @@ const Admin = () => {
             />
             <Tooltip />
           </PieChart>
-          <Typography variant="h6">QA 2024</Typography>
+          <Typography variant="h7">QA 2024</Typography>
         </Box>
       </Box>
-
-      <Box
-        display="flex"
-        justifyContent="space-around"
-        alignItems="center"
-        sx={{ m: 5 }}
-      >
-        <Typography variant="h5">Incoming Applications</Typography>
-        <Typography variant="h5">Current Interns on leave</Typography>
+      <Divider sx={{ m: 3 }} />
+      <Box display="flex" justifyContent="space-around" alignItems="center">
+        <Box>
+          <Typography variant="h5">Incoming Applications</Typography>
+        </Box>
+        <Box>
+          <Typography variant="h5">Current Interns on leave</Typography>
+        </Box>
       </Box>
     </main>
   );
