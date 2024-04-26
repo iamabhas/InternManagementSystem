@@ -31,10 +31,10 @@ export class JwtService {
     }
   }
 
-  public static async verifyAccessToken(accesstoken: string) {
+  public static async verifyAccessToken(accessToken: string) {
     return new Promise((resolve, reject) => {
       jwt.verify(
-        accesstoken,
+        accessToken,
         envConfig.accessTokenSecret as string,
         (err, payload) => {
           if (err) {
