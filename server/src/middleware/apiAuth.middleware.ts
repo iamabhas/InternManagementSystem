@@ -21,7 +21,9 @@ export const validateToken: functionParan = (
   res: Response,
   next: NextFunction
 ) => {
-  const authToken = req.headers["authorization"];
+  //const authToken = req.headers["authorization"];
+  const authToken =
+    req.headers.authorization && req.headers.authorization.split(" ")[1];
 
   console.log(authToken);
   if (!authToken || typeof authToken !== "string") {

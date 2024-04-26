@@ -30,6 +30,10 @@ const leaveApplicationSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: "user",
   },
+  Batch: {
+    type: mongoose.Types.ObjectId,
+    ref: "batch",
+  },
 });
 
 const LeaveApplication = mongoose.model(

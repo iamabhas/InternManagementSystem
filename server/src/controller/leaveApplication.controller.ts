@@ -28,7 +28,9 @@ export class leaveApplicationController {
     next: NextFunction
   ) {
     try {
-      await LeaveApplicationService.getAllApplications(res, next);
+      const id = req.user.user_id;
+
+      await LeaveApplicationService.getAllApplications(res, id, next);
     } catch (error: any) {
       res.status(500).json({
         message: error.message,

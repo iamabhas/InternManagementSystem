@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import LeaveApplication from "../../database/schema/leaveApplication.schema";
-import { Response, Request, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import AppError from "../../utils/errorUtils/appError";
-import { error } from "console";
+
+import user from "../../database/schema/user.schema";
 
 export class LeaveApplicationService {
   public static async createLeaveApplication(
@@ -12,6 +13,9 @@ export class LeaveApplicationService {
     next: NextFunction
   ) {
     try {
+      const existUser = await user
+        .findOne({ _id: userId })
+        .populate({ path: "Batch", select: "name" });
       const { subject, applicationBody, leaveFromDate, leaveToDate } = body;
       const currentDate = new Date();
       const leaveDate = new Date(leaveFromDate);
@@ -33,6 +37,7 @@ export class LeaveApplicationService {
       }
       const newLeaveApplication = {
         User: userId,
+        Batch: existUser?.Batch,
         subject: subject,
         applicationBody: applicationBody,
         leaveFromDate: leaveFromDate,
@@ -51,17 +56,20 @@ export class LeaveApplicationService {
     }
   }
 
-  public static async getAllApplications(res: Response, next: NextFunction) {
+  public static async getAllApplications(
+    res: Response,
+    userId: mongoose.Types.ObjectId | string,
+    next: NextFunction
+  ) {
     try {
       const applications = await LeaveApplication.find({}).populate({
-        path: "User",
-        select: "username Batch",
-        populate: {
-          path: "Batch",
-          select: "name",
-        },
+        path: "Batch",
+        select: "name",
       });
-      res.json(applications);
+
+      res.json({
+        application: applications,
+      });
     } catch (error: any) {
       return next(new AppError(error.message, 400));
     }
