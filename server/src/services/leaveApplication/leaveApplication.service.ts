@@ -53,10 +53,14 @@ export class LeaveApplicationService {
 
   public static async getAllApplications(res: Response, next: NextFunction) {
     try {
-      const applications = await LeaveApplication.find({}).populate(
-        "User",
-        "username"
-      );
+      const applications = await LeaveApplication.find({}).populate({
+        path: "User",
+        select: "username Batch",
+        populate: {
+          path: "Batch",
+          select: "name",
+        },
+      });
       res.json(applications);
     } catch (error: any) {
       return next(new AppError(error.message, 400));
