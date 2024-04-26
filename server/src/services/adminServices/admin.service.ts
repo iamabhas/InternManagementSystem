@@ -15,9 +15,7 @@ export class AdminService {
     const { name, startDate, endDate } = body;
     console.log(name, startDate, endDate);
     if (startDate > endDate) {
-      return next(
-        new AppError("Start Date Must Be Greater than End Date", 400)
-      );
+      throw new AppError("Start Date Must Be Greater than End Date", 400);
     }
     try {
       console.log("Hi");

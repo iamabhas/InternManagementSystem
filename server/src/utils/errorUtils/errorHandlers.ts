@@ -1,8 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import AppError from "./appError";
-import { ICustomError } from "../../@types/interface/customError";
+interface CustomError extends Error {
+  statusCode?: any;
+  status?: string;
+  path?: any;
+  value?: any;
+  isOperational: true;
+}
 
-const sendErrorDev = (error: ICustomError, res: Response) => {
+const handleCastErrorDB = (error: CustomError) => {
+  const message = `Invalid.`;
+  return new AppError(message, 400);
+};
+const sendErrorDev = (error: CustomError, res: Response) => {
   res.status(error.statusCode).json({
     status: error.statusCode,
     message: error.message,
@@ -10,14 +20,45 @@ const sendErrorDev = (error: ICustomError, res: Response) => {
   });
 };
 
+const sendErrorProd = (error: CustomError, res: Response) => {
+  if (error.isOperational) {
+    res.status(error.statusCode).json({
+      status: error.statusCode,
+      message: error.message,
+    });
+  } else {
+    res.status(500).json({
+      status: "error",
+      message: "something went very wrong",
+    });
+  }
+};
+
 export const globalErrorHandler = (
-  error: ICustomError,
+  err: CustomError,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  error.statusCode = error.statusCode || 500;
-  error.status = error.status || "error";
+  err.statusCode = err.statusCode || 500;
+  err.status = err.status || "error";
+  switch (process.env.NODE_ENV) {
+    case "development":
+      sendErrorDev(err, res);
+      break;
+    case "production":
+      if (err.name === "JsonWebTokenError") {
+        {
+          return res.status(500).json({
+            status: "fail",
+          });
+        }
+      }
+      sendErrorProd(err, res);
 
-  sendErrorDev(error, res);
+      break;
+    default:
+      // Handle other environments (if needed)
+      sendErrorProd(err, res);
+  }
 };
