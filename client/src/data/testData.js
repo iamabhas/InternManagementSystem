@@ -121,3 +121,26 @@ export const internData = [
     batch: "Node JS 2024",
   },
 ];
+
+//pie chart data
+export const data01 = [
+  {
+    name: "Interns",
+    value: 10,
+  },
+  {
+    name: "Mentors",
+    value: 2,
+  },
+];
+
+export const data02 = [
+  {
+    name: "Interns",
+    value: 11,
+  },
+  {
+    name: "Mentors",
+    value: 3,
+  },
+];
