@@ -1,4 +1,4 @@
-import { IUserRequestBody } from "../@types/interface/requestBody";
+// import { IUserRequestBody } from "../@types/interface/requestBody";
 import { NextFunction, Request, Response } from "express";
 import { loginService } from "../services/authService/login.service";
 

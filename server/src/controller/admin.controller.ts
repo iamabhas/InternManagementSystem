@@ -48,7 +48,7 @@ class adminController {
     } catch (err: any) {
       console.log(err);
       return res.status(500).json({
-        message: "Failed To Register Intern",
+        message: "Failed To Register Mentors",
         error: err.message,
       });
     }
