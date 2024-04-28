@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { LeaveApplicationService } from "../services/leaveApplication/leaveApplication.service";
-
+import mongoose from "mongoose";
 export class leaveApplicationController {
   public static async createLeaveApplicationController(
     req: Request,
@@ -16,10 +16,8 @@ export class leaveApplicationController {
         body,
         next
       );
-    } catch (error: any) {
-      return res.status(500).json({
-        message: error.message,
-      });
+    } catch (err: any) {
+      next(err);
     }
   }
   public static async getApplications(
@@ -31,10 +29,22 @@ export class leaveApplicationController {
       const id = req.user.user_id;
 
       await LeaveApplicationService.getAllApplications(res, id, next);
-    } catch (error: any) {
-      res.status(500).json({
-        message: error.message,
-      });
+    } catch (err: any) {
+      next(err);
+    }
+  }
+
+  public static async verifiedLeave(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      console.log(req.params.id);
+      const id: string | mongoose.Types.ObjectId = req.params.id;
+      await LeaveApplicationService.verifiedLeaveService(res, id);
+    } catch (err: any | unknown) {
+      next(err);
     }
   }
 }

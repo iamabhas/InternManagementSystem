@@ -46,14 +46,14 @@ export const validateToken: functionParan = (
   } catch (error: any) {
     switch (error.name) {
       case "JsonWebTokenError": {
-        return next(new AppError("Invalid Token, Please Log In", 401));
+        return next(new AppError(error.message, 401));
       }
 
       case "TokenExpiredError": {
-        return next(new AppError("Token Has Been Expired", 401));
+        return next(new AppError(error.message, 401));
       }
       default:
-        return next(new AppError("INTERNAL SERVER ERROR", 500));
+        return next(new AppError(error.message, 500));
     }
   }
 };

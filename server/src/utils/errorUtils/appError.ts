@@ -1,8 +1,9 @@
 import { statusConstants } from "../../constants/statusConstants";
 const { FAIL, ERROR, SUCCESS } = statusConstants;
+
 class AppError extends Error {
-  private readonly statusCode: number;
-  private readonly status: string;
+  statusCode: any;
+  status: string;
   constructor(message: any, statusCode: any) {
     super(message);
     this.statusCode = statusCode;
