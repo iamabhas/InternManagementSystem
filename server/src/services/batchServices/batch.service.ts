@@ -129,6 +129,43 @@ export class BatchService {
     }
   }
 
+  public static async deleteBatchByIdService(
+    res: Response,
+    id: string | undefined | mongoose.Types.ObjectId
+  ) {
+    try {
+      const existingBatch = await Batch.find({ _id: id }).countDocuments();
+      if (existingBatch === 0 || existingBatch < 0) {
+        return res.status(400).json({
+          error: "ERROR",
+          status: 400,
+          message: "Batch with The Given Id is not available",
+        });
+      }
+
+      const existBatch = await Batch.findOneAndDelete({ _id: id })
+        .populate({
+          path: "interns",
+          select: "-_id fullname",
+        })
+        .populate({
+          path: "mentor",
+          select: "-_id fullname expertise position",
+        });
+
+      return res.status(200).json({
+        error: "OK",
+        status: 201,
+        message: "Batch Deleted SuccessFully",
+        data: existBatch,
+      });
+    } catch (err: any | unknown) {
+      return res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
+
   public static async getAllInternService(res: Response) {
     try {
       const internList = await user

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import envConfig from "../../config/env.config";
-import { IPayload } from "../../@types/interface/customRequest";
+import { IPayload } from "../../@types/interface/CustomRequest";
 import { JwtPayload } from "jsonwebtoken";
 export class JwtService {
   public static async generateAccessToken(object: any | {}): Promise<any> {

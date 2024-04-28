@@ -48,6 +48,14 @@ adminRouter.get(
   BatchController.getBatchByIdController
 );
 
+adminRouter.delete(
+  "/batch/:id",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  BatchController.deleteBatchByIdController
+);
+
 adminRouter.get(
   "/batchintern",
   validateToken,
