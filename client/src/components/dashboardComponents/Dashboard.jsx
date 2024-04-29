@@ -32,12 +32,15 @@ import {logoutReducer} from "../../redux/authSlice";
 import UserProfile from "./UserProfile";
 import InternDashboard from "./InternComponents/InternDashboard";
 import AdminDashboard from "./AdminComponents/AdminDashboard";
+import MentorDashboard from "./MentorComponents/MentorDashboard";
 import ManageInterns from "./AdminComponents/ManageInterns";
 import ManageMentors from "./AdminComponents/ManageMentors";
 import BatchDetails from "./AdminComponents/BatchDetails.jsx";
 import ErrorPage from "../../pages/ErrorPage";
 import ManageBatch from "./AdminComponents/ManageBatch";
+import ManageLeaves from "./AdminComponents/ManageLeaves.jsx";
 import {mainListItems} from "./listItems";
+
 
 function Copyright(props) {
     return (
@@ -153,6 +156,8 @@ export default function Dashboard() {
                 return <InternDashboard/>;
             case "AdminDashboard":
                 return <AdminDashboard/>;
+            case "MentorDashboard":
+                return <MentorDashboard/>
             case "ManageBatches":
                 return <ManageBatch selectComponentState={setSelectedComponent}/>;
             case "ManageInterns":
@@ -163,6 +168,8 @@ export default function Dashboard() {
                 return <UserProfile/>;
             case "BatchDetails":
                 return <BatchDetails selectComponentState={setSelectedComponent}/>
+            case "ManageLeaves":
+                return <ManageLeaves/>
             default:
                 return <ErrorPage/>;
         }
