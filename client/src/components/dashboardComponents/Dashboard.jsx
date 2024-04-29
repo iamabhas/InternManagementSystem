@@ -23,6 +23,7 @@ import InternDashboard from "./InternComponents/InternDashboard";
 import AdminDashboard from "./AdminComponents/AdminDashboard";
 import ManageInterns from "./AdminComponents/ManageInterns";
 import ManageMentors from "./AdminComponents/ManageMentors";
+import BatchDetails from "./AdminComponents/BatchDetails.jsx";
 import ErrorPage from "../../pages/ErrorPage";
 import ManageBatch from "./AdminComponents/ManageBatch";
 import { useNavigate } from "react-router-dom";
@@ -142,13 +143,15 @@ export default function Dashboard() {
       case "AdminDashboard":
         return <AdminDashboard />;
       case "ManageBatches":
-        return <ManageBatch />;
+        return <ManageBatch selectComponentState={setSelectedComponent}/>;
       case "ManageInterns":
         return <ManageInterns />;
       case "ManageMentors":
         return <ManageMentors />;
       case "Profile":
         return <UserProfile />;
+      case "BatchDetails":
+        return <BatchDetails selectComponentState={setSelectedComponent}/>
       default:
         return <ErrorPage />;
     }
