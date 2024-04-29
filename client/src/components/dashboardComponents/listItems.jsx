@@ -2,10 +2,13 @@ import * as React from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+
+//icons imports
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import {FaUser} from "react-icons/fa6";
 import {LiaChalkboardTeacherSolid} from "react-icons/lia";
 import {HiOutlineUserGroup} from "react-icons/hi";
+import {HiDocumentCheck} from "react-icons/hi2";
 
 export const mainListItems = (role, setSelectedComponent) => {
     switch (role) {
@@ -65,6 +68,13 @@ export const mainListItems = (role, setSelectedComponent) => {
                             <LiaChalkboardTeacherSolid style={{fontSize: "1.5rem"}}/>
                         </ListItemIcon>
                         <ListItemText primary="Manage Mentors"/>
+                    </ListItemButton>
+
+                    <ListItemButton onClick={() => setSelectedComponent("ManageLeaves")}>
+                        <ListItemIcon>
+                            <HiDocumentCheck style={{fontSize: "1.5rem"}}/>
+                        </ListItemIcon>
+                        <ListItemText primary="Manage Leaves"/>
                     </ListItemButton>
                 </React.Fragment>
             );
