@@ -23,7 +23,6 @@ import {
 import PropTypes from "prop-types";
 import Swal from "sweetalert2";
 import { IoMdAddCircle } from "react-icons/io";
-import { internData } from "../../../data/testData";
 import { registerIntern } from "../../../services/Api";
 import { IoFilter } from "react-icons/io5";
 import axios from "axios";
@@ -50,14 +49,10 @@ LinearProgressWithLabel.propTypes = {
 };
 
 export default function ManageInterns() {
-  const navigate = useNavigate();
-  const dispatch = useNavigate();
-
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [progress, setProgress] = React.useState(10);
   const accesstoken = useSelector((state) => state.auth.token);
 
   React.useEffect(() => {
@@ -71,13 +66,10 @@ export default function ManageInterns() {
             },
           }
         );
-        console.log(response);
-        console.log(response.data); // No need for .json(), Axios handles it
-        console.log(response.data.internList);
 
-        setData(response.data.internList);
+        setData(response.data.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error.message);
       }
     };
     fetchData();
@@ -90,7 +82,6 @@ export default function ManageInterns() {
     phoneNo: "",
     role: "",
   });
-  console.log(data[1]);
 
   const handleChange = (e) => {
     setInputs((prev) => ({
@@ -101,11 +92,8 @@ export default function ManageInterns() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(inputs);
     try {
-      console.log(inputs);
       const userData = await registerIntern(inputs);
-      console.log(userData);
       if (userData !== null) {
         Swal.fire({
           icon: "success",
@@ -128,6 +116,13 @@ export default function ManageInterns() {
 
   const handleClose = () => {
     setOpen(false);
+    setInputs({
+      username: "",
+      fullname: "",
+      email: "",
+      phoneNo: "",
+      role: "",
+    });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -220,7 +215,6 @@ export default function ManageInterns() {
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
             const email = formJson.email;
-            console.log(email);
             handleClose();
           },
         }}
