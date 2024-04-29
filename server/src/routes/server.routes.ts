@@ -2,7 +2,7 @@ import { Application } from "express";
 import testRouter from "./test.routes";
 
 import { statusConstants } from "../constants/statusConstants";
-import userRouter from "./auth.routes";
+import userRouter from "./user.routes";
 import adminRouter from "./admin.routes";
 const { ERROR, SUCCESS } = statusConstants;
 import { globalErrorHandler } from "../utils/Errors/errorHandlers";
@@ -14,7 +14,8 @@ export const initializeRoutes = (expressApplication: Application) => {
   });
 
   //app routes
-  expressApplication.use("/api/", [testRouter, userRouter, adminRouter]);
+  expressApplication.use("/api/", [testRouter,adminRouter]);
+  expressApplication.use("/api/",userRouter)
 
   expressApplication.use(globalErrorHandler);
 };

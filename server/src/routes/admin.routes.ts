@@ -1,12 +1,12 @@
 import e, { Router } from "express";
 import express from 'express' ;
 import { createBatch } from "../controller/admin.controller";
-import { getUserById } from "../controller/admin.controller";
 import { roleConstants } from "../constants/roleConstants";
 import { BatchController } from "../controller/batch.controller";
 import { validateToken } from "../middleware/apiAuth.middleware";
 import { validateRole } from "../middleware/checkRole.middleware";
 import { restrictRole } from "../middleware/RestrictRoles";
+import userRouter from "./auth.routes";
 
 
 const { USER, ADMIN, MENTOR } = roleConstants;
@@ -69,7 +69,5 @@ adminRouter.post(
 // );
 
 
-const router = express.Router ();
-router.get('/users/:id' , getUserById);
 
-export default { router , adminRouter } ;
+export default adminRouter ;

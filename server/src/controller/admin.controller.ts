@@ -4,7 +4,6 @@ import {
   createBatchServices,
   getBatchService,
   getBatchByIdService,
-  getUserByIdService
 } from "../services/admin.service";
 import { handleFourStatusError } from "../utils/Errors/CommonFourResponseError";
 import { functionReq } from "../@types/interface/CustomRequest";
@@ -42,23 +41,6 @@ export const getBatchById = async (
   } catch (error) {
     console.error('Error in getBatchById controller:', error);
     return res.status(500).json({ error: 'Internal server error' });
-  }
-};
-
-
-export const getUserById = async (
-  req: Request,
-  res: Response
-) => {
-  const id = req.user.user_id ;
-  try {
-    const result = await getUserByIdService (res, id);
-    return result ;
-  } catch (error) {
-    console.log('Error in getUserById controller :' , error);
-    return res.status(500).json ({
-      error : 'Internal server error'
-    });
   }
 };
 
