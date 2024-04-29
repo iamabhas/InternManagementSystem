@@ -14,6 +14,10 @@ import {
 } from "@mui/material";
 import {useSelector} from "react-redux";
 
+//icons import
+import {FaArrowLeft} from "react-icons/fa6";
+import {RiFileExcel2Fill} from "react-icons/ri";
+
 const BatchDetails = ({selectComponentState}) => {
 
     const batchId = useSelector((state) => state.batchSelect.batchId);
@@ -29,6 +33,7 @@ const BatchDetails = ({selectComponentState}) => {
                         selectComponentState("ManageBatches");
                     }}
                     variant="outlined"
+                    startIcon={<FaArrowLeft/>}
                 >
                     Back
                 </Button>
@@ -58,6 +63,9 @@ const BatchDetails = ({selectComponentState}) => {
                                 })}
                             </TableBody>
                         </Table>
+                        <Button variant="contained" color="success" startIcon={<RiFileExcel2Fill/>} sx={{m: 2}}>Import
+                            interns data
+                            ( .xlsx )</Button>
                     </TableContainer>
 
                     <TableContainer component={Paper} sx={{m: 1}}>
