@@ -65,11 +65,19 @@ adminRouter.get(
 );
 
 adminRouter.get(
-  "/batch/mentors",
+  "/batchmentor",
   validateToken,
   validateRole,
   restrictRole(USER, MENTOR),
   BatchController.getAllMentors
+);
+
+adminRouter.get(
+  "/dashboard",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  BatchController.getAllDashBoard
 );
 
 export default adminRouter;
