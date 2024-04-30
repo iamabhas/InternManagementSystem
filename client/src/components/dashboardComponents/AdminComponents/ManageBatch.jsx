@@ -102,8 +102,11 @@ export default function ManageBatch() {
         inputs,
         {
           headers: {
-            Authorization: accesstoken,
+            Authorization: `Bearer ${accesstoken}`,
           },
+        },
+        {
+          Credential: true,
         }
       );
       console.log(response);
