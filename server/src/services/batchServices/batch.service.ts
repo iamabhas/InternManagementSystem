@@ -259,4 +259,58 @@ export class BatchService {
 
     return sendResponse(res, 201, "Mentors", mentorList);
   }
+
+  public static async getAllCompletedBatchService(res: Response) {
+    const batchList = await Batch.find({})
+      .populate({
+        path: "interns",
+        select: " -_id fullname role ",
+      })
+      .populate({
+        path: "mentor",
+        select: " -_id fullname expertise position",
+      });
+
+    if (!batchList) {
+      throw new AppError("Batch Cannot be Fetched", 401);
+    }
+    let data: Array<any> = [];
+    batchList.forEach((batch) => {
+      if (batch.get("startDate") === batch.get("endDate")) {
+        data.push(batch);
+      }
+    });
+    if (data.length === 0) {
+      throw new AppError("There Is No Batch That Are Completed", 400);
+    }
+
+    return sendResponse(res, 201, "Completed Batch", data);
+  }
+
+  public static async getAllOngoingBatchService(res: Response) {
+    const batchList = await Batch.find({})
+      .populate({
+        path: "interns",
+        select: " -_id fullname role ",
+      })
+      .populate({
+        path: "mentor",
+        select: " -_id fullname expertise position",
+      });
+
+    if (!batchList) {
+      throw new AppError("Batch Cannot be Fetched", 401);
+    }
+    let data: Array<any> = [];
+    batchList.forEach((batch) => {
+      if (batch.get("startDate") < batch.get("endDate")) {
+        data.push(batch);
+      }
+    });
+    if (data.length === 0) {
+      throw new AppError("There Is No Batch That Are Ongoing", 400);
+    }
+
+    return sendResponse(res, 201, "Ongoing Batch", data);
+  }
 }
