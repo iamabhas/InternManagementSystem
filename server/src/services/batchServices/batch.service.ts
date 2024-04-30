@@ -85,14 +85,19 @@ export class BatchService {
       },
     ]);
 
-    const newObject = {
-      ListOfInterns,
-      ListOfMentors,
-    };
+    let data: Array<any> = [];
+
+    batchList.forEach((batch) => {
+      data.push({
+        Batchname: batch.name,
+        Interns: batch.interns.length,
+        Mentors: batch.mentor.length,
+      });
+    });
 
     return res.status(201).json({
       message: "Batch List",
-      newObject,
+      data,
     });
   }
 
