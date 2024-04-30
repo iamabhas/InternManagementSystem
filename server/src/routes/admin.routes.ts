@@ -80,4 +80,20 @@ adminRouter.get(
   BatchController.getAllDashBoard
 );
 
+adminRouter.get(
+  "/batchcomplete",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  BatchController.getALLCompletedBatch
+);
+
+adminRouter.get(
+  "/batchongoing",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  BatchController.getAllOngoingBatch
+);
+
 export default adminRouter;
