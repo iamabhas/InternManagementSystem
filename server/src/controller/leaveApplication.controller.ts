@@ -61,6 +61,20 @@ export class leaveApplicationController {
       next(err);
     }
   }
+
+  public static async rejectLeave(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      console.log(req.params.id);
+      const id: string | mongoose.Types.ObjectId = req.params.id;
+      await LeaveApplicationService.rejectLeaveService(res, id);
+    } catch (err: any | unknown) {
+      next(err);
+    }
+  }
 }
 
 export default leaveApplicationController;
