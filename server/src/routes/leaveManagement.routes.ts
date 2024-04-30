@@ -26,11 +26,19 @@ leaveManagementRouter.get(
 );
 
 leaveManagementRouter.patch(
-  "/verify/:id",
+  "/verify-leave-application/:id",
   validateToken,
   validateRole,
   restrictRole(USER, MENTOR),
   leaveApplicationController.verifiedLeave
+);
+
+leaveManagementRouter.patch(
+  "/reject-leave-application/:id",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  leaveApplicationController.rejectLeave
 );
 
 leaveManagementRouter.get(
