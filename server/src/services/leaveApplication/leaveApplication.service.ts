@@ -57,10 +57,12 @@ export class LeaveApplicationService {
     userId: mongoose.Types.ObjectId | string,
     next: NextFunction
   ) {
-    const applications = await LeaveApplication.find({}).populate({
-      path: "Batch",
-      select: "name",
-    });
+    const applications = await LeaveApplication.find({})
+      .populate({
+        path: "Batch",
+        select: " -_id name",
+      })
+      .populate({ path: "User", select: "-_id fullname" });
     if (!applications) {
       throw new AppError("Leave Application Cannot Be Fetched", 403);
     }
@@ -75,6 +77,9 @@ export class LeaveApplicationService {
     const checkLeave = await LeaveApplication.findOne({ _id: id });
     if (!checkLeave) {
       throw new AppError("Leave Is Expired or Does not Exists", 400);
+    }
+    if (checkLeave.get("approveStatus") === true) {
+      throw new AppError("Leave Is Already Approved", 400);
     }
     await LeaveApplication.updateOne(
       {
@@ -131,7 +136,40 @@ export class LeaveApplicationService {
       </body>
       </html>`
     );
-    res.contentType("application/pdf");
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=leave_application.pdf"
+    );
+
     res.send(pdf);
+  }
+
+  public static async rejectLeaveService(
+    res: Response,
+    id: string | undefined
+  ) {
+    const checkLeave = await LeaveApplication.findOne({ _id: id });
+    if (!checkLeave) {
+      throw new AppError("Leave Is Expired or Does not Exists", 400);
+    }
+    if (checkLeave.approveStatus === false || !checkLeave.approveStatus) {
+      throw new AppError("Leave is Already Rejected", 400);
+    }
+    await LeaveApplication.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          approveStatus: false,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    return sendResponse(res, 200, "Leave Is Rejected SuccessFully");
   }
 }
