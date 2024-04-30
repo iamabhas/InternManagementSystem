@@ -64,4 +64,12 @@ adminRouter.get(
   BatchController.getInternById
 );
 
+adminRouter.get(
+  "/batch/mentors",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  BatchController.getAllMentors
+);
+
 export default adminRouter;

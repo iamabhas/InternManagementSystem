@@ -47,6 +47,20 @@ export class leaveApplicationController {
       next(err);
     }
   }
+
+  public static async DowloadLeave(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const id: string | undefined = req.params.id;
+      const adminId = req.user.user_id;
+      await LeaveApplicationService.DowloadLeaveService(res, id, adminId);
+    } catch (err: any | unknown) {
+      next(err);
+    }
+  }
 }
 
 export default leaveApplicationController;

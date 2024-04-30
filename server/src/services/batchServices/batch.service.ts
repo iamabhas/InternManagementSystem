@@ -153,4 +153,12 @@ export class BatchService {
       );
     }
   }
+
+  public static async getAllMentorService(res: Response) {
+    const Allmentor = await user.findOne({ role: "mentor" });
+    if (Allmentor?.get("role") === null || undefined) {
+      throw new AppError("Mentor Arent Available", 400);
+    }
+    return sendResponse(res, 201, "Mentors", Allmentor);
+  }
 }

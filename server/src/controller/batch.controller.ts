@@ -51,4 +51,15 @@ export class BatchController {
       next(err);
     }
   }
+  public static async getAllMentors(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      await BatchService.getAllMentorService(res);
+    } catch (err: any | unknown) {
+      next(err);
+    }
+  }
 }

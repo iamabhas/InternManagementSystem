@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 import LeaveApplication from "../../database/schema/leaveApplication.schema";
 import { Response, NextFunction, application } from "express";
 import AppError from "../../utils/errorUtils/appError";
-
 import user from "../../database/schema/user.schema";
 import { sendResponse } from "../../helpers/customResponse";
-import { send } from "process";
-
+import PDF from "../../utils/pdfUtils/pdf";
+import { roleConstants } from "../../constants/roleConstants";
+const { ADMIN } = roleConstants;
 export class LeaveApplicationService {
   public static async createLeaveApplication(
     res: Response,
@@ -91,5 +91,47 @@ export class LeaveApplicationService {
     );
 
     return sendResponse(res, 200, "Leave Is Verified SuccessFully");
+  }
+
+  public static async DowloadLeaveService(
+    res: Response,
+    id: string | undefined,
+    adminId: string | undefined
+  ) {
+    const existAdmin = await user.findOne({ _id: adminId });
+    const check = existAdmin?.get("role") === ADMIN ? true : false;
+
+    if (!check) {
+      throw new AppError(
+        "Admin Are Only Allowed To View Or Dowload Leave Applications",
+        401
+      );
+    }
+
+    const existLeave = await LeaveApplication.findOne({ _id: id });
+    if (!existLeave) {
+      throw new AppError("Leave Is Already Removed Or It Does Not Exists", 401);
+    }
+
+    const sendDate = existLeave.get("sendDate");
+    const leaveFromDate = existLeave.get("leaveFromDate");
+    const leaveToDate = existLeave.get("leaveToDate");
+    const subject = existLeave.get("subject");
+    const applicationBody = existLeave.get("applicationBody");
+
+    //sample Testing For Now
+    const pdf = await PDF.htmlToPdf(
+      `<html>
+      <body>
+      <h1>${subject}</h1>
+      <h2>${applicationBody}</h2>
+      <p><span>Leave Date </span>${leaveFromDate} </p>
+      <p><span>Leave To  Date </span>${leaveToDate} </p>
+      <h1>Leave Send At: ${sendDate}</h1>
+      </body>
+      </html>`
+    );
+    res.contentType("application/pdf");
+    res.send(pdf);
   }
 }

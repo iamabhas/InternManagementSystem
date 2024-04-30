@@ -47,6 +47,9 @@ const userSchema = new mongoose.Schema(
       max: 50,
       required: [true, fieldCannotBeEmpty("password")],
     },
+    image: {
+      type: String,
+    },
     expertise: {
       type: [String],
     },

@@ -32,4 +32,13 @@ leaveManagementRouter.patch(
   restrictRole(USER, MENTOR),
   leaveApplicationController.verifiedLeave
 );
+
+leaveManagementRouter.get(
+  "/dowload/:id",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  leaveApplicationController.DowloadLeave
+);
+
 export default leaveManagementRouter;

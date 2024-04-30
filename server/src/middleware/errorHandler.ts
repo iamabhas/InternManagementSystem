@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../@types/interface/customRequest";
+import { statusConstants } from "../constants/statusConstants";
+import { HTTPStatusCode } from "../constants/statusCodeConstant";
+import { HttpStatusCode } from "axios";
+const { ERROR } = statusConstants;
+const { InternalServerError } = HttpStatusCode;
 export const errorHandler = (
   err: CustomError,
   req: Request,
@@ -7,8 +12,8 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   console.log(err.message, err.name);
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || "error";
+  err.statusCode = err.statusCode || InternalServerError;
+  err.status = err.status || ERROR;
 
   return res.status(403).json({
     statuscode: err.statusCode,
