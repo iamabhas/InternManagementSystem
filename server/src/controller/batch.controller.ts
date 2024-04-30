@@ -8,7 +8,7 @@ export class BatchController {
     next: NextFunction
   ) {
     try {
-      await BatchService.getAllBatchServices(req, res);
+      await BatchService.getAllBatchServices(res);
     } catch (err: any) {
       next(err);
     }
@@ -58,6 +58,18 @@ export class BatchController {
   ) {
     try {
       await BatchService.getAllMentorService(res);
+    } catch (err: any | unknown) {
+      next(err);
+    }
+  }
+
+  public static async getAllDashBoard(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      await BatchService.getAllBatchServicesForDashBoard(res);
     } catch (err: any | unknown) {
       next(err);
     }
