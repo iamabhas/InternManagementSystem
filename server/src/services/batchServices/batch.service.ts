@@ -62,6 +62,7 @@ export class BatchService {
       {
         $project: {
           _id: 0,
+          name: 1,
           numberOfInterns: 1,
         },
       },
@@ -78,17 +79,20 @@ export class BatchService {
       {
         $project: {
           _id: 0,
+          name: 1,
           numberOfMentor: 1,
         },
       },
     ]);
 
+    const newObject = {
+      ListOfInterns,
+      ListOfMentors,
+    };
+
     return res.status(201).json({
       message: "Batch List",
-      data: batchList,
-      AverageInternInBatch: computeInternSize,
-      InternList: ListOfInterns,
-      MentorList: ListOfMentors,
+      newObject,
     });
   }
 

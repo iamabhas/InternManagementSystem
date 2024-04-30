@@ -3,7 +3,7 @@ import { fieldCannotBeEmpty } from "../../utils/schemaUtils/userSchemaMessage";
 import { roleConstants } from "../../constants/roleConstants";
 import { positionConstants } from "../../constants/roleConstants";
 
-const { SOFTWARE_ENGINEER, SCRUM_MASTER, Quality_Assurance } =
+const { SOFTWARE_ENGINEER, SCRUM_MASTER, QUALITY_ASSURANCE } =
   positionConstants;
 const { ADMIN, SUPER_ADMIN, MENTOR, USER } = roleConstants;
 
@@ -47,16 +47,13 @@ const userSchema = new mongoose.Schema(
       max: 50,
       required: [true, fieldCannotBeEmpty("password")],
     },
-    image: {
-      type: String,
-    },
     expertise: {
       type: [String],
     },
 
     position: {
       type: String,
-      enum: [SOFTWARE_ENGINEER, SCRUM_MASTER, Quality_Assurance],
+      enum: [SOFTWARE_ENGINEER, SCRUM_MASTER, QUALITY_ASSURANCE],
     },
     status: {
       type: Boolean,

@@ -1,12 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../@types/interface/customRequest";
-import { statusConstants } from "../constants/statusConstants";
-import { HTTPStatusCode } from "../constants/statusCodeConstant";
-import { HttpStatusCode } from "axios";
-const { ERROR } = statusConstants;
-const { InternalServerError } = HttpStatusCode;
 export const errorHandler = (
-  err: CustomError,
+  err: ICustomError,
   req: Request,
   res: Response,
   next: NextFunction

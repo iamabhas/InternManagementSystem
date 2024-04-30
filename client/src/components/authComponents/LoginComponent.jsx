@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { LockOutlined as LockOutlinedIcon } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import BackToHome from "../utils/BackToHome";
+import BackToHome from "../../utils/BackToHome";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { loginFunction } from "../../services/Api";

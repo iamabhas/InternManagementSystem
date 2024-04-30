@@ -1,4 +1,7 @@
 import * as React from "react";
+import PropTypes from "prop-types";
+
+//mui imports
 import {
   Button,
   TextField,
@@ -18,15 +21,23 @@ import {
   TablePagination,
   LinearProgress,
 } from "@mui/material";
+
+//date imports
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import PropTypes from "prop-types";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { formatDate } from "../../../utils/dateFormatter";
+
+//icons imports
 import { IoMdAddCircle } from "react-icons/io";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
+
+//package imports
 import axios from "axios";
 import Swal from "sweetalert2";
+
+//redux imports
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { setBatch } from "../../../redux/batchSelectSlice.js";
 
 function LinearProgressWithLabel(props) {
   return (
@@ -47,20 +58,34 @@ LinearProgressWithLabel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-export default function ManageBatch() {
+const calculateProgress = (startDate, endDate) => {
+  startDate = new Date(startDate);
+  endDate = new Date(endDate);
+  let today = new Date();
+
+  let quotient = Math.abs(today - startDate);
+  let divider = Math.abs(endDate - startDate);
+  let finalProgress = Math.round((quotient / divider) * 100);
+
+  if (finalProgress >= 100) {
+    return 100;
+  } else {
+    return finalProgress;
+  }
+};
+
+export default function ManageBatch({ selectComponentState }) {
   const [inputs, setInputs] = React.useState({
     name: "",
     startDate: null,
     endDate: null,
   });
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [progress, setProgress] = React.useState(10);
   const accesstoken = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setInputs((prev) => ({
@@ -75,6 +100,7 @@ export default function ManageBatch() {
       [key]: date,
     }));
   };
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -83,17 +109,14 @@ export default function ManageBatch() {
             Authorization: accesstoken,
           },
         });
-        console.log(response.data); // No need for .json(), Axios handles it
-        console.log(response.data.data);
         setData(response.data.data);
+        console.log(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
   }, []);
-
-  console.log(inputs);
 
   const handleSubmit = async () => {
     try {
@@ -102,11 +125,8 @@ export default function ManageBatch() {
         inputs,
         {
           headers: {
-            Authorization: `Bearer ${accesstoken}`,
+            Authorization: accesstoken,
           },
-        },
-        {
-          Credential: true,
         }
       );
       console.log(response);
@@ -129,7 +149,6 @@ export default function ManageBatch() {
     }
   };
 
-  console.log(data);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -178,14 +197,14 @@ export default function ManageBatch() {
 
       <Box textAlign="center" sx={{ m: 5 }}>
         <TableContainer component={Paper}>
-          <Table aria-label="simple table">
+          <TableContainer aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Batch Name</TableCell>
                 <TableCell align="center">Start Date</TableCell>
                 <TableCell align="center">End Date</TableCell>
                 <TableCell align="center">Progress</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableCell align="center">Details</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -200,13 +219,32 @@ export default function ManageBatch() {
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="center">{row.startDate}</TableCell>
-                    <TableCell align="center">{row.endDate}</TableCell>
                     <TableCell align="center">
-                      <LinearProgressWithLabel value={progress} />
+                      {formatDate(row.startDate)}
                     </TableCell>
                     <TableCell align="center">
-                      <Button>View Detail</Button>
+                      {formatDate(row.endDate)}
+                    </TableCell>
+                    <TableCell align="center">
+                      <LinearProgressWithLabel
+                        color={
+                          calculateProgress(row.startDate, row.endDate) === 100
+                            ? "success"
+                            : "error"
+                        }
+                        value={calculateProgress(row.startDate, row.endDate)}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        onClick={() => {
+                          dispatch(setBatch(row));
+
+                          selectComponentState("BatchDetails");
+                        }}
+                      >
+                        View
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -234,7 +272,6 @@ export default function ManageBatch() {
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
             const email = formJson.email;
-            console.log(email);
             handleClose();
           },
         }}
