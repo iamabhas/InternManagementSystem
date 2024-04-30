@@ -4,10 +4,9 @@ import { Request, Response } from "express";
 import user from "../../database/schema/user.schema";
 import AppError from "../../utils/errorUtils/appError";
 import { sendResponse } from "../../helpers/customResponse";
-import App from "../../server";
 
 export class BatchService {
-  public static async getAllBatchServices(req: Request, res: Response) {
+  public static async getAllBatchServicesForDashBoard(res: Response) {
     const batchList = await Batch.find({})
       .populate({
         path: "interns",
@@ -101,6 +100,90 @@ export class BatchService {
     });
   }
 
+  public static async getAllBatchServices(res: Response) {
+    const batchList = await Batch.find({})
+      .populate({
+        path: "interns",
+        select: " -_id fullname role ",
+      })
+      .populate({
+        path: "mentor",
+        select: " -_id fullname expertise position",
+      });
+
+    if (!batchList) {
+      throw new AppError("Batch Cannot be Fetched", 401);
+    }
+    const computeInternSize = await Batch.aggregate([
+      {
+        $unwind: {
+          path: "$interns",
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          numberOfInterns: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          averageNumberOfInterns: {
+            $avg: "$numberOfInterns",
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          averageNumberOfInterns: 1,
+        },
+      },
+    ]);
+
+    const ListOfInterns = await Batch.aggregate([
+      {
+        $addFields: {
+          numberOfInterns: {
+            $size: "$interns",
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          numberOfInterns: 1,
+        },
+      },
+    ]);
+
+    const ListOfMentors = await Batch.aggregate([
+      {
+        $addFields: {
+          numberOfMentor: {
+            $size: "$mentor",
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          numberOfMentor: 1,
+        },
+      },
+    ]);
+
+    return res.status(201).json({
+      message: "Batch List",
+      data: batchList,
+      AverageInternInBatch: computeInternSize,
+      InternList: ListOfInterns,
+      MentorList: ListOfMentors,
+    });
+  }
   public static async getBatchByIdService(
     res: Response,
     id: string | undefined | mongoose.Types.ObjectId
@@ -164,10 +247,16 @@ export class BatchService {
   }
 
   public static async getAllMentorService(res: Response) {
-    const Allmentor = await user.findOne({ role: "mentor" });
-    if (Allmentor?.get("role") === null || undefined) {
-      throw new AppError("Mentor Arent Available", 400);
-    }
-    return sendResponse(res, 201, "Mentors", Allmentor);
+    const mentorList = await user
+      .find({ role: "mentor" })
+      .populate({ path: "Batch", select: "-_id name" });
+
+    mentorList.forEach((mentor) => {
+      if (mentor.role !== "mentor") {
+        throw new AppError("Mentor Is Not Available", 401);
+      }
+    });
+
+    return sendResponse(res, 201, "Mentors", mentorList);
   }
 }
