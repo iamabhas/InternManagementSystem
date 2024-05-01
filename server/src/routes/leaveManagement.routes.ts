@@ -26,10 +26,42 @@ leaveManagementRouter.get(
 );
 
 leaveManagementRouter.patch(
-  "/verify/:id",
+  "/verify-leave-application/:id",
   validateToken,
   validateRole,
   restrictRole(USER, MENTOR),
   leaveApplicationController.verifiedLeave
+);
+
+leaveManagementRouter.patch(
+  "/reject-leave-application/:id",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  leaveApplicationController.rejectLeave
+);
+
+leaveManagementRouter.get(
+  "/dowload/:id",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  leaveApplicationController.DowloadLeave
+);
+
+leaveManagementRouter.get(
+  "/current",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  leaveApplicationController.viewCurrentLeave
+);
+
+leaveManagementRouter.get(
+  "/incoming",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  leaveApplicationController.IncomingApplication
 );
 export default leaveManagementRouter;

@@ -1,5 +1,5 @@
-import { Response, NextFunction } from "express";
-import user from "../../database/schema/user.schema";
+import { Request, Response, NextFunction } from "express";
+import user, { IUser } from "../../database/schema/user.schema";
 import AppError from "../../utils/errorUtils/appError";
 
 export class UserService {

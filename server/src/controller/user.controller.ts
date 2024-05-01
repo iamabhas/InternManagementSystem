@@ -6,6 +6,7 @@ export class UserController {
   public static async getUser(req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.user.user_id;
+
       console.log(id);
       await UserService.getUserService(res, id, next);
     } catch (err: any | unknown) {

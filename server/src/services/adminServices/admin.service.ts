@@ -5,6 +5,7 @@ import validator from "validator";
 import { sendEmail } from "../../utils/smtpServerUtils/smtpEmail";
 import AppError from "../../utils/errorUtils/appError";
 import { sendResponse } from "../../helpers/customResponse";
+import LeaveApplication from "../../database/schema/leaveApplication.schema";
 
 export class AdminService {
   public static async createBatchService(
@@ -166,4 +167,6 @@ export class AdminService {
       sendResponse(res, 201, "Mentor Assigned SuccessFully", dbUser);
     }
   }
+
+ 
 }

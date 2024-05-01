@@ -8,11 +8,6 @@ import { validateRole } from "../middleware/checkRole.middleware";
 const userRouter: Router = Router();
 
 userRouter.post("/login", loginController.login);
-
 userRouter.get("/profile", validateToken, validateRole, UserController.getUser);
-userRouter.get("/testing", (_req: Request, res: Response) => {
-  return res.json({
-    message: "Testing Controller",
-  });
-});
+
 export default userRouter;

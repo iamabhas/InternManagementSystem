@@ -28,3 +28,8 @@ export type functionReq = (
   res: Response,
   next: NextFunction
 ) => void;
+
+export type TdefaultOptions = {
+  format: string;
+  printBackground: boolean;
+};

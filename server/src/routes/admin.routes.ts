@@ -39,6 +39,13 @@ adminRouter.get(
   restrictRole(USER, MENTOR),
   BatchController.getBatchController
 );
+adminRouter.get(
+  "/batchdash",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  BatchController.getBatchControllerPieChart
+);
 
 adminRouter.get(
   "/batch/:id",
@@ -62,6 +69,38 @@ adminRouter.get(
   validateRole,
   restrictRole(USER, MENTOR),
   BatchController.getInternById
+);
+
+adminRouter.get(
+  "/batchmentor",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  BatchController.getAllMentors
+);
+
+adminRouter.get(
+  "/dashboard",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  BatchController.getAllDashBoard
+);
+
+adminRouter.get(
+  "/batchcomplete",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  BatchController.getALLCompletedBatch
+);
+
+adminRouter.get(
+  "/batchongoing",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  BatchController.getAllOngoingBatch
 );
 
 export default adminRouter;

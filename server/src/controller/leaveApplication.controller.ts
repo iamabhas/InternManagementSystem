@@ -47,6 +47,58 @@ export class leaveApplicationController {
       next(err);
     }
   }
+
+  public static async DowloadLeave(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const id: string | undefined = req.params.id;
+      const adminId = req.user.user_id;
+      await LeaveApplicationService.DowloadLeaveService(res, id, adminId);
+    } catch (err: any | unknown) {
+      next(err);
+    }
+  }
+
+  public static async rejectLeave(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      console.log(req.params.id);
+      const id: string | mongoose.Types.ObjectId = req.params.id;
+      await LeaveApplicationService.rejectLeaveService(res, id);
+    } catch (err: any | unknown) {
+      next(err);
+    }
+  }
+
+  public static async viewCurrentLeave(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      await LeaveApplicationService.viewCurrentLeaveService(res);
+    } catch (err: any | unknown) {
+      next(err);
+    }
+  }
+
+  public static async IncomingApplication(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      await LeaveApplicationService.IncomingApplicationService(res);
+    } catch (err: any | unknown) {
+      next(err);
+    }
+  }
 }
 
 export default leaveApplicationController;
