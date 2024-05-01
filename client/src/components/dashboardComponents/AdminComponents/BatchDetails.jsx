@@ -17,13 +17,73 @@ import {useSelector} from "react-redux";
 //icons import
 import {FaArrowLeft} from "react-icons/fa6";
 import {RiFileExcel2Fill} from "react-icons/ri";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const BatchDetails = ({selectComponentState}) => {
 
     const batchId = useSelector((state) => state.batchSelect.batchId);
     const batchName = useSelector((state) => state.batchSelect.batchName);
-    const batchInterns = useSelector((state) => state.batchSelect.batchInterns);
     const batchMentors = useSelector((state) => state.batchSelect.batchMentors);
+
+    const accessToken = useSelector((state) => state.auth.token);
+    const [internsData, setInternsData] = React.useState([])
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:5000/api/get-qualifications-batch/${batchId}`,
+                    {
+                        headers: {
+                            Authorization: accessToken,
+                        },
+                    }
+                );
+
+                setInternsData(response.data.data);
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: error.message || "Error",
+                });
+            }
+        };
+        fetchData();
+    }, []);
+
+    const handleExcelDownload = async () => {
+        try {
+
+            const response = await axios.get(
+                `http://localhost:5000/api/excel-batchData-download/${batchId}`,
+                {
+                    headers: {
+                        Authorization: accessToken,
+                    },
+                    responseType: "blob",
+                }
+            );
+
+            const blob = new Blob([response.data]);
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `batch_${batchId}.xlsx`;
+            document.body.appendChild(link);
+            link.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(link);
+
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: error.message || "DownloadFailed!",
+            });
+        }
+    };
 
     return (
         <>
@@ -50,20 +110,39 @@ const BatchDetails = ({selectComponentState}) => {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell align="center"></TableCell>
+                                    <TableCell align="center">Name</TableCell>
+                                    <TableCell align="center">University Name</TableCell>
+                                    <TableCell align="center">Graduation Year</TableCell>
+                                    <TableCell align="center">Graduation Month</TableCell>
+                                    <TableCell align="center">Skills</TableCell>
                                 </TableRow>
                             </TableHead>
-                            <TableBody>
-                                {batchInterns.map((interns, index) => {
-                                    return (
-                                        <TableCell key={index} align="center">
-                                            {interns.fullname}
+
+                            {internsData.map((interns) => {
+                                return (
+                                    <TableBody key={interns._id}>
+                                        <TableCell align="center">
+                                            {interns.Intern.username}
                                         </TableCell>
-                                    );
-                                })}
-                            </TableBody>
+                                        <TableCell align="center">
+                                            {interns.universityName}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {interns.graduationYear}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {interns.graduationMonth}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {interns.skills}
+                                        </TableCell>
+                                    </TableBody>
+                                );
+                            })}
+
                         </Table>
-                        <Button variant="contained" color="success" startIcon={<RiFileExcel2Fill/>} sx={{m: 2}}>Import
+                        <Button variant="contained" color="success" startIcon={<RiFileExcel2Fill/>} sx={{m: 2}}
+                                onClick={handleExcelDownload}>Import
                             interns data
                             ( .xlsx )</Button>
                     </TableContainer>

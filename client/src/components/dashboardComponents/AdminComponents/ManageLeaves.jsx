@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 import { VscFilePdf, VscPass, VscRemove } from "react-icons/vsc";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { formatDate } from "../../../utils/dateFormatter.jsx";
 
 const ManageLeaves = () => {
   const [leaveApplications, setLeaveApplications] = useState([]);
@@ -106,7 +107,7 @@ const ManageLeaves = () => {
       Swal.fire({
         icon: "error",
         title: "Verification Error",
-        text: error.message.data || "Cannot Reject Pending ",
+        text: error.message.data || "Already Rejected",
       });
     }
   };
@@ -163,30 +164,31 @@ const ManageLeaves = () => {
           style={{ marginBottom: "20px" }}
         >
           <CardContent>
-            <Typography variant="h4" component="div">
-              {application.subject}
+            <Typography variant="h5" component="div">
+              Subject: {application.subject}
             </Typography>
+            <Typography variant="body1" component="div">
+              Date: {formatDate(new Date(application.sendDate))}
+            </Typography>
+
             <Typography variant="body1" color="text.secondary">
-              Leave Application From :{" "}
+              From :{" "}
               {application.User?.fullname
                 ? application.User.fullname
                 : "No User"}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              {application.applicationBody}
+              Batch:{" "}
+              {application.Batch?.name ? application.Batch.name : "No Batch"}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              From: {new Date(application.leaveFromDate).toLocaleDateString()} -
-              To: {new Date(application.leaveToDate).toLocaleDateString()}
+              Requested Leave from :{" "}
+              {formatDate(new Date(application.leaveFromDate))} - To:{" "}
+              {formatDate(new Date(application.leaveToDate))}
             </Typography>
             <Typography variant="body1" color="text.secondary">
               Status: {application.approveStatus ? "Approved" : "Pending"}
             </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Batch:{" "}
-              {application.Batch?.name ? application.Batch.name : "No Batch"}
-            </Typography>
-            {/* Add more details as needed */}
             <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
               <Button
                 sx={{ marginTop: "10px" }}

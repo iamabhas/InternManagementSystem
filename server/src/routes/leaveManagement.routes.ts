@@ -13,7 +13,7 @@ leaveManagementRouter.post(
   "/send-leave-application",
   validateToken,
   validateRole,
-  restrictRole(MENTOR),
+  restrictRole(MENTOR, ADMIN),
   leaveApplicationController.createLeaveApplicationController
 );
 
