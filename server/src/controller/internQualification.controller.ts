@@ -40,7 +40,7 @@ export class internQualificationController {
             const workbook = await InternQualificationService.downloadBatchData(batchId);
 
             res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            res.setHeader('Content-Disposition', `attachment; filename=\`batch_${batchId}.xlsx\``);
+            res.setHeader('Content-Disposition', `attachment; filename="batchData.xlsx"`);
 
             await workbook.xlsx.write(res);
             res.end();
