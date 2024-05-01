@@ -55,10 +55,29 @@ export class InternQualificationService {
         }
         sendResponse(
             res,
-            200,
-            "Intern Qualifications fetched successfully",
+            201,
+            "Intern Qualifications fetched successfully !",
             internQualifications
         );
+    }
+
+    public static async getInternQualificationByBatch(
+        res: Response,
+        batchId: mongoose.Types.ObjectId | string,
+        next: NextFunction
+    ) {
+        const interQualifications = await InternQualification.find({Batch: batchId}).populate({
+            path: "Intern",
+            select: "-_id username"
+        });
+
+        if (!interQualifications) {
+            return next(
+                new AppError("Batch does not exist", 404)
+            )
+        }
+
+        sendResponse(res, 201, "Intern Qualifications according to Batch fetched successfully !", interQualifications)
     }
 
     public static async downloadBatchData(
