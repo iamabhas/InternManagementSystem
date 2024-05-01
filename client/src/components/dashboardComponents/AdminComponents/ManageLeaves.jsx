@@ -183,7 +183,7 @@ const ManageLeaves = () => {
 
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
-                            Leave from : {formatDate(new Date(application.leaveFromDate))} -
+                            Requested Leave from : {formatDate(new Date(application.leaveFromDate))} -
                             To: {formatDate(new Date(application.leaveToDate))}
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
