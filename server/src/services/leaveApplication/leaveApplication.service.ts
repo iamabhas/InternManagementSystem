@@ -6,7 +6,9 @@ import user from "../../database/schema/user.schema";
 import { sendResponse } from "../../helpers/customResponse";
 import PDF from "../../utils/pdfUtils/pdf";
 import { roleConstants } from "../../constants/roleConstants";
+
 const { ADMIN } = roleConstants;
+
 export class LeaveApplicationService {
   public static async createLeaveApplication(
     res: Response,
@@ -113,7 +115,13 @@ export class LeaveApplicationService {
       );
     }
 
-    const existLeave = await LeaveApplication.findOne({ _id: id });
+    const existLeave = await LeaveApplication.findOne({ _id: id }).populate({
+      path: "User",
+      select: "-_id username",
+    });
+    console.log(existLeave);
+    const { username }: any = existLeave?.get("User");
+
     if (!existLeave) {
       throw new AppError("Leave Is Already Removed Or It Does Not Exists", 401);
     }
@@ -128,7 +136,7 @@ export class LeaveApplicationService {
     const pdf = await PDF.htmlToPdf(
       `<html>
       <body>
-      <h1>${subject}</h1>
+      <h1>${subject} ${username}</h1>
       <h2>${applicationBody}</h2>
       <p><span>Leave Date </span>${leaveFromDate} </p>
       <p><span>Leave To  Date </span>${leaveToDate} </p>
@@ -172,6 +180,7 @@ export class LeaveApplicationService {
 
     return sendResponse(res, 200, "Leave Is Rejected SuccessFully");
   }
+
   public static async viewCurrentLeaveService(res: Response) {
     const allLeave = await LeaveApplication.find({})
       .select(

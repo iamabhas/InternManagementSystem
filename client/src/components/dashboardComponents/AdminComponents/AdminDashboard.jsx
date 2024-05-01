@@ -150,6 +150,7 @@ const Admin = () => {
             </Typography>
             <List sx={{ maxHeight: 300, overflowY: "auto" }}>
               {incomingApplications.map((application, index) => (
+           
                 <ListItem
                   key={index}
                   alignItems="flex-start"

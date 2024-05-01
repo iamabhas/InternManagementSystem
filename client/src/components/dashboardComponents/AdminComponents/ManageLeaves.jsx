@@ -106,7 +106,7 @@ const ManageLeaves = () => {
       Swal.fire({
         icon: "error",
         title: "Verification Error",
-        text: error.message.data || "Already Rejected",
+        text: error.message.data || "Cannot Reject Pending ",
       });
     }
   };

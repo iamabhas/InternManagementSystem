@@ -116,7 +116,7 @@ export default function ManageBatch({ selectComponentState }) {
       }
     };
     fetchData();
-  }, []);
+  }, [accesstoken]);
 
   const handleOngoing = () => {
     const fetchData = async () => {
@@ -167,7 +167,8 @@ export default function ManageBatch({ selectComponentState }) {
     fetchData();
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.post(
         "http://localhost:5000/api/batch",
