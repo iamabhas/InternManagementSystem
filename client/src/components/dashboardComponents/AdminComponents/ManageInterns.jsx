@@ -58,7 +58,7 @@ export default function ManageInterns() {
       }
     };
     fetchData();
-  }, []);
+  }, [setData]);
 
   const [inputs, setInputs] = React.useState({
     username: "",
@@ -71,7 +71,6 @@ export default function ManageInterns() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(inputs);
     try {
       const response = await axios.post(
         "http://localhost:5000/api/batch/intern",
@@ -94,6 +93,7 @@ export default function ManageInterns() {
           icon: "success",
         });
 
+        // Update the data state with the new intern
         setData((prevData) => [...prevData, inputs]);
 
         handleClose();
@@ -120,6 +120,7 @@ export default function ManageInterns() {
       email: "",
       phoneNo: "",
       role: "intern",
+      BatchId: "",
     });
   };
 
@@ -196,7 +197,7 @@ export default function ManageInterns() {
                 <TableCell align="center">User Name</TableCell>
                 <TableCell align="center">Phone No</TableCell>
                 <TableCell align="center">Email</TableCell>
-                <TableCell align="center"></TableCell>
+                <TableCell align="center">Batch</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

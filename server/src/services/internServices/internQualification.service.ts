@@ -91,4 +91,27 @@ export class InternQualificationService {
 
     return workbook;
   }
+  public static async getInternQualificationByBatch(
+    res: Response,
+    batchId: mongoose.Types.ObjectId | string,
+    next: NextFunction
+  ) {
+    const interQualifications = await InternQualification.find({
+      Batch: batchId,
+    }).populate({
+      path: "Intern",
+      select: "-_id username",
+    });
+
+    if (!interQualifications) {
+      return next(new AppError("Batch does not exist", 404));
+    }
+
+    sendResponse(
+      res,
+      201,
+      "Intern Qualifications according to Batch fetched successfully !",
+      interQualifications
+    );
+  }
 }
