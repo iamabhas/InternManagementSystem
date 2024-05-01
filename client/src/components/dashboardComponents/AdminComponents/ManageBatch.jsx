@@ -118,6 +118,55 @@ export default function ManageBatch({ selectComponentState }) {
     fetchData();
   }, []);
 
+  const handleOngoing = () => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/batchongoing",
+          {
+            headers: {
+              Authorization: accesstoken,
+            },
+          }
+        );
+        Swal.fire({
+          icon: "success",
+          title: "Completed Batch",
+          text: "Ongoing Batches",
+        });
+        setData(response.data.data);
+        console.log(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  };
+  const handleComplete = () => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/batchcomplete",
+          {
+            headers: {
+              Authorization: accesstoken,
+            },
+          }
+        );
+
+        setData(response.data.data);
+        console.log(response.data.data);
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Batch Error",
+          text: error.message.data || "None Of The Batch Are Completed",
+        });
+      }
+    };
+    fetchData();
+  };
+
   const handleSubmit = async () => {
     try {
       const response = await axios.post(
@@ -129,22 +178,27 @@ export default function ManageBatch({ selectComponentState }) {
           },
         }
       );
-      console.log(response);
-      console.log(response.data); // No need for .json(), Axios handles it
-      if (response.data !== null) {
-        Swal.fire({
-          icon: "success",
-          title: "Registered",
-          text: "Batch Register SuccessFully!",
-        });
-      }
-      setData((...prev) => [...prev, response.data]);
+      console.log(response.data);
+
+      setData((prevData) => [...prevData, response.data]);
+
+      setInputs({
+        name: "",
+        startDate: null,
+        endDate: null,
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Registered",
+        text: "Batch Registered Successfully!",
+      });
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error adding batch:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.message || "Batch Register Failed!",
+        text: error.message || "Failed to register batch!",
       });
     }
   };
@@ -187,17 +241,27 @@ export default function ManageBatch({ selectComponentState }) {
         <Button variant="outlined" color="warning" sx={{ m: 1 }}>
           All Batches
         </Button>
-        <Button variant="outlined" color="warning" sx={{ m: 1 }}>
+        <Button
+          variant="outlined"
+          color="warning"
+          sx={{ m: 1 }}
+          onClick={handleOngoing}
+        >
           Ongoing Batches
         </Button>
-        <Button variant="outlined" color="warning" sx={{ m: 1 }}>
+        <Button
+          variant="outlined"
+          color="warning"
+          sx={{ m: 1 }}
+          onClick={handleComplete}
+        >
           Completed Batches
         </Button>
       </Box>
 
       <Box textAlign="center" sx={{ m: 5 }}>
         <TableContainer component={Paper}>
-          <TableContainer aria-label="simple table">
+          <Table aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Batch Name</TableCell>
@@ -310,7 +374,12 @@ export default function ManageBatch({ selectComponentState }) {
               />
             </LocalizationProvider>
             <Box textAlign="center" sx={{ m: 1 }}>
-              <Button type="submit" variant="contained" color="secondary">
+              <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                onClick={async () => await handleSubmit()}
+              >
                 Add Batch
               </Button>
             </Box>

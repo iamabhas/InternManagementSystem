@@ -75,6 +75,30 @@ export class leaveApplicationController {
       next(err);
     }
   }
+
+  public static async viewCurrentLeave(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      await LeaveApplicationService.viewCurrentLeaveService(res);
+    } catch (err: any | unknown) {
+      next(err);
+    }
+  }
+
+  public static async IncomingApplication(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      await LeaveApplicationService.IncomingApplicationService(res);
+    } catch (err: any | unknown) {
+      next(err);
+    }
+  }
 }
 
 export default leaveApplicationController;

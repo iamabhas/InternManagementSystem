@@ -49,4 +49,19 @@ leaveManagementRouter.get(
   leaveApplicationController.DowloadLeave
 );
 
+leaveManagementRouter.get(
+  "/current",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  leaveApplicationController.viewCurrentLeave
+);
+
+leaveManagementRouter.get(
+  "/incoming",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  leaveApplicationController.IncomingApplication
+);
 export default leaveManagementRouter;

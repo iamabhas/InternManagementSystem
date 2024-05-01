@@ -172,4 +172,49 @@ export class LeaveApplicationService {
 
     return sendResponse(res, 200, "Leave Is Rejected SuccessFully");
   }
+  public static async viewCurrentLeaveService(res: Response) {
+    const allLeave = await LeaveApplication.find({})
+      .select(
+        "-_id  -subject -applicationBody -leaveToDate -leaveFromDate -sendDate "
+      )
+      .populate({
+        path: "User",
+        select: "-_id fullname role email phoneNo",
+      })
+      .populate({
+        path: "Batch",
+        select: "-_id name",
+      });
+    let data: Array<any> = [];
+    allLeave.forEach((leave) => {
+      if (leave.get("approveStatus") && leave.get("approveStatus") === true) {
+        data.push(leave);
+      }
+    });
+    if (data.length === 0 || typeof data !== "object") {
+      throw new AppError("There are no Intern on Current Leave", 401);
+    }
+    return sendResponse(res, 201, "Current Leave", data);
+  }
+
+  public static async IncomingApplicationService(res: Response) {
+    const existLeave = await LeaveApplication.find({})
+      .select("-_id   -applicationBody  -sendDate  ")
+      .populate({
+        path: "User",
+        select: "-_id fullname ",
+      })
+      .populate({
+        path: "Batch",
+        select: "-_id name",
+      });
+
+    let resData: Array<any> | any[] = [];
+    existLeave.forEach((data) => {
+      if (data.get("approveStatus") === false || !data.get("approveStatus")) {
+        resData.push(data);
+      }
+    });
+    return sendResponse(res, 201, "Incoming Application", resData);
+  }
 }

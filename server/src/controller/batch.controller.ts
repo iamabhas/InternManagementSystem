@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { BatchService } from "../services/batchServices/batch.service";
 import mongoose from "mongoose";
+import { AdminService } from "../services/adminServices/admin.service";
 export class BatchController {
   public static async getBatchController(
     req: Request,
@@ -9,6 +10,18 @@ export class BatchController {
   ) {
     try {
       await BatchService.getAllBatchServices(res);
+    } catch (err: any) {
+      next(err);
+    }
+  }
+
+  public static async getBatchControllerPieChart(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      await BatchService.getAllBatchServicesForDashBoard(res);
     } catch (err: any) {
       next(err);
     }

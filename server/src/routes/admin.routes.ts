@@ -39,6 +39,13 @@ adminRouter.get(
   restrictRole(USER, MENTOR),
   BatchController.getBatchController
 );
+adminRouter.get(
+  "/batchdash",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  BatchController.getBatchControllerPieChart
+);
 
 adminRouter.get(
   "/batch/:id",
