@@ -66,7 +66,7 @@ export class InternQualificationService {
     ) {
         const qualifications = await InternQualification.find({
             Batch: batchId,
-        }).populate("Intern", "username");
+        }).populate("Intern", "-_id username");
 
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Batch Qualifications");
@@ -80,8 +80,9 @@ export class InternQualificationService {
         ];
 
         qualifications.forEach((q) => {
+            const {username}: any = q.Intern
             worksheet.addRow({
-                name: q.Intern,
+                name: username,
                 universityName: q.universityName,
                 graduationYear: q.graduationYear,
                 graduationMonth: q.graduationMonth,
