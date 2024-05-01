@@ -231,7 +231,6 @@ const ManageLeaves = () => {
           </CardContent>
         </Card>
       ))}
-      {/* Button to download as PDF */}
     </div>
   );
 };

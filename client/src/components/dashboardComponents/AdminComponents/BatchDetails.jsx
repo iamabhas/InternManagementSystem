@@ -24,6 +24,7 @@ const BatchDetails = ({selectComponentState}) => {
 
     const batchId = useSelector((state) => state.batchSelect.batchId);
     const batchName = useSelector((state) => state.batchSelect.batchName);
+    const batchInterns = useSelector((state) => state.batchSelect.batchInterns);
     const batchMentors = useSelector((state) => state.batchSelect.batchMentors);
 
     const accessToken = useSelector((state) => state.auth.token);
@@ -103,73 +104,102 @@ const BatchDetails = ({selectComponentState}) => {
                 </Typography>
                 <Divider/>
                 <Box className="flex-component-space" sx={{m: 2}}>
-                    <TableContainer component={Paper} sx={{m: 1}}>
-                        <Typography textAlign="center" variant="h5">
-                            Interns
-                        </Typography>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="center">Name</TableCell>
-                                    <TableCell align="center">University Name</TableCell>
-                                    <TableCell align="center">Graduation Year</TableCell>
-                                    <TableCell align="center">Graduation Month</TableCell>
-                                    <TableCell align="center">Skills</TableCell>
-                                </TableRow>
-                            </TableHead>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            borderRadius: 2,
+                            bgcolor: 'background.paper',
+                            color: 'text.secondary',
+                            '& svg': {
+                                m: 1,
+                            }, p: 1
+                        }}
+                    >
+                        <Typography variant="h6">Interns:</Typography>
 
-                            {internsData.map((interns) => {
-                                return (
-                                    <TableBody key={interns._id}>
-                                        <TableCell align="center">
-                                            {interns.Intern.username}
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            {interns.universityName}
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            {interns.graduationYear}
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            {interns.graduationMonth}
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            {interns.skills}
-                                        </TableCell>
-                                    </TableBody>
-                                );
-                            })}
+                        {batchInterns.map((interns, index) => {
+                            return (
+                                <Box key={index} sx={{m: 1}}>
+                                    {interns.fullname},
+                                </Box>
+                            );
+                        })}
 
-                        </Table>
-                        <Button variant="contained" color="success" startIcon={<RiFileExcel2Fill/>} sx={{m: 2}}
-                                onClick={handleExcelDownload}>Import
-                            interns data
-                            ( .xlsx )</Button>
-                    </TableContainer>
+                    </Box>
 
-                    <TableContainer component={Paper} sx={{m: 1}}>
-                        <Typography textAlign="center" variant="h5">
-                            Mentors
-                        </Typography>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="center"> Name</TableCell>
-                                    <TableCell align="center"> Position</TableCell>
-                                </TableRow>
-                            </TableHead>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            borderRadius: 2,
+                            bgcolor: 'background.paper',
+                            color: 'text.secondary',
+                            '& svg': {
+                                m: 1,
+                            }, p: 1
 
-                            {batchMentors.map((mentors, index) => {
-                                return (
-                                    <TableBody key={index}>
-                                        <TableCell align="center"> {mentors.fullname}</TableCell>
-                                        <TableCell align="center">{mentors.position}</TableCell>
-                                    </TableBody>
-                                );
-                            })}
-                        </Table>
-                    </TableContainer>
+                        }}
+                    >
+                        <Typography variant="h6">Mentors:</Typography>
+
+                        {batchMentors.map((mentors, index) => {
+                            return (
+                                <Box key={index} sx={{m: 1}}>
+                                    {mentors.fullname} [ {mentors.position} ],
+                                </Box>
+                            );
+                        })}
+                    </Box>
                 </Box>
+                <TableContainer component={Paper} sx={{m: 1}}>
+                    <Typography textAlign="center" variant="h5">
+                        Intern Qualifications
+                    </Typography>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align="center">Name</TableCell>
+                                <TableCell align="center">University Name</TableCell>
+                                <TableCell align="center">Graduation Year</TableCell>
+                                <TableCell align="center">Graduation Month</TableCell>
+                                <TableCell align="center">Skills</TableCell>
+                            </TableRow>
+                        </TableHead>
+
+                        {internsData.map((interns) => {
+                            return (
+                                <TableBody key={interns._id}>
+                                    <TableCell align="center">
+                                        {interns.Intern.username}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {interns.universityName}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {interns.graduationYear}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {interns.graduationMonth}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {interns.skills}
+                                    </TableCell>
+                                </TableBody>
+                            );
+                        })}
+
+                    </Table>
+                    <Button variant="contained" color="success" startIcon={<RiFileExcel2Fill/>} sx={{m: 2}}
+                            onClick={handleExcelDownload}>Import
+                        interns data
+                        ( .xlsx )</Button>
+                </TableContainer>
+
             </main>
         </>
     );
