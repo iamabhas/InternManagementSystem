@@ -1,19 +1,10 @@
-// Add | Edit Qualifications ( Interns )
-
-// Get Intern Qualifications according to batch id (Admin)
-
-// Get Intern Qualifications according to user id ( Admins )
-
-// Export Intern Qualifications as xslx according to batch id
-
-
 import mongoose from "mongoose";
 import InternQualification from "../../database/schema/internQualification.schema";
 import {Response, NextFunction} from "express";
 import AppError from "../../utils/errorUtils/appError";
 import user from "../../database/schema/user.schema";
 import {sendResponse} from "../../helpers/customResponse";
-import ExcelJS from 'exceljs';
+import ExcelJS from "exceljs";
 
 export class InternQualificationService {
     public static async addQualifications(
@@ -27,14 +18,13 @@ export class InternQualificationService {
             .populate({path: "Batch", select: "name"});
         const {universityName, graduationYear, graduationMonth, skills} = body;
 
-
         const newInternQualification = {
-            User: userId,
+            Intern: userId,
             Batch: existUser?.Batch,
             universityName: universityName,
             graduationYear: graduationYear,
             graduationMonth: graduationMonth,
-            skills: skills
+            skills: skills,
         };
         const internQualification = new InternQualification(newInternQualification);
 
@@ -53,34 +43,45 @@ export class InternQualificationService {
         userId: mongoose.Types.ObjectId | string,
         next: NextFunction
     ) {
-
-        const internQualifications = await InternQualification.find({Intern: userId}).populate('Batch', 'name');
+        const internQualifications = await InternQualification.find({
+            Intern: userId,
+        })
+            .populate("Intern", "username")
+            .populate("Batch", "name");
         if (!internQualifications) {
-            return next(new AppError("No qualifications found for the specified user.", 404));
+            return next(
+                new AppError("No qualifications found for the specified user.", 404)
+            );
         }
-        sendResponse(res, 200, "Intern Qualifications fetched successfully", internQualifications);
-
+        sendResponse(
+            res,
+            200,
+            "Intern Qualifications fetched successfully",
+            internQualifications
+        );
     }
 
-    public static async downloadBatchData(batchId: mongoose.Types.ObjectId | string) {
-        const qualifications = await InternQualification.find({Batch: batchId})
-            .populate('Intern', 'username')
-
+    public static async downloadBatchData(
+        batchId: mongoose.Types.ObjectId | string
+    ) {
+        const qualifications = await InternQualification.find({
+            Batch: batchId,
+        }).populate("Intern", "username");
 
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Batch Qualifications');
+        const worksheet = workbook.addWorksheet("Batch Qualifications");
 
         worksheet.columns = [
-            {header: 'Intern Name', key: 'name', width: 30},
-            {header: 'University Name', key: 'universityName', width: 30},
-            {header: 'Graduation Year', key: 'graduationYear', width: 15},
-            {header: 'Graduation Month', key: 'graduationMonth', width: 15},
-            {header: 'Skills', key: 'skills', width: 30},
+            {header: "Intern Name", key: "name", width: 30},
+            {header: "University Name", key: "universityName", width: 30},
+            {header: "Graduation Year", key: "graduationYear", width: 15},
+            {header: "Graduation Month", key: "graduationMonth", width: 15},
+            {header: "Skills", key: "skills", width: 30},
         ];
 
-        qualifications.forEach(q => {
+        qualifications.forEach((q) => {
             worksheet.addRow({
-                name: q.Intern ?? 'Username not available',
+                name: q.Intern,
                 universityName: q.universityName,
                 graduationYear: q.graduationYear,
                 graduationMonth: q.graduationMonth,
@@ -90,5 +91,4 @@ export class InternQualificationService {
 
         return workbook;
     }
-
 }
