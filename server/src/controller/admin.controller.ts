@@ -6,7 +6,7 @@ class adminController {
     req: Request,
     res: Response,
     next: NextFunction
-  ) {
+  ):Promise<void> {
     try {
       const body = req.body;
       await AdminService.createBatchService(res, body, next);
@@ -19,7 +19,7 @@ class adminController {
     req: Request,
     res: Response,
     next: NextFunction
-  ) {
+  ):Promise<void> {
     try {
       const body = req.body;
       await AdminService.registerInternService(res, body, next);
@@ -33,7 +33,7 @@ class adminController {
     req: Request,
     res: Response,
     next: NextFunction
-  ) {
+  ):Promise<void> {
     try {
       const body = req.body;
 
