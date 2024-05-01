@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-key */
+/* eslint-disable no-undef */
 import * as React from "react";
 import {
   Button,
@@ -17,11 +19,16 @@ import {
   TableRow,
   TablePagination,
   Grid,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Menu,
 } from "@mui/material";
 
 import Swal from "sweetalert2";
 import { IoMdAddCircle } from "react-icons/io";
-import { registerIntern } from "../../../services/Api";
+
 import { IoFilter } from "react-icons/io5";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -30,6 +37,7 @@ export default function ManageInterns() {
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  const [BatchData, setBatchData] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const accesstoken = useSelector((state) => state.auth.token);
 
@@ -44,46 +52,58 @@ export default function ManageInterns() {
             },
           }
         );
-
         setData(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error.message);
       }
     };
     fetchData();
-  }, []);
+  }, [setData]);
 
   const [inputs, setInputs] = React.useState({
     username: "",
     fullname: "",
     email: "",
     phoneNo: "",
-    role: "",
+    role: "intern",
+    BatchId: "",
   });
-
-  const handleChange = (e) => {
-    setInputs((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userData = await registerIntern(inputs);
-      if (userData !== null) {
+      const response = await axios.post(
+        "http://localhost:5000/api/batch/intern",
+        {
+          ...inputs,
+          BatchId: inputs.BatchId,
+        },
+        {
+          headers: {
+            Authorization: accesstoken,
+          },
+        }
+      );
+
+      if (response && `${response.status}`.startsWith("2")) {
         Swal.fire({
-          icon: "success",
           title: "Success",
-          text: "Intern Register SuccessFully",
+          text: "Intern Registered Successfully",
+          timer: 2000,
+          icon: "success",
         });
+
+        // Update the data state with the new intern
+        setData((prevData) => [...prevData, inputs]);
+
+        handleClose();
       }
     } catch (error) {
+      setOpen(false);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.message || "Error",
+        text: error.message || "Failed",
       });
     }
   };
@@ -99,7 +119,8 @@ export default function ManageInterns() {
       fullname: "",
       email: "",
       phoneNo: "",
-      role: "",
+      role: "intern",
+      BatchId: "",
     });
   };
 
@@ -112,6 +133,36 @@ export default function ManageInterns() {
     setPage(0);
   };
 
+  const handleChange = (e) => {
+    setInputs((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  React.useEffect(() => {
+    const fetchBatchName = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/batchdash",
+          {
+            headers: {
+              Authorization: accesstoken,
+            },
+          }
+        );
+
+        setBatchData(response.data.data);
+      } catch (error) {
+        Swal.fire({
+          title: "error",
+          text: "Batch Is Not Available",
+          timer: 2000,
+        });
+      }
+    };
+    fetchBatchName();
+  }, []);
   return (
     <React.Fragment>
       <Typography variant="h4" sx={{ m: 2 }} style={{ textAlign: "center" }}>
@@ -155,18 +206,18 @@ export default function ManageInterns() {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => (
                   <TableRow
-                    key={row.id}
+                    key={row?.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {row.fullname}
+                      {row?.fullname}
                     </TableCell>
-                    <TableCell align="center">{row.fullname}</TableCell>
-                    <TableCell align="center">{row.phoneNo}</TableCell>
-                    <TableCell align="center">{row.email}</TableCell>
+                    <TableCell align="center">{row?.fullname}</TableCell>
+                    <TableCell align="center">{row?.phoneNo}</TableCell>
+                    <TableCell align="center">{row?.email}</TableCell>
                     <TableCell align="center">
-                      {row.Batch.name
-                        ? row.Batch.name
+                      {row?.Batch?.name
+                        ? row?.Batch?.name
                         : "Not Assign In Any Batch"}
                     </TableCell>
                   </TableRow>
@@ -241,22 +292,6 @@ export default function ManageInterns() {
             </Grid>
             <Grid item xs={12} md={6}>
               {" "}
-              {/* Grid item for Role */}
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="role"
-                label="Role"
-                name="role"
-                autoComplete="role"
-                autoFocus
-                value={inputs.role}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              {" "}
               {/* Grid item for Intern Phone Number */}
               <TextField
                 margin="normal"
@@ -271,15 +306,29 @@ export default function ManageInterns() {
                 onChange={handleChange}
               />
             </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel>Batch Name</InputLabel>
+                <Select
+                  labelId="batch-label"
+                  label="Batch"
+                  name="BatchId"
+                  value={inputs.BatchId}
+                  onChange={handleChange}
+                >
+                  {BatchData.map((option) => (
+                    <MenuItem key={option.id} value={option.id}>
+                      {option.Batchname}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
         </DialogContent>
 
         <Box textAlign="center" sx={{ m: 1 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => handleSubmit}
-          >
+          <Button variant="contained" color="secondary" onClick={handleSubmit}>
             Add Intern
           </Button>
         </Box>

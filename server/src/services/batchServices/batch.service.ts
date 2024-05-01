@@ -88,6 +88,7 @@ export class BatchService {
 
     batchList.forEach((batch) => {
       data.push({
+        id: batch._id,
         Batchname: batch.name,
         Interns: batch.interns.length,
         Mentors: batch.mentor.length,

@@ -17,11 +17,14 @@ import {
   TableRow,
   TablePagination,
   Grid,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 
 import Swal from "sweetalert2";
 import { IoMdAddCircle } from "react-icons/io";
-import { registerIntern } from "../../../services/Api";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
@@ -31,7 +34,7 @@ export default function ManageMentors() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const accesstoken = useSelector((state) => state.auth.token);
-
+  const [BatchData, setBatchData] = React.useState([]);
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -58,7 +61,10 @@ export default function ManageMentors() {
     fullname: "",
     email: "",
     phoneNo: "",
-    role: "",
+    role: "mentor",
+    BatchId: "",
+    position: "",
+    expertise: "",
   });
 
   const handleChange = (e) => {
@@ -71,23 +77,39 @@ export default function ManageMentors() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userData = await registerIntern(inputs);
-      if (userData !== null) {
+      const response = await axios.post(
+        "http://localhost:5000/api/batch/mentor",
+        {
+          ...inputs,
+          BatchId: inputs.BatchId,
+        },
+        {
+          headers: {
+            Authorization: accesstoken,
+          },
+        }
+      );
+      if (response && `${response.status}`.startsWith("2")) {
         Swal.fire({
-          icon: "success",
           title: "Success",
-          text: "Intern Register SuccessFully",
+          text: "Intern Registered Successfully",
+          timer: 2000,
+          icon: "success",
         });
+
+        setData((prevData) => [...prevData, inputs]);
+
+        handleClose();
       }
     } catch (error) {
+      setOpen(false);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.message || "Error",
+        text: error.message || "Failed",
       });
     }
   };
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -100,6 +122,9 @@ export default function ManageMentors() {
       email: "",
       phoneNo: "",
       role: "",
+      BatchId: "",
+      position: "",
+      expertise: "",
     });
   };
 
@@ -111,6 +136,29 @@ export default function ManageMentors() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+  React.useEffect(() => {
+    const fetchBatchName = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/batchdash",
+          {
+            headers: {
+              Authorization: accesstoken,
+            },
+          }
+        );
+
+        setBatchData(response.data.data);
+      } catch (error) {
+        Swal.fire({
+          title: "error",
+          text: "Batch Is Not Available",
+          timer: 2000,
+        });
+      }
+    };
+    fetchBatchName();
+  }, []);
 
   return (
     <React.Fragment>
@@ -140,6 +188,7 @@ export default function ManageMentors() {
                 <TableCell align="center">Email</TableCell>
                 <TableCell align="center">Batch</TableCell>
                 <TableCell align="center">Position</TableCell>
+                <TableCell align="center">Expertise</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -161,6 +210,13 @@ export default function ManageMentors() {
                       {row.Batch?.name ? row.Batch.name : "Not In A Batch"}
                     </TableCell>
                     <TableCell align="center">{row.position}</TableCell>
+                    <Button
+                      sx={{ marginTop: "0.8rem" }}
+                      variant="outlined"
+                      size="small"
+                    >
+                      View
+                    </Button>
                   </TableRow>
                 ))}
             </TableBody>
@@ -233,22 +289,6 @@ export default function ManageMentors() {
             </Grid>
             <Grid item xs={12} md={6}>
               {" "}
-              {/* Grid item for Role */}
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="role"
-                label="Role"
-                name="role"
-                autoComplete="role"
-                autoFocus
-                value={inputs.role}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              {" "}
               {/* Grid item for Intern Phone Number */}
               <TextField
                 margin="normal"
@@ -263,16 +303,62 @@ export default function ManageMentors() {
                 onChange={handleChange}
               />
             </Grid>
+            <Grid item xs={12} md={6}>
+              {" "}
+              {/* Grid item for Intern Phone Number */}
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="position"
+                label="Position"
+                name="position"
+                autoComplete="position"
+                autoFocus
+                value={inputs.position}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              {" "}
+              {/* Grid item for Intern Phone Number */}
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="expertise"
+                label="Expertise"
+                name="expertise"
+                autoComplete="expertise"
+                autoFocus
+                value={inputs.expertise}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel>Batch Name</InputLabel>
+                <Select
+                  labelId="batch-label"
+                  label="Batch"
+                  name="BatchId"
+                  value={inputs.BatchId}
+                  onChange={handleChange}
+                >
+                  {BatchData.map((option) => (
+                    <MenuItem key={option.id} value={option.id}>
+                      {option.Batchname}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
         </DialogContent>
 
         <Box textAlign="center" sx={{ m: 1 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => handleSubmit}
-          >
-            Add Intern
+          <Button variant="contained" color="secondary" onClick={handleSubmit}>
+            Add Mentor
           </Button>
         </Box>
 
