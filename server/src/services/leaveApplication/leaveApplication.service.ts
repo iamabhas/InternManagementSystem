@@ -6,6 +6,7 @@ import user from "../../database/schema/user.schema";
 import {sendResponse} from "../../helpers/customResponse";
 import PDF from "../../utils/pdfUtils/pdf";
 import {roleConstants} from "../../constants/roleConstants";
+import {formatDate} from "../../helpers/dateFormatter";
 
 const {ADMIN} = roleConstants;
 
@@ -115,26 +116,29 @@ export class LeaveApplicationService {
             );
         }
 
-        const existLeave = await LeaveApplication.findOne({_id: id});
+        const existLeave = await LeaveApplication.findOne({_id: id}).populate("User", "-_id username");
         if (!existLeave) {
             throw new AppError("Leave Is Already Removed Or It Does Not Exists", 401);
         }
 
         const sendDate = existLeave.get("sendDate");
-        const leaveFromDate = existLeave.get("leaveFromDate");
-        const leaveToDate = existLeave.get("leaveToDate");
         const subject = existLeave.get("subject");
+        const {username}: any = existLeave.get("User")
         const applicationBody = existLeave.get("applicationBody");
 
         //sample Testing For Now
         const pdf = await PDF.htmlToPdf(
             `<html>
       <body>
-      <h1>${subject}</h1>
-      <h2>${applicationBody}</h2>
-      <p><span>Leave Date </span>${leaveFromDate} </p>
-      <p><span>Leave To  Date </span>${leaveToDate} </p>
-      <h1>Leave Send At: ${sendDate}</h1>
+      <h1>UBA Solutions</h1>
+      <p>Date: ${formatDate(sendDate)}</p>
+      <h3>Subject: ${subject}</h3>
+     <p>Dear HR, </p>
+     <h4>
+     ${applicationBody}
+</h4>
+<p>Sincerely, ${username} </p>
+
       </body>
       </html>`
         );
