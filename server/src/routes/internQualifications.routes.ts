@@ -25,5 +25,12 @@ internQualificationsRouter.get(
     internQualificationController.getQualificationsByIdController
 );
 
+internQualificationsRouter.get(
+    "/excel-batchData-download/:batchId",
+    validateToken,
+    validateRole,
+    restrictRole(USER),
+    internQualificationController.downloadBatchDataController
+);
 
 export default internQualificationsRouter;
