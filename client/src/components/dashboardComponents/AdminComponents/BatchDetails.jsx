@@ -42,9 +42,12 @@ const BatchDetails = ({selectComponentState}) => {
                 );
 
                 setInternsData(response.data.data);
-                console.log(response.data.data)
             } catch (error) {
-                console.error("Error fetching data:", error.message);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: error.message || "Error",
+                });
             }
         };
         fetchData();
@@ -74,8 +77,6 @@ const BatchDetails = ({selectComponentState}) => {
             document.body.removeChild(link);
 
         } catch (error) {
-            console.log(error);
-            console.error("Error exporting data:", error.message);
             Swal.fire({
                 icon: "error",
                 title: "Error",
