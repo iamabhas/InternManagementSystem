@@ -1,5 +1,6 @@
 import {Request, Response, NextFunction} from "express";
 import {InternQualificationService} from "../services/internServices/internQualification.service";
+import InternQualification from "../database/schema/internQualification.schema";
 
 export class internQualificationController {
     public static async addQualificationsController(
@@ -33,6 +34,14 @@ export class internQualificationController {
         }
     }
 
+    public static async getInternQualificationByBatchController(req: Request, res: Response, next: NextFunction) {
+        const batchId = req.params.batchId;
+        try {
+            await InternQualificationService.getInternQualificationByBatch(res, batchId, next)
+        } catch (err: any) {
+            next(err);
+        }
+    }
 
     public static async downloadBatchDataController(req: Request, res: Response, next: NextFunction) {
         try {
