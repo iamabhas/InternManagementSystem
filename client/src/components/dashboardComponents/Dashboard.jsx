@@ -41,7 +41,8 @@ import ManageBatch from "./AdminComponents/ManageBatch";
 import ManageLeaves from "./AdminComponents/ManageLeaves.jsx";
 import SendLeave from "./InternComponents/SendLeave.jsx";
 import {mainListItems} from "./ListItems.jsx";
- 
+import RegisterQualifications from "./InternComponents/RegisterQualifications.jsx";
+
 
 function Copyright(props) {
     return (
@@ -173,6 +174,8 @@ export default function Dashboard() {
                 return <ManageLeaves/>
             case "SendLeave":
                 return <SendLeave/>
+            case "registerQualification":
+                return <RegisterQualifications/>
             default:
                 return <ErrorPage/>;
         }

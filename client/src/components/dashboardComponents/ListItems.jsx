@@ -9,6 +9,7 @@ import {FaUser} from "react-icons/fa6";
 import {LiaChalkboardTeacherSolid} from "react-icons/lia";
 import {HiOutlineUserGroup} from "react-icons/hi";
 import {HiDocumentCheck} from "react-icons/hi2";
+import {FaGraduationCap} from "react-icons/fa6";
 
 export const mainListItems = (role, setSelectedComponent) => {
     switch (role) {
@@ -30,6 +31,14 @@ export const mainListItems = (role, setSelectedComponent) => {
                             <HiDocumentCheck/>
                         </ListItemIcon>
                         <ListItemText primary="Send Leave"/>
+                    </ListItemButton>
+                    <ListItemButton
+                        onClick={() => setSelectedComponent("registerQualification")}
+                    >
+                        <ListItemIcon>
+                            <FaGraduationCap/>
+                        </ListItemIcon>
+                        <ListItemText primary="Your Qualifications"/>
                     </ListItemButton>
                 </React.Fragment>
             );
