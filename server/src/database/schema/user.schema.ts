@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema(
       required: [true, fieldCannotBeEmpty("password")],
     },
     expertise: {
-      type: [String],
+      type: String,
     },
 
     position: {

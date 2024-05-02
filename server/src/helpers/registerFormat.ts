@@ -12,8 +12,8 @@ type testing = {
   phoneNo: string;
   role: string;
   password: any;
-  expertise: any;
   position?: string;
+  expertise?: string;
 };
 export class HelperFunction {
   public static async register(res: Response, bodyObj: testing | any) {
@@ -43,6 +43,7 @@ export class HelperFunction {
         role: bodyObj.role,
         password: password,
         position: bodyObj.position,
+        expertise: bodyObj.expertise,
       });
       const dbUser = await newUser.save();
 

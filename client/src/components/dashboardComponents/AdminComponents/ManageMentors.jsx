@@ -112,7 +112,7 @@ export default function ManageMentors() {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.response.data.message || "Failed to register Mentors!",
+        text: error.message || "Failed",
       });
     }
   };
@@ -233,13 +233,15 @@ export default function ManageMentors() {
                     <Dialog
                       open={openDialog}
                       onClose={handleCloseDialog}
-                      maxWidth="lg"
+                      maxWidth="1"
                     >
                       <DialogTitle>Expertise</DialogTitle>
                       <DialogContent>
                         <Typography variant="body1" color="text.secondary">
                           Progamming Language :{" "}
-                          {selectedMentor?.expertise.map((data) => data)}
+                          {selectedMentor?.expertise
+                            ? selectedMentor?.expertise
+                            : "Empty"}
                         </Typography>
                       </DialogContent>
                       <DialogActions>

@@ -70,6 +70,7 @@ export class AdminService {
       role: role,
       BatchId: BatchId,
       position: position,
+      expertise: expertise,
     };
     await HelperFunction.register(res, responseBody);
   }
