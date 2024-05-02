@@ -127,7 +127,7 @@ export default function ManageMentors() {
       fullname: "",
       email: "",
       phoneNo: "",
-      role: "",
+      role: "mentor",
       BatchId: "",
       position: "",
       expertise: "",
