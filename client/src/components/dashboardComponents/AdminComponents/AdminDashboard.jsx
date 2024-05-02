@@ -40,7 +40,12 @@ const Admin = () => {
             },
           }
         );
-        setBatchData(response.data.data);
+
+        const unfilteredData = response.data.data;
+        const filteredData = unfilteredData.filter((uf) => {
+          return uf.Interns > 0 || uf.Mentors > 0;
+        });
+        setBatchData(filteredData);
         console.log(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -118,9 +123,11 @@ const Admin = () => {
                 outerRadius={80}
                 label
               >
-                {batchData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={colors[index]} />
-                ))}
+                {batch.Mentors > 0
+                  ? batchData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={colors[index]} />
+                    ))
+                  : null}
               </Pie>
               <Legend
                 align="right"
