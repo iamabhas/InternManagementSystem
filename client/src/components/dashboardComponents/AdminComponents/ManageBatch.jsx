@@ -83,6 +83,7 @@ export default function ManageBatch({ selectComponentState }) {
     startDate: null,
     endDate: null,
   });
+
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
@@ -132,10 +133,27 @@ export default function ManageBatch({ selectComponentState }) {
             },
           }
         );
+
+        setData(response.data.data);
+        console.log(response.data.data);
+      } catch (error) {
         Swal.fire({
-          icon: "success",
-          title: "Completed Batch",
-          text: "Ongoing Batches",
+          icon: "error",
+          title: "Error",
+          text: error.response.data.message || "No Ongoing Batches",
+        });
+      }
+    };
+    fetchData();
+  };
+
+  const handleAllBatch = () => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/batch", {
+          headers: {
+            Authorization: accesstoken,
+          },
         });
         setData(response.data.data);
         console.log(response.data.data);
@@ -162,8 +180,9 @@ export default function ManageBatch({ selectComponentState }) {
       } catch (error) {
         Swal.fire({
           icon: "error",
-          title: "Batch Error",
-          text: error.message.data || "None Of The Batch Are Completed",
+          title: "Error",
+          text:
+            error.response.data.message || "None of The Batch Are Completed",
         });
       }
     };
@@ -206,11 +225,13 @@ export default function ManageBatch({ selectComponentState }) {
         text: "Batch Registered Successfully!",
       });
     } catch (error) {
+      console.log(error);
+      setOpen(false);
       console.error("Error adding batch:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.message || "Failed to register batch!",
+        text: error.response.data.message || "Failed to register batch!",
       });
     }
   };
@@ -250,7 +271,12 @@ export default function ManageBatch({ selectComponentState }) {
       </Box>
 
       <Box textAlign="center">
-        <Button variant="outlined" color="warning" sx={{ m: 1 }}>
+        <Button
+          variant="outlined"
+          color="warning"
+          sx={{ m: 1 }}
+          onClick={handleAllBatch}
+        >
           All Batches
         </Button>
         <Button

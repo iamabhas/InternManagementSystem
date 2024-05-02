@@ -103,7 +103,7 @@ export default function ManageInterns() {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.message || "Failed",
+        text: error.response.data.message || "Failed to register Interns!",
       });
     }
   };
@@ -155,9 +155,9 @@ export default function ManageInterns() {
         setBatchData(response.data.data);
       } catch (error) {
         Swal.fire({
-          title: "error",
-          text: "Batch Is Not Available",
-          timer: 2000,
+          icon: "error",
+          title: "Error",
+          text: error.response.data.message,
         });
       }
     };
