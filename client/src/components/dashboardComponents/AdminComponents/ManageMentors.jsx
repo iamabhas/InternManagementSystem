@@ -112,7 +112,7 @@ export default function ManageMentors() {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.message || "Failed",
+        text: error.response.data.message || "Failed to register Mentors!",
       });
     }
   };
