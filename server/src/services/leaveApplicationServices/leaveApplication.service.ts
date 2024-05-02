@@ -76,7 +76,6 @@ export class LeaveApplicationService {
         res: Response,
         id: string | mongoose.Types.ObjectId
     ) {
-        console.log("Hi");
         const checkLeave = await LeaveApplication.findOne({_id: id});
         if (!checkLeave) {
             throw new AppError("Leave Is Expired or Does not Exists", 400);
