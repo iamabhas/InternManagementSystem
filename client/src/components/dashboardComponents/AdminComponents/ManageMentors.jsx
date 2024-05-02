@@ -32,9 +32,12 @@ export default function ManageMentors() {
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  const [openDialog, setOpenDialog] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const accesstoken = useSelector((state) => state.auth.token);
   const [BatchData, setBatchData] = React.useState([]);
+  const [selectedMentor, setSelectedMentor] = React.useState(null);
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -67,6 +70,9 @@ export default function ManageMentors() {
     expertise: "",
   });
 
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
   const handleChange = (e) => {
     setInputs((prev) => ({
       ...prev,
@@ -160,6 +166,12 @@ export default function ManageMentors() {
     fetchBatchName();
   }, []);
 
+  const handleExpertiseDetails = (mentor) => {
+    setSelectedMentor(mentor);
+    setOpenDialog(true);
+  };
+  console.log(selectedMentor);
+
   return (
     <React.Fragment>
       <Typography variant="h4" sx={{ m: 2 }} style={{ textAlign: "center" }}>
@@ -214,14 +226,31 @@ export default function ManageMentors() {
                       sx={{ marginTop: "0.8rem" }}
                       variant="outlined"
                       size="small"
+                      onClick={() => handleExpertiseDetails(row)}
                     >
                       View
                     </Button>
+                    <Dialog
+                      open={openDialog}
+                      onClose={handleCloseDialog}
+                      maxWidth="lg"
+                    >
+                      <DialogTitle>Expertise</DialogTitle>
+                      <DialogContent>
+                        <Typography variant="body1" color="text.secondary">
+                          Progamming Language :{" "}
+                          {selectedMentor?.expertise.map((data) => data)}
+                        </Typography>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleCloseDialog}>Close</Button>
+                      </DialogActions>
+                    </Dialog>
                   </TableRow>
                 ))}
             </TableBody>
           </Table>
-        </TableContainer>
+        </TableContainer>{" "}
         <TablePagination
           rowsPerPageOptions={[5, 10, 15]}
           component="div"
