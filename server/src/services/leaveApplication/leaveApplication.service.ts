@@ -122,8 +122,6 @@ export class LeaveApplicationService {
         }
 
         const sendDate = existLeave.get("sendDate");
-        const leaveFromDate = existLeave.get("leaveFromDate");
-        const leaveToDate = existLeave.get("leaveToDate");
         const subject = existLeave.get("subject");
         const {username}: any = existLeave.get("User")
         const applicationBody = existLeave.get("applicationBody");
@@ -132,13 +130,11 @@ export class LeaveApplicationService {
             `<html>
       <body>
             <h1>UBA Solutions</h1>
-      <p>Date: ${formatDate(sendDate)}</p>
-      <h3>Subject: ${subject}</h3>
-     <p>Dear HR, </p>
-     <h4>
-     ${applicationBody}
-</h4>
-<p>Sincerely, ${username} </p>
+            <p>Date: ${formatDate(sendDate)}</p>
+            <h3>Subject: ${subject}</h3>
+            <p>Dear HR, </p>
+            <h4> ${applicationBody} </h4>
+            <p>Sincerely, ${username} </p>
       </body>
       </html>`
         );
