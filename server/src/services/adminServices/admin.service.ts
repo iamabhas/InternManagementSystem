@@ -5,6 +5,7 @@ import validator from "validator";
 import { sendEmail } from "../../utils/smtpServerUtils/smtpEmail";
 import AppError from "../../utils/errorUtils/appError";
 import { sendResponse } from "../../helpers/customResponse";
+import { HelperFunction } from "../../helpers/registerFormat";
 
 export class AdminService {
   public static async createBatchService(
@@ -24,7 +25,7 @@ export class AdminService {
       endDate: endDate,
     });
     await batch.save();
-    sendResponse(res, 201, "Batch Saved SuccessFully");
+    sendResponse(res, 201, "Batch Saved SuccessFully", batch);
   }
 
   public static async registerInternService(
@@ -33,59 +34,15 @@ export class AdminService {
     next: NextFunction
   ) {
     const { username, fullname, email, phoneNo, role, BatchId } = body;
-    const existingBatch = await Batch.findOne({ _id: BatchId });
-    if (!existingBatch) {
-      throw new AppError("Fail,Batch Is Not Available", 401);
-    }
-    if (!validator.isEmail(email)) {
-      throw new AppError(
-        "The Email you have Provided is not a valid Email, Please Provide A valid Email",
-        400
-      );
-    }
-    const password = "admin1234";
-    const lowercaseRegex = /[a-z]/;
-    if (lowercaseRegex.test(password) && password.length > 8) {
-      // console.log("true");
-      // const subject = "Password Authentication ";
-      // const text = `Password for ${username}`;
-      // const html = `<h1>Dear ${username}, You have Been Your Current Password is ${password} Please Contact the Admin (HR) if you Forget your Password</h1> `;
-      // await sendEmail(email, subject, text, html);
-      const newUser = new user({
-        username: username,
-        fullname: fullname,
-        email: email,
-        phoneNo: phoneNo,
-        role: role,
-        password: password,
-      });
-      const dbUser = await newUser.save();
-
-      await Batch.updateOne(
-        { _id: BatchId },
-        {
-          $push: {
-            interns: dbUser._id,
-          },
-        },
-        {
-          new: true,
-        }
-      );
-      await user.updateOne(
-        {
-          _id: dbUser._id,
-        },
-        {
-          $set: { Batch: BatchId },
-        },
-        {
-          new: true,
-        }
-      );
-
-      sendResponse(res, 201, "Intern Registed SuccessFully", dbUser);
-    }
+    const responseBody = {
+      username: username,
+      fullname: fullname,
+      email: email,
+      phoneNo: phoneNo,
+      role: role,
+      BatchId: BatchId,
+    };
+    await HelperFunction.register(res, responseBody);
   }
 
   public static async registerMentorService(
@@ -103,67 +60,15 @@ export class AdminService {
       position,
       BatchId,
     } = body;
-    const existingBatch = await Batch.findOne({ _id: BatchId });
-    if (!existingBatch) {
-      throw new AppError("Batch is not Available", 401);
-    }
-    if (!validator.isEmail(email)) {
-      throw new AppError(
-        "The Email you have provided is not valid Email, Please Provide A valid Email",
-        400
-      );
-    }
-    const password = "admin1234";
-    const minLength = 8;
-    const lowercaseRegex = /[a-z]/;
-    const uppercaseRegex = /[A-Z]/;
-    const digitRegex = /\d/;
-
-    if (lowercaseRegex.test(password) && password.length > 8) {
-      //   console.log("true");
-      //   const subject = "Password Authentication ";
-      //   const text = `Password for ${username}`;
-      //   const html = `<h1>Dear ${username} Mentor, You have Been Your Current Password is ${password} Please Contact the Admin (HR) if you Forget your Password</h1> `;
-      //   await sendEmail(email, subject, text, html);
-      const newUser = new user({
-        username: username,
-        fullname: fullname,
-        email: email,
-        phoneNo: phoneNo,
-        role: role,
-        password: password,
-        expertise: expertise,
-        position: position,
-      });
-      const dbUser = await newUser.save();
-
-      await Batch.updateOne(
-        { _id: BatchId },
-        {
-          $push: {
-            mentor: dbUser._id,
-          },
-        },
-        {
-          new: true,
-        }
-      );
-
-      await user.updateOne(
-        {
-          _id: dbUser._id,
-        },
-        {
-          $set: {
-            Batch: BatchId,
-          },
-        },
-        {
-          new: true,
-        }
-      );
-
-      sendResponse(res, 201, "Mentor Assigned SuccessFully", dbUser);
-    }
+    const responseBody = {
+      username: username,
+      fullname: fullname,
+      email: email,
+      phoneNo: phoneNo,
+      role: role,
+      BatchId: BatchId,
+      position: position,
+    };
+    await HelperFunction.register(res, responseBody);
   }
 }
