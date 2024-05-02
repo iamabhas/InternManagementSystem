@@ -115,7 +115,7 @@ const Admin = () => {
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                outerRadius={100}
+                outerRadius={80}
                 label
               >
                 {batchData.map((entry, index) => (
@@ -150,7 +150,6 @@ const Admin = () => {
             </Typography>
             <List sx={{ maxHeight: 300, overflowY: "auto" }}>
               {incomingApplications.map((application, index) => (
-           
                 <ListItem
                   key={index}
                   alignItems="flex-start"
