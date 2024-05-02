@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer";
-import {IDefaultOptions} from "../../@types/interface/RequestBody";
+import {IDefaultOptions} from "../../@types/interface/requestBody";
 
 const defaultOptions: IDefaultOptions | any = {
     format: "A4",

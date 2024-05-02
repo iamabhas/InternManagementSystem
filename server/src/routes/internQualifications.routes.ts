@@ -3,7 +3,7 @@ import internQualificationController from "../controller/internQualification.con
 import {roleConstants} from "../constants/roleConstants";
 import {validateToken} from "../middleware/apiAuth.middleware";
 import {validateRole} from "../middleware/checkRole.middleware";
-import {restrictRole} from "../middleware/RestrictRoles";
+import {restrictRole} from "../middleware/restrictRoles.middleware";
 
 const {ADMIN, MENTOR, USER} = roleConstants;
 

@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import {NextFunction} from "express";
 
 export interface IUserRequestBody {

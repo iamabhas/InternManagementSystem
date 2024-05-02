@@ -1,11 +1,10 @@
 import {NextFunction, Response} from "express";
 import {statusConstants} from "../../constants/statusConstants";
 import {roleConstants} from "../../constants/roleConstants";
-import {IUserRequestBody} from "../../@types/interface/RequestBody";
+import {IUserRequestBody} from "../../@types/interface/requestBody";
 import AppError from "../../utils/errorUtils/appError";
 import user from "../../database/schema/user.schema";
 import {JwtService} from "../jwtServices/jwt.service";
-import {userNameValidation} from "../../utils/schemaUtils/checklength";
 
 const {ERROR, FAIL, SUCCESS} = statusConstants;
 const {ADMIN, USER, MENTOR, SUPER_ADMIN} = roleConstants;
