@@ -14,14 +14,12 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 
 const SendLeave = () => {
     const [open, setOpen] = React.useState(false);
-
-
     const {
         control,
         handleSubmit,
         watch,
         reset,
-        formState: {errors},
+        formState: {errors, isValid},
     } = useForm({
         defaultValues: {
             subject: "",
@@ -31,7 +29,7 @@ const SendLeave = () => {
         },
         mode: "onBlur",
     });
-
+    const watchAllFields = watch()
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -94,15 +92,37 @@ const SendLeave = () => {
                                 />
                             </Grid>
                             <Grid item xs={12} sm={12}>
-                                <TextField label="Test"></TextField>
+                                <Controller
+                                    name="applicationBody"
+                                    control={control}
+                                    rules={{required: "Application Body is required"}}
+                                    render={({field}) => (
+                                        <TextField
+                                            margin="normal"
+                                            required
+                                            fullWidth
+                                            id="applicationBody"
+                                            label="Body"
+                                            autoComplete="applicationBody"
+                                            error={!!errors.applicationBody}
+                                            helperText={
+                                                errors.applicationBody
+                                                    ? errors.applicationBody.message
+                                                    : ""
+                                            }
+                                            {...field}
+                                        />
+                                    )}
+                                />
                             </Grid>
+
                         </Grid>
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             sx={{mt: 3, mb: 2}}
-
+                            disabled={!isValid}
                         >
                             Send Leave
                         </Button>
