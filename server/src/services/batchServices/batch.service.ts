@@ -277,7 +277,7 @@ export class BatchService {
     }
     let data: Array<any> = [];
     batchList.forEach((batch) => {
-      if (batch.get("startDate") === batch.get("endDate")) {
+      if (new Date() > new Date(batch.get("endDate"))) {
         data.push(batch);
       }
     });
@@ -304,7 +304,7 @@ export class BatchService {
     }
     let data: Array<any> = [];
     batchList.forEach((batch) => {
-      if (batch.get("startDate") < batch.get("endDate")) {
+      if (new Date() < new Date(batch.get("endDate"))) {
         data.push(batch);
       }
     });
