@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-key */
+/* eslint-disable no-undef */
 import * as React from "react";
 import {
   Button,
@@ -16,48 +18,27 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-  LinearProgress,
   Grid,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Menu,
 } from "@mui/material";
 
-import PropTypes from "prop-types";
 import Swal from "sweetalert2";
 import { IoMdAddCircle } from "react-icons/io";
-import { internData } from "../../../data/testData";
-import { registerIntern } from "../../../services/Api";
+
 import { IoFilter } from "react-icons/io5";
 import axios from "axios";
-import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 
-function LinearProgressWithLabel(props) {
-  return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Box sx={{ width: "100%", mr: 1 }}>
-        <LinearProgress variant="determinate" {...props} />
-      </Box>
-      <Box sx={{ minWidth: 35 }}>
-        <Typography variant="body2" color="text.secondary">{`${Math.round(
-          props.value
-        )}%`}</Typography>
-      </Box>
-    </Box>
-  );
-}
-
-LinearProgressWithLabel.propTypes = {
-  value: PropTypes.number.isRequired,
-};
-
 export default function ManageInterns() {
-  const navigate = useNavigate();
-  const dispatch = useNavigate();
-
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  const [BatchData, setBatchData] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [progress, setProgress] = React.useState(10);
   const accesstoken = useSelector((state) => state.auth.token);
 
   React.useEffect(() => {
@@ -71,53 +52,58 @@ export default function ManageInterns() {
             },
           }
         );
-        console.log(response);
-        console.log(response.data); // No need for .json(), Axios handles it
-        console.log(response.data.internList);
-
-        setData(response.data.internList);
+        setData(response.data.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error.message);
       }
     };
     fetchData();
-  }, []);
+  }, [setData]);
 
   const [inputs, setInputs] = React.useState({
     username: "",
     fullname: "",
     email: "",
     phoneNo: "",
-    role: "",
+    role: "intern",
+    BatchId: "",
   });
-  console.log(data[1]);
-
-  const handleChange = (e) => {
-    setInputs((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(inputs);
     try {
-      console.log(inputs);
-      const userData = await registerIntern(inputs);
-      console.log(userData);
-      if (userData !== null) {
+      const response = await axios.post(
+        "http://localhost:5000/api/batch/intern",
+        {
+          ...inputs,
+          BatchId: inputs.BatchId,
+        },
+        {
+          headers: {
+            Authorization: accesstoken,
+          },
+        }
+      );
+
+      if (response && `${response.status}`.startsWith("2")) {
         Swal.fire({
-          icon: "success",
           title: "Success",
-          text: "Intern Register SuccessFully",
+          text: "Intern Registered Successfully",
+          timer: 2000,
+          icon: "success",
         });
+
+        // Update the data state with the new intern
+        setData((prevData) => [...prevData, inputs]);
+
+        handleClose();
       }
     } catch (error) {
+      setOpen(false);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.message || "Error",
+        text: error.message || "Failed",
       });
     }
   };
@@ -128,6 +114,14 @@ export default function ManageInterns() {
 
   const handleClose = () => {
     setOpen(false);
+    setInputs({
+      username: "",
+      fullname: "",
+      email: "",
+      phoneNo: "",
+      role: "intern",
+      BatchId: "",
+    });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -139,8 +133,36 @@ export default function ManageInterns() {
     setPage(0);
   };
 
-  const nobatch = "Not In A Batch";
+  const handleChange = (e) => {
+    setInputs((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
+  React.useEffect(() => {
+    const fetchBatchName = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/batchdash",
+          {
+            headers: {
+              Authorization: accesstoken,
+            },
+          }
+        );
+
+        setBatchData(response.data.data);
+      } catch (error) {
+        Swal.fire({
+          title: "error",
+          text: "Batch Is Not Available",
+          timer: 2000,
+        });
+      }
+    };
+    fetchBatchName();
+  }, []);
   return (
     <React.Fragment>
       <Typography variant="h4" sx={{ m: 2 }} style={{ textAlign: "center" }}>
@@ -184,16 +206,20 @@ export default function ManageInterns() {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => (
                   <TableRow
-                    key={row.id}
+                    key={row?.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {row.fullname}
+                      {row?.fullname}
                     </TableCell>
-                    <TableCell align="center">{row.fullname}</TableCell>
-                    <TableCell align="center">{row.phoneNo}</TableCell>
-                    <TableCell align="center">{row.email}</TableCell>
-                    <TableCell align="center">{row.Batch.name}</TableCell>
+                    <TableCell align="center">{row?.fullname}</TableCell>
+                    <TableCell align="center">{row?.phoneNo}</TableCell>
+                    <TableCell align="center">{row?.email}</TableCell>
+                    <TableCell align="center">
+                      {row?.Batch?.name
+                        ? row?.Batch?.name
+                        : "Not Assign In Any Batch"}
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
@@ -210,22 +236,7 @@ export default function ManageInterns() {
         />
       </Box>
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          component: "form",
-          onSubmit: (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const email = formJson.email;
-            console.log(email);
-            handleClose();
-          },
-        }}
-        fullWidth
-      >
+      <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>Add Intern</DialogTitle>
         <DialogContent>
           <Grid container spacing={2}>
@@ -281,22 +292,6 @@ export default function ManageInterns() {
             </Grid>
             <Grid item xs={12} md={6}>
               {" "}
-              {/* Grid item for Role */}
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="role"
-                label="Role"
-                name="role"
-                autoComplete="role"
-                autoFocus
-                value={inputs.role}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              {" "}
               {/* Grid item for Intern Phone Number */}
               <TextField
                 margin="normal"
@@ -311,15 +306,29 @@ export default function ManageInterns() {
                 onChange={handleChange}
               />
             </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel>Batch Name</InputLabel>
+                <Select
+                  labelId="batch-label"
+                  label="Batch"
+                  name="BatchId"
+                  value={inputs.BatchId}
+                  onChange={handleChange}
+                >
+                  {BatchData.map((option) => (
+                    <MenuItem key={option.id} value={option.id}>
+                      {option.Batchname}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
         </DialogContent>
 
         <Box textAlign="center" sx={{ m: 1 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => handleSubmit}
-          >
+          <Button variant="contained" color="secondary" onClick={handleSubmit}>
             Add Intern
           </Button>
         </Box>

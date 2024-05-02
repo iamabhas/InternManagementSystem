@@ -1,4 +1,7 @@
 import * as React from "react";
+import PropTypes from "prop-types";
+
+//mui imports
 import {
   Button,
   TextField,
@@ -18,16 +21,23 @@ import {
   TablePagination,
   LinearProgress,
 } from "@mui/material";
+
+//date imports
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import PropTypes from "prop-types";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { formatDate } from "../../../utils/dateFormatter";
+
+//icons imports
 import { IoMdAddCircle } from "react-icons/io";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
+
+//package imports
 import axios from "axios";
 import Swal from "sweetalert2";
-import { formatDate } from "../../../utils/dateFormatter";
+
+//redux imports
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { setBatch } from "../../../redux/batchSelectSlice.js";
 
 function LinearProgressWithLabel(props) {
   return (
@@ -64,20 +74,18 @@ const calculateProgress = (startDate, endDate) => {
   }
 };
 
-export default function ManageBatch() {
+export default function ManageBatch({ selectComponentState }) {
   const [inputs, setInputs] = React.useState({
     name: "",
     startDate: null,
     endDate: null,
   });
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [progress, setProgress] = React.useState(10);
   const accesstoken = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setInputs((prev) => ({
@@ -102,14 +110,65 @@ export default function ManageBatch() {
           },
         });
         setData(response.data.data);
+        console.log(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
-  }, []);
+  }, [accesstoken]);
 
-  const handleSubmit = async () => {
+  const handleOngoing = () => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/batchongoing",
+          {
+            headers: {
+              Authorization: accesstoken,
+            },
+          }
+        );
+        Swal.fire({
+          icon: "success",
+          title: "Completed Batch",
+          text: "Ongoing Batches",
+        });
+        setData(response.data.data);
+        console.log(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  };
+  const handleComplete = () => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/batchcomplete",
+          {
+            headers: {
+              Authorization: accesstoken,
+            },
+          }
+        );
+
+        setData(response.data.data);
+        console.log(response.data.data);
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Batch Error",
+          text: error.message.data || "None Of The Batch Are Completed",
+        });
+      }
+    };
+    fetchData();
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.post(
         "http://localhost:5000/api/batch",
@@ -120,24 +179,31 @@ export default function ManageBatch() {
           },
         }
       );
-      if (response.data !== null) {
-        Swal.fire({
-          icon: "success",
-          title: "Registered",
-          text: "Batch Register SuccessFully!",
-        });
-      }
-      setData((...prev) => [...prev, response.data]);
+      console.log(response.data);
+
+      setData((prevData) => [...prevData, response.data]);
+
+      setInputs({
+        name: "",
+        startDate: null,
+        endDate: null,
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Registered",
+        text: "Batch Registered Successfully!",
+      });
     } catch (error) {
+      console.error("Error adding batch:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.message || "Batch Register Failed!",
+        text: error.message || "Failed to register batch!",
       });
     }
   };
 
-  console.log(data);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -176,10 +242,20 @@ export default function ManageBatch() {
         <Button variant="outlined" color="warning" sx={{ m: 1 }}>
           All Batches
         </Button>
-        <Button variant="outlined" color="warning" sx={{ m: 1 }}>
+        <Button
+          variant="outlined"
+          color="warning"
+          sx={{ m: 1 }}
+          onClick={handleOngoing}
+        >
           Ongoing Batches
         </Button>
-        <Button variant="outlined" color="warning" sx={{ m: 1 }}>
+        <Button
+          variant="outlined"
+          color="warning"
+          sx={{ m: 1 }}
+          onClick={handleComplete}
+        >
           Completed Batches
         </Button>
       </Box>
@@ -193,7 +269,7 @@ export default function ManageBatch() {
                 <TableCell align="center">Start Date</TableCell>
                 <TableCell align="center">End Date</TableCell>
                 <TableCell align="center">Progress</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableCell align="center">Details</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -225,7 +301,15 @@ export default function ManageBatch() {
                       />
                     </TableCell>
                     <TableCell align="center">
-                      <Button>View Detail</Button>
+                      <Button
+                        onClick={() => {
+                          dispatch(setBatch(row));
+
+                          selectComponentState("BatchDetails");
+                        }}
+                      >
+                        View
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -253,7 +337,6 @@ export default function ManageBatch() {
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
             const email = formJson.email;
-            console.log(email);
             handleClose();
           },
         }}
@@ -292,7 +375,12 @@ export default function ManageBatch() {
               />
             </LocalizationProvider>
             <Box textAlign="center" sx={{ m: 1 }}>
-              <Button type="submit" variant="contained" color="secondary">
+              <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                onClick={async () => await handleSubmit()}
+              >
                 Add Batch
               </Button>
             </Box>
