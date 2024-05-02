@@ -6,6 +6,7 @@ import { sendEmail } from "../../utils/smtpServerUtils/smtpEmail";
 import AppError from "../../utils/errorUtils/appError";
 import { sendResponse } from "../../helpers/customResponse";
 import { HelperFunction } from "../../helpers/registerFormat";
+import { send } from "process";
 
 export class AdminService {
   public static async createBatchService(
@@ -24,8 +25,9 @@ export class AdminService {
       startDate: startDate,
       endDate: endDate,
     });
-    await batch.save();
-    sendResponse(res, 201, "Batch Saved SuccessFully", batch);
+    const sendData = await batch.save();
+    console.log(sendData);
+    sendResponse(res, 201, "Batch Saved SuccessFully", sendData);
   }
 
   public static async registerInternService(

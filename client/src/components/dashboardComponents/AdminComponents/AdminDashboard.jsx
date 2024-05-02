@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Legend, Tooltip, Cell } from "recharts";
-import { generateColors } from "../../../utils/GenerateColors";
+import { generateColors } from "../../../utils/generateColors.js";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import {

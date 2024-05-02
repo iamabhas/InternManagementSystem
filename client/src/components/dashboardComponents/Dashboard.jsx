@@ -39,7 +39,7 @@ import BatchDetails from "./AdminComponents/BatchDetails.jsx";
 import ErrorPage from "../../pages/ErrorPage";
 import ManageBatch from "./AdminComponents/ManageBatch";
 import ManageLeaves from "./AdminComponents/ManageLeaves.jsx";
-import {mainListItems} from "./listItems";
+import {mainListItems} from "./ListItems.jsx";
 
 
 function Copyright(props) {

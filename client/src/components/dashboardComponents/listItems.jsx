@@ -12,7 +12,7 @@ import {HiDocumentCheck} from "react-icons/hi2";
 
 export const mainListItems = (role, setSelectedComponent) => {
     switch (role) {
-        case "user":
+        case "intern":
             return (
                 <React.Fragment>
                     <ListItemButton
