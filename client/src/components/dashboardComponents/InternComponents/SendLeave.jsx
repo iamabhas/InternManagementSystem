@@ -4,11 +4,11 @@ import {
     Box,
     Button,
     Dialog,
-    DialogActions,
-    DialogContent,
     DialogTitle, TextField, Grid
 } from "@mui/material";
 import {RiMailSendLine} from "react-icons/ri";
+
+// Date imports
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 
@@ -17,7 +17,6 @@ const SendLeave = () => {
     const {
         control,
         handleSubmit,
-        watch,
         reset,
         formState: {errors, isValid},
     } = useForm({
@@ -29,7 +28,7 @@ const SendLeave = () => {
         },
         mode: "onBlur",
     });
-    const watchAllFields = watch()
+
     const handleClickOpen = () => {
         setOpen(true);
     };
