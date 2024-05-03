@@ -60,7 +60,7 @@ export class InternQualificationService {
     ) {
         // if (role === USER) {
         //     if (userId !== req.params.id) {
-        //         return next(new AppError("Interns can only fetch their own qualifications !", 400))
+        //         return next(new AppError("Interns can only fetch their own qualifications !", 404))
         //     }
         // }
         const internQualifications = await InternQualification.find({
@@ -82,6 +82,7 @@ export class InternQualificationService {
     }
 
     public static async downloadBatchData(
+        res: Response,
         batchId: mongoose.Types.ObjectId | string
     ) {
         const qualifications = await InternQualification.find({
@@ -90,6 +91,15 @@ export class InternQualificationService {
 
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Batch Qualifications");
+
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+        res.setHeader(
+            "Content-Disposition",
+            `attachment; filename="batchData.xlsx"`
+        );
 
         worksheet.columns = [
             {header: "Intern Name", key: "name", width: 30},
