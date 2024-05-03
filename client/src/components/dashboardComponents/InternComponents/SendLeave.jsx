@@ -45,12 +45,13 @@ const SendLeave = () => {
 
     const onSubmit = async (data) => {
         console.log(data)
+        handleClose()
     }
 
 
     return (
         <div>
-            <Button variant="outlined" endIcon={<RiMailSendLine/>} onClick={handleClickOpen}>Send Leave
+            <Button variant="outlined" endIcon={<RiMailSendLine/>} onClick={handleClickOpen} color="success">Send Leave
                 Application</Button>
             <Dialog open={open} onClose={handleClose} fullWidth>
                 <DialogTitle>Leave Application</DialogTitle>
@@ -69,7 +70,7 @@ const SendLeave = () => {
                                 <Controller
                                     name="subject"
                                     control={control}
-                                    rules={{required: "Subject is required"}}
+                                    rules={{required: "Application Subject is required"}}
                                     render={({field}) => (
                                         <TextField
                                             margin="normal"
@@ -122,6 +123,7 @@ const SendLeave = () => {
                             variant="contained"
                             sx={{mt: 3, mb: 2}}
                             disabled={!isValid}
+
                         >
                             Send Leave
                         </Button>
