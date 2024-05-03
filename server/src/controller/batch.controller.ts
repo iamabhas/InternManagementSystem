@@ -39,6 +39,16 @@ export class BatchController {
       next(err);
     }
   }
+  public static async updateBatchByIdController(req: Request, res: Response) {
+    try {
+      const id: string | mongoose.Types.ObjectId = req.params.id;
+      await BatchService.updateBatchByIdService(res, id);
+    } catch (err: any) {
+      return res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
 
   public static async deleteBatchByIdController(req: Request, res: Response) {
     try {

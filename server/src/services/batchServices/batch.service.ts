@@ -207,6 +207,50 @@ export class BatchService {
     return sendResponse(res, 200, "Batch Fetches SuccessFully", existBatch);
   }
 
+  public static async updateBatchByIdService(
+    res: Response,
+    id: string | undefined | mongoose.Types.ObjectId
+  ) {
+    const existingBatch = await Batch.find({ _id: id }).countDocuments();
+    if (existingBatch === 0 || existingBatch < 0) {
+      throw new AppError("Batch Is Not Available", 400);
+    }
+
+    const existBatch = await Batch.findOneAndUpdate({ _id: id })
+      .populate({
+        path: "interns",
+        select: "-_id fullname",
+      })
+      .populate({
+        path: "mentor",
+        select: "-_id fullname expertise position",
+      });
+
+    return sendResponse(res, 200, "Batch Updated SuccessFully", existBatch);
+  }
+
+  public static async deleteBatchByIdService(
+    res: Response,
+    id: string | undefined | mongoose.Types.ObjectId
+  ) {
+    const existingBatch = await Batch.find({ _id: id }).countDocuments();
+    if (existingBatch === 0 || existingBatch < 0) {
+      throw new AppError("Batch Is Not Available", 400);
+    }
+
+    const existBatch = await Batch.findOneAndDelete({ _id: id })
+      .populate({
+        path: "interns",
+        select: "-_id fullname",
+      })
+      .populate({
+        path: "mentor",
+        select: "-_id fullname expertise position",
+      });
+
+    return sendResponse(res, 200, "Batch Deleted SuccessFully", existBatch);
+  }
+
   public static async getAllInternService(res: Response) {
     const internList = await user
       .find({ role: "intern" })
