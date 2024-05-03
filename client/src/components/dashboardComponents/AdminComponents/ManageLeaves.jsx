@@ -36,7 +36,7 @@ const ManageLeaves = () => {
 
     const handleDownload = async (applicationId) => {
         try {
-  
+
             const response = await axios.get(
                 `http://localhost:5000/api/dowload/${applicationId}`,
                 {
@@ -104,8 +104,8 @@ const ManageLeaves = () => {
             console.error("Error Rejecting status:", error.message);
             Swal.fire({
                 icon: "error",
-                title: "Verification Error",
-                text: error.message.data || "Already Rejected",
+                title: "Already Error",
+                text: error.message.data || "You have already rejected this application",
             });
         }
     };
@@ -147,8 +147,8 @@ const ManageLeaves = () => {
             console.error("Error verifying status:", error.message);
             Swal.fire({
                 icon: "error",
-                title: "Verification Error",
-                text: error.message.data || "Already Verified",
+                title: "Already Verified",
+                text: error.message.data || "You have already approved of this application",
             });
         }
     };
