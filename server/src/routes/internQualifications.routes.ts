@@ -21,7 +21,6 @@ internQualificationsRouter.get(
     "/get-qualification/:id",
     validateToken,
     validateRole,
-    restrictRole(USER),
     internQualificationController.getQualificationsByIdController
 );
 
