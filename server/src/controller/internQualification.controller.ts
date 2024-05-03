@@ -38,6 +38,22 @@ export class internQualificationController {
     }
   }
 
+  public static async updateQualificationsByIdController(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      await InternQualificationService.updateInternQualificationById(
+        res,
+        req.params.id,
+        next
+      );
+    } catch (err: any) {
+      next(err);
+    }
+  }
+
   public static async getInternQualificationByBatchController(
     req: Request,
     res: Response,

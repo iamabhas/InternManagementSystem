@@ -61,6 +61,29 @@ export class InternQualificationService {
         );
     }
 
+    public static async updateInternQualificationById(
+        res: Response,
+        userId: mongoose.Types.ObjectId | string,
+        next: NextFunction
+    ) {
+        const internQualifications = await InternQualification.findOneAndUpdate({
+            Intern: userId,
+        })
+            .populate("Intern", "username")
+            .populate("Batch", "name");
+        if (!internQualifications) {
+            return next(
+                new AppError("No qualifications found for the specified user.", 404)
+            );
+        }
+        sendResponse(
+            res,
+            200,
+            "Intern Qualifications Updated successfully",
+            internQualifications
+        );
+    }
+
     public static async downloadBatchData(
         batchId: mongoose.Types.ObjectId | string
     ) {
