@@ -39,13 +39,10 @@ class adminController {
 
       await AdminService.registerMentorService(res, body, next);
     } catch (err: any) {
-      console.log(err);
-      return res.status(500).json({
-        message: "Failed To Register Intern",
-        error: err.message,
-      });
+      next(err) ;
+      }
     }
-  }
 }
+
 
 export default adminController;
