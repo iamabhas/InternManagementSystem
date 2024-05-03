@@ -4,6 +4,7 @@ import {roleConstants} from "../constants/roleConstants";
 import {validateToken} from "../middleware/apiAuth.middleware";
 import {validateRole} from "../middleware/checkRole.middleware";
 import {restrictRole} from "../middleware/restrictRoles.middleware";
+import {internValidation} from "../middleware/internsValidations.middleware";
 
 const {ADMIN, MENTOR, USER} = roleConstants;
 
@@ -21,6 +22,7 @@ internQualificationsRouter.get(
     "/get-qualification/:id",
     validateToken,
     validateRole,
+    internValidation,
     internQualificationController.getQualificationsByIdController
 );
 
