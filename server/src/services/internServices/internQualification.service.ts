@@ -6,10 +6,6 @@ import user from "../../database/schema/user.schema";
 import {sendResponse} from "../../helpers/customResponse";
 import ExcelJS from "exceljs";
 
-import {roleConstants} from "../../constants/roleConstants";
-
-const {USER} = roleConstants
-
 
 export class InternQualificationService {
     public static async addQualifications(
@@ -53,16 +49,10 @@ export class InternQualificationService {
     }
 
     public static async getInternQualificationById(
-        // req: Request,
         res: Response,
         userId: mongoose.Types.ObjectId | string,
         next: NextFunction
     ) {
-        // if (role === USER) {
-        //     if (userId !== req.params.id) {
-        //         return next(new AppError("Interns can only fetch their own qualifications !", 404))
-        //     }
-        // }
         const internQualifications = await InternQualification.find({
             Intern: userId,
         })
