@@ -87,28 +87,4 @@ export class BatchController {
       next(err);
     }
   }
-
-  public static async getALLCompletedBatch(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      await BatchService.getAllCompletedBatchService(res);
-    } catch (err: any | unknown) {
-      next(err);
-    }
-  }
-
-  public static async getAllOngoingBatch(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      await BatchService.getAllOngoingBatchService(res);
-    } catch (err: any | unknown) {
-      next(err);
-    }
-  }
 }

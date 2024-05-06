@@ -1,12 +1,13 @@
 import { AdminService } from "../services/adminServices/admin.service";
 import { Request, Response, NextFunction } from "express";
+import { BatchService } from "../services/batchServices/batch.service";
 
 class adminController {
   public static async createBatch(
     req: Request,
     res: Response,
     next: NextFunction
-  ):Promise<void> {
+  ): Promise<void> {
     try {
       const body = req.body;
       await AdminService.createBatchService(res, body, next);
@@ -19,7 +20,7 @@ class adminController {
     req: Request,
     res: Response,
     next: NextFunction
-  ):Promise<void> {
+  ): Promise<void> {
     try {
       const body = req.body;
       await AdminService.registerInternService(res, body, next);
@@ -33,12 +34,26 @@ class adminController {
     req: Request,
     res: Response,
     next: NextFunction
-  ):Promise<void> {
+  ): Promise<void> {
     try {
       const body = req.body;
 
       await AdminService.registerMentorService(res, body, next);
     } catch (err: any) {
+      next(err);
+    }
+  }
+
+  public static async testGetAll(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const check = req.query.filter;
+      await BatchService.testGetAllService(res, check);
+      console.log(check);
+    } catch (err: any | unknown) {
       next(err);
     }
   }
