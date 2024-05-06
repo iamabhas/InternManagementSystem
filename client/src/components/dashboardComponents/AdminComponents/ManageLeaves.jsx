@@ -155,7 +155,7 @@ const ManageLeaves = () => {
 
     return (
         <div>
-            {leaveApplications.map((application) => (
+            {[...leaveApplications].reverse().map((application) => (
                 <Card
                     key={application._id}
                     variant="outlined"
@@ -212,7 +212,7 @@ const ManageLeaves = () => {
                                 startIcon={<VscPass style={{fontSize: "1.5rem"}}/>}
                                 onClick={async () => await handleVerify(application._id)}
                             >
-                                {application.approveStatus ? "Approved" : "Verify Status"}
+                                {application.approveStatus ? "Approved" : "Approve Leave Request"}
                             </Button>
                             <Button
                                 sx={{marginTop: "0.5rem"}}
@@ -222,7 +222,7 @@ const ManageLeaves = () => {
                             >
                                 {application.approveStatus === "Approved"
                                     ? "Approved"
-                                    : "Reject"}
+                                    : "Reject Leave Request"}
                             </Button>
                         </Box>
                     </CardContent>

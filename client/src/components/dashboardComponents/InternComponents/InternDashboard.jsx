@@ -46,8 +46,10 @@ const InternDashboard = () => {
     }, []);
     return (
         <main>
-            <Typography variant="h6">Ongoing Leave Approved by HR</Typography>
-            <Box sx={{m: 2}}>
+
+            <Typography variant="h6">Ongoing Leave Approved by HR: </Typography>
+
+            {data.length > 0 ? <Box sx={{m: 2}}>
 
                 {
 
@@ -66,7 +68,8 @@ const InternDashboard = () => {
 
                 }
 
-            </Box>
+            </Box> : <Typography sx={{m: 2}} variant="h5">No current leaves !</Typography>}
+
         </main>
     );
 };
