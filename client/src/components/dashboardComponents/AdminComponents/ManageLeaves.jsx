@@ -155,7 +155,7 @@ const ManageLeaves = () => {
 
   return (
     <div>
-      {[...leaveApplications].reverse().map((application) => (
+      {leaveApplications.map((application) => (
         <Card
           key={application._id}
           variant="outlined"
