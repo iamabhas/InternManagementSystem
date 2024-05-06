@@ -95,7 +95,8 @@ const RegisterQualifications = () => {
           },
         }
       );
-      setQualificationsData(Object.assign(qualificationsData, response.data));
+
+      setQualificationsData(data);
       console.log(response.data);
     } catch (error) {
       console.log(error);
