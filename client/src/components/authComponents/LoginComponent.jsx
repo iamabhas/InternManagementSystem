@@ -15,7 +15,7 @@ import {createTheme, ThemeProvider} from "@mui/material/styles";
 import BackToHome from "../../utils/BackToHome";
 import {useNavigate} from "react-router";
 import {useDispatch} from "react-redux";
-import {loginFunction} from "../../services/Api.js";
+import {loginFunction} from "../../services/api.js";
 import {loginReducer} from "../../redux/authSlice";
 import Swal from "sweetalert2";
 
