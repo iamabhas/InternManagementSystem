@@ -117,6 +117,13 @@ const SendLeave = () => {
                   )}
                 />
               </Grid>
+              <Box sx={{ display: "flex", marginLeft: "30px" }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker label="Start Date" sx={{ m: 1 }} fullWidth />
+
+                  <DatePicker label="End Date" sx={{ m: 1 }} />
+                </LocalizationProvider>
+              </Box>
             </Grid>
             <Button
               type="submit"
