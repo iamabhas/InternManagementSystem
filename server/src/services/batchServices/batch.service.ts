@@ -87,12 +87,14 @@ export class BatchService {
     let data: Array<any> = [];
 
     batchList.forEach((batch) => {
-      data.push({
-        id: batch._id,
-        Batchname: batch.name,
-        Interns: batch.interns.length,
-        Mentors: batch.mentor.length,
-      });
+      if (new Date() < new Date(batch.endDate)) {
+        data.push({
+          id: batch._id,
+          Batchname: batch.name,
+          Interns: batch.interns.length,
+          Mentors: batch.mentor.length,
+        });
+      }
     });
 
     return res.status(201).json({
@@ -261,7 +263,7 @@ export class BatchService {
     return sendResponse(res, 201, "Mentors", mentorList);
   }
 
-  public static async getAllCompletedBatchService(res: Response) {
+  public static async testGetAllService(res: Response, check: string | any) {
     const batchList = await Batch.find({})
       .populate({
         path: "interns",
@@ -275,43 +277,50 @@ export class BatchService {
     if (!batchList) {
       throw new AppError("Batch Cannot be Fetched", 401);
     }
-    let data: Array<any> = [];
-    batchList.forEach((batch) => {
-      if (new Date() > new Date(batch.get("endDate"))) {
-        data.push(batch);
+    let data;
+
+    switch (check) {
+      case "completed": {
+        data = await Batch.find({ endDate: { $lt: new Date() } })
+          .populate({
+            path: "interns",
+            select: " -_id fullname role ",
+          })
+          .populate({
+            path: "mentor",
+            select: " -_id fullname expertise position",
+          });
+        break;
       }
-    });
-    if (data.length === 0) {
-      throw new AppError("There Is No Batch That Are Completed", 400);
-    }
-
-    return sendResponse(res, 201, "Completed Batch", data);
-  }
-
-  public static async getAllOngoingBatchService(res: Response) {
-    const batchList = await Batch.find({})
-      .populate({
-        path: "interns",
-        select: " -_id fullname role ",
-      })
-      .populate({
-        path: "mentor",
-        select: " -_id fullname expertise position",
-      });
-
-    if (!batchList) {
-      throw new AppError("Batch Cannot be Fetched", 401);
-    }
-    let data: Array<any> = [];
-    batchList.forEach((batch) => {
-      if (new Date() < new Date(batch.get("endDate"))) {
-        data.push(batch);
+      case "ongoing": {
+        data = await Batch.find({ endDate: { $gt: new Date() } })
+          .populate({
+            path: "interns",
+            select: " -_id fullname role ",
+          })
+          .populate({
+            path: "mentor",
+            select: " -_id fullname expertise position",
+          });
+        break;
       }
-    });
-    if (data.length === 0) {
-      throw new AppError("There Is No Batch That Are Ongoing", 400);
+      case "all": {
+        data = await Batch.find({})
+          .populate({
+            path: "interns",
+            select: " -_id fullname role ",
+          })
+          .populate({
+            path: "mentor",
+            select: " -_id fullname expertise position",
+          });
+        break;
+      }
+      default:
     }
-
-    return sendResponse(res, 201, "Ongoing Batch", data);
+    if (data === null || undefined) {
+      throw new AppError("No Batch Matches Any Filter", 401);
+    }
+    return sendResponse(res, 201, "Batches", data);
   }
 }

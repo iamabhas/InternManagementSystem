@@ -47,17 +47,33 @@ export class HelperFunction {
       });
       const dbUser = await newUser.save();
 
-      await Batch.updateOne(
-        { _id: bodyObj.BatchId },
-        {
-          $push: {
-            interns: dbUser._id,
+      if (dbUser.get("role") === "intern") {
+        await Batch.updateOne(
+          { _id: bodyObj.BatchId },
+          {
+            $push: {
+              interns: dbUser._id,
+            },
           },
-        },
-        {
-          new: true,
-        }
-      );
+          {
+            new: true,
+          }
+        );
+      }
+
+      if (dbUser.get("role") === "mentor") {
+        await Batch.updateOne(
+          { _id: bodyObj.BatchId },
+          {
+            $push: {
+              mentor: dbUser._id,
+            },
+          },
+          {
+            new: true,
+          }
+        );
+      }
       await user.updateOne(
         {
           _id: dbUser._id,
