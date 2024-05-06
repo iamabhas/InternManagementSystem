@@ -98,7 +98,7 @@ export default function ManageMentors() {
       if (response && `${response.status}`.startsWith("2")) {
         Swal.fire({
           title: "Success",
-          text: "Intern Registered Successfully",
+          text: "Mentor Registered Successfully",
           timer: 2000,
           icon: "success",
         });
@@ -265,7 +265,7 @@ export default function ManageMentors() {
       </Box>
 
       <Dialog open={open} onClose={handleClose} fullWidth>
-        <DialogTitle>Add Intern</DialogTitle>
+        <DialogTitle>Add Mentor</DialogTitle>
         <DialogContent>
           <Grid container spacing={2}>
             {" "}

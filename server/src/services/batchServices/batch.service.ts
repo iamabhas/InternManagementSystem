@@ -87,12 +87,14 @@ export class BatchService {
     let data: Array<any> = [];
 
     batchList.forEach((batch) => {
-      data.push({
-        id: batch._id,
-        Batchname: batch.name,
-        Interns: batch.interns.length,
-        Mentors: batch.mentor.length,
-      });
+      if (new Date() < new Date(batch.endDate)) {
+        data.push({
+          id: batch._id,
+          Batchname: batch.name,
+          Interns: batch.interns.length,
+          Mentors: batch.mentor.length,
+        });
+      }
     });
 
     return res.status(201).json({

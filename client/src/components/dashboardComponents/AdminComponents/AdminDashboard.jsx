@@ -123,11 +123,9 @@ const Admin = () => {
                 outerRadius={80}
                 label
               >
-                {batch.Mentors > 0
-                  ? batchData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={colors[index]} />
-                    ))
-                  : null}
+                {batchData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={colors[index]} />
+                ))}
               </Pie>
               <Legend
                 align="right"
