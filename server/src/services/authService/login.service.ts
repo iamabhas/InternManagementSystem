@@ -6,7 +6,7 @@ import AppError from "../../utils/errorUtils/appError";
 import user from "../../database/schema/user.schema";
 import {JwtService} from "../jwtServices/jwt.service";
 
-const {ERROR, FAIL, SUCCESS} = statusConstants;
+const {SUCCESS} = statusConstants;
 const {ADMIN, USER, MENTOR, SUPER_ADMIN} = roleConstants;
 
 export class AuthService {

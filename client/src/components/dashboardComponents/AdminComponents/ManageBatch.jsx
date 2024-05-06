@@ -275,18 +275,19 @@ export default function ManageBatch({selectComponentState}) {
                     variant="outlined"
                     color="warning"
                     sx={{m: 1}}
-                    onClick={handleOngoing}
+                    onClick={handleComplete}
                 >
-                    Ongoing Batches
+                    Completed Batches
                 </Button>
                 <Button
                     variant="outlined"
                     color="warning"
                     sx={{m: 1}}
-                    onClick={handleComplete}
+                    onClick={handleOngoing}
                 >
-                    Completed Batches
+                    Non-Completed Batches
                 </Button>
+
             </Box>
 
             <Box textAlign="center" sx={{m: 5}}>
