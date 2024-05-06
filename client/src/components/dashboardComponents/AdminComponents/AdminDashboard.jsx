@@ -18,6 +18,7 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
+import { BACKEND_URL } from "../../../services/helper.js";
 
 const Admin = () => {
   const [batchData, setBatchData] = useState([]);
@@ -32,14 +33,11 @@ const Admin = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/batchdash",
-          {
-            headers: {
-              Authorization: accesstoken,
-            },
-          }
-        );
+        const response = await axios.get(`${BACKEND_URL}/api/batchdash`, {
+          headers: {
+            Authorization: accesstoken,
+          },
+        });
 
         const unfilteredData = response.data.data;
         const filteredData = unfilteredData.filter((uf) => {
@@ -57,7 +55,7 @@ const Admin = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/incoming", {
+        const response = await axios.get(`${BACKEND_URL}/api/incoming`, {
           headers: {
             Authorization: accesstoken,
           },
@@ -74,7 +72,7 @@ const Admin = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/current", {
+        const response = await axios.get(`${BACKEND_URL}/api/current`, {
           headers: {
             Authorization: accesstoken,
           },
@@ -123,9 +121,11 @@ const Admin = () => {
                 outerRadius={80}
                 label
               >
-                {batchData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={colors[index]} />
-                ))}
+                {batch.Mentors > 0
+                  ? batchData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={colors[index]} />
+                    ))
+                  : null}
               </Pie>
               <Legend
                 align="right"
