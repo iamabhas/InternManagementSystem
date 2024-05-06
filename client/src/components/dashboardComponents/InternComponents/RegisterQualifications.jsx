@@ -4,13 +4,23 @@ import {
     Box,
     Button,
     Dialog,
-    DialogTitle, TextField, Grid
+    DialogTitle, TextField, Grid, Typography
 } from "@mui/material";
 import {FaUserGraduate} from "react-icons/fa";
-
+import {useSelector} from "react-redux";
+import Swal from "sweetalert2";
+import axios from "axios";
+import {BACKEND_URL} from "../../../services/helper.js";
+import {returnMonthName} from "../../../utils/returnMonthName.js";
 
 const RegisterQualifications = () => {
     const [open, setOpen] = React.useState(false);
+
+    const [qualificationsExist, setQualificationsExists] = React.useState(false);
+    const [qualificationsData, setQualificationsData] = React.useState({});
+
+    const accessToken = useSelector((state) => state.auth.token);
+    const userId = useSelector((state) => state.auth.userId);
     const {
         control,
         handleSubmit,
@@ -26,8 +36,40 @@ const RegisterQualifications = () => {
         mode: "onBlur",
     });
 
+    const fetchQualifications = async () => {
+        try {
+            const response = await axios.get(
+                `${BACKEND_URL}/api/get-qualification/${userId}`,
+                {
+                    headers: {
+                        Authorization: accessToken,
+                    },
+                }
+            );
+            if (response.data.data.length > 0) {
+                setQualificationsExists(true);
+            }
+            setQualificationsData(response.data.data[0]);
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: error.response.data.message,
+            });
+        }
+    }
+    React.useEffect(() => {
+        fetchQualifications()
+    }, [])
+
     const handleClickOpen = () => {
         setOpen(true);
+        if (qualificationsExist) {
+            reset({
+                ...qualificationsData
+            })
+        }
+
     };
 
     const handleClose = () => {
@@ -49,8 +91,27 @@ const RegisterQualifications = () => {
 
     return (
         <div>
-            <Button variant="outlined" endIcon={<FaUserGraduate/>} onClick={handleClickOpen} color="success">Register
-                Qualification</Button>
+            <Button variant="outlined" endIcon={<FaUserGraduate/>} onClick={handleClickOpen} color="success">
+
+                {qualificationsExist ? `Edit Qualifications` : `Add Qualifications`}
+
+            </Button>
+
+            <div>
+                {qualificationsExist ? <Box sx={{m: 5}}>
+                        <Typography variant="h5" sx={{mb: 2}}>
+                            Your Qualifications: </Typography>
+                        <Typography variant="h6">University: {qualificationsData.universityName}</Typography>
+                        <Typography
+                            variant="h6">Graduation: {returnMonthName(qualificationsData.graduationMonth)} of {qualificationsData.graduationYear}</Typography>
+                        <Typography variant="h6">Skill set: {qualificationsData.skills}</Typography>
+                    </Box> :
+                    <Typography sx={{m: 5}} variant="h5">Please Register
+                        your qualifications as soon as possible by clicking the add qualifications button
+                        !</Typography>}
+            </div>
+
+
             <Dialog open={open} onClose={handleClose} fullWidth>
                 <DialogTitle>Qualifications</DialogTitle>
                 <Box sx={{
@@ -182,7 +243,7 @@ const RegisterQualifications = () => {
                             disabled={!isValid}
 
                         >
-                            Add Qualifications
+                            {qualificationsExist ? `Edit ` : `Add `}
                         </Button>
                     </Box>
                 </Box>
