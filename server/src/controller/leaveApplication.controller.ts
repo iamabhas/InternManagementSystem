@@ -42,7 +42,6 @@ export class leaveApplicationController {
         next: NextFunction
     ) {
         try {
-            console.log(req.params.id);
             const id: string | mongoose.Types.ObjectId = req.params.id;
             await LeaveApplicationService.verifiedLeaveService(res, id);
         } catch (err: any | unknown) {
@@ -50,7 +49,7 @@ export class leaveApplicationController {
         }
     }
 
-    public static async DowloadLeave(
+    public static async downloadLeave(
         req: Request,
         res: Response,
         next: NextFunction
