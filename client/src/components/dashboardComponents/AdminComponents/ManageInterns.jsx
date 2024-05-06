@@ -246,7 +246,7 @@ export default function ManageInterns() {
                                         <TableCell component="th" scope="row">
                                             {row?.fullname}
                                         </TableCell>
-                                        <TableCell align="center">{row?.fullname}</TableCell>
+                                        <TableCell align="center">{row?.username}</TableCell>
                                         <TableCell align="center">{row?.phoneNo}</TableCell>
                                         <TableCell align="center">{row?.email}</TableCell>
                                         <TableCell align="center">
