@@ -29,7 +29,6 @@ export class internQualificationController {
         try {
 
             await InternQualificationService.getInternQualificationById(
-                // req,
                 res,
                 req.params.id,
                 next
