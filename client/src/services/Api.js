@@ -1,4 +1,4 @@
-import {commonRequest} from "./ApiCall";
+import {commonRequest} from "./apiCall.js";
 import {BACKEND_URL} from "./helper.js";
 
 export const loginFunction = async (data) => {
