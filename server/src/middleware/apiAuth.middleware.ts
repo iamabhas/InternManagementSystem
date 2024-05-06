@@ -12,10 +12,10 @@ declare global {
     }
 }
 
-type functionParam = (req: Request, res: Response, next: NextFunction) => void;
+type functionParam = (req: Request, _: any, next: NextFunction) => void;
 export const validateToken: functionParam = (
     req: Request,
-    res: Response,
+    _: any,
     next: NextFunction
 ) => {
     const {authorization} = req.headers;
