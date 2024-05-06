@@ -39,7 +39,7 @@ import {useDispatch} from "react-redux";
 import {useSelector} from "react-redux";
 import {setBatch} from "../../../redux/batchSelectSlice.js";
 
-function LinearProgressWithLabel(props) {
+export function LinearProgressWithLabel(props) {
     return (
         <Box sx={{display: "flex", alignItems: "center"}}>
             <Box sx={{width: "100%", mr: 1}}>
@@ -58,7 +58,7 @@ LinearProgressWithLabel.propTypes = {
     value: PropTypes.number.isRequired,
 };
 
-const calculateProgress = (startDate, endDate) => {
+export const calculateProgress = (startDate, endDate) => {
     if (new Date(startDate) > new Date()) {
         return 0;
     }
