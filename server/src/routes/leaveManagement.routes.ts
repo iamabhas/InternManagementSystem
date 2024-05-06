@@ -46,7 +46,7 @@ leaveManagementRouter.get(
     validateToken,
     validateRole,
     restrictRole(USER, MENTOR),
-    leaveApplicationController.DowloadLeave
+    leaveApplicationController.downloadLeave
 );
 
 leaveManagementRouter.get(
