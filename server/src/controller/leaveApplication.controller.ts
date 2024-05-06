@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { LeaveApplicationService } from "../services/leaveApplicationServices/leaveApplication.service";
 import mongoose from "mongoose";
+import LeaveApplication from "../database/schema/leaveApplication.schema";
 
 export class leaveApplicationController {
   public static async createLeaveApplicationController(
@@ -110,6 +111,19 @@ export class leaveApplicationController {
       const authId = req.user.user_id;
       await LeaveApplicationService.getLeaveApplicationByUserId(res, authId);
     } catch (error: any | unknown) {
+      next(error);
+    }
+  }
+
+  public static async getAllInternLeaves(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const authId = req.user.user_id;
+      await LeaveApplicationService.getAllInternLeavesService(res, authId);
+    } catch (error) {
       next(error);
     }
   }

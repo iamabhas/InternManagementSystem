@@ -74,4 +74,12 @@ leaveManagementRouter.get(
   //   internValidation,
   leaveApplicationController.getInternLeaves
 );
+
+leaveManagementRouter.get(
+  "/leave-intern-all",
+  validateToken,
+  validateRole,
+  restrictRole(MENTOR),
+  leaveApplicationController.getAllInternLeaves
+);
 export default leaveManagementRouter;

@@ -87,6 +87,7 @@ export class LeaveApplicationService {
         { User: userId },
         { approveStatus: true },
         { leaveToDate: { $gt: new Date() } },
+        { leaveFromDate: { $lt: new Date() } },
       ],
     });
 
@@ -242,5 +243,17 @@ export class LeaveApplicationService {
       }
     });
     return sendResponse(res, 201, "Incoming Application", resData);
+  }
+
+  public static async getAllInternLeavesService(
+    res: Response,
+    userId: string | mongoose.Types.ObjectId | undefined
+  ) {
+    const findUser = await user.findOne({ _id: userId });
+    const data = await LeaveApplication.find({ User: userId });
+    if (data.length === 0) {
+      throw new AppError("The Intern Has No Leaves", 401);
+    }
+    return sendResponse(res, 201, `${findUser?.fullname} All Leaves`, data);
   }
 }
