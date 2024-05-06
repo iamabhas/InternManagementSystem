@@ -33,6 +33,7 @@ const Admin = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log(accesstoken);
         const response = await axios.get(`${BACKEND_URL}/api/batchdash`, {
           headers: {
             Authorization: accesstoken,
