@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { LeaveApplicationService } from "../services/leaveApplicationServices/leaveApplication.service";
 import mongoose from "mongoose";
 import LeaveApplication from "../database/schema/leaveApplication.schema";
+import { validationResult } from "express-validator";
+import AppError from "../utils/errorUtils/appError";
 
 export class leaveApplicationController {
   public static async createLeaveApplicationController(
@@ -43,7 +45,17 @@ export class leaveApplicationController {
     next: NextFunction
   ) {
     try {
-      const id: string | mongoose.Types.ObjectId = req.params.id;
+      const result = validationResult(req);
+
+      if (!result.isEmpty()) {
+        return next(
+          new AppError(
+            result.array().map((data) => data.msg),
+            401
+          )
+        );
+      }
+      const id = req.params.id;
       await LeaveApplicationService.verifiedLeaveService(res, id);
     } catch (err: any | unknown) {
       next(err);
@@ -56,7 +68,17 @@ export class leaveApplicationController {
     next: NextFunction
   ) {
     try {
-      const id: string | undefined = req.params.id;
+      const result = validationResult(req);
+
+      if (!result.isEmpty()) {
+        return next(
+          new AppError(
+            result.array().map((data) => data.msg),
+            401
+          )
+        );
+      }
+      const id = req.params.id;
       const adminId = req.user.user_id;
       await LeaveApplicationService.DowloadLeaveService(res, id, adminId);
     } catch (err: any | unknown) {
@@ -70,8 +92,17 @@ export class leaveApplicationController {
     next: NextFunction
   ) {
     try {
-      console.log(req.params.id);
-      const id: string | mongoose.Types.ObjectId = req.params.id;
+      const result = validationResult(req);
+
+      if (!result.isEmpty()) {
+        return next(
+          new AppError(
+            result.array().map((data) => data.msg),
+            401
+          )
+        );
+      }
+      const id = req.params.id;
       await LeaveApplicationService.rejectLeaveService(res, id);
     } catch (err: any | unknown) {
       next(err);

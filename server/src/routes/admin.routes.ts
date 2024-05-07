@@ -5,6 +5,7 @@ import { BatchController } from "../controller/batch.controller";
 import { validateToken } from "../middleware/apiAuth.middleware";
 import { validateRole } from "../middleware/checkRole.middleware";
 import { restrictRole } from "../middleware/restrictRoles.middleware";
+import { param, body } from "express-validator";
 
 const { USER, MENTOR } = roleConstants;
 const adminRouter = Router();
@@ -53,6 +54,7 @@ adminRouter.get(
   validateToken,
   validateRole,
   restrictRole(USER, MENTOR),
+  param("id").exists().isString(),
   BatchController.getBatchByIdController
 );
 
@@ -69,6 +71,7 @@ adminRouter.get(
   validateToken,
   validateRole,
   restrictRole(USER, MENTOR),
+  param("id").exists().isString(),
   BatchController.getInternById
 );
 
@@ -94,6 +97,26 @@ adminRouter.get(
   validateRole,
   restrictRole(USER, MENTOR),
   adminController.testGetAll
+);
+
+adminRouter.delete(
+  "/batch/:id",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+
+  param("id").exists().isString(),
+  BatchController.deleteBatchById
+);
+
+adminRouter.patch(
+  "/batch/:id",
+  validateToken,
+  validateRole,
+  restrictRole(USER, MENTOR),
+  body("name").exists().isString(),
+  param("id").exists().isString(),
+  BatchController.updateBatchById
 );
 
 export default adminRouter;

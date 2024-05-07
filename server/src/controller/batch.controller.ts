@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { BatchService } from "../services/batchServices/batch.service";
 import mongoose from "mongoose";
 import { AdminService } from "../services/adminServices/admin.service";
+import { validationResult } from "express-validator";
+import AppError from "../utils/errorUtils/appError";
 export class BatchController {
   public static async getBatchController(
     req: Request,
@@ -85,6 +87,50 @@ export class BatchController {
       await BatchService.getAllBatchServicesForDashBoard(res);
     } catch (err: any | unknown) {
       next(err);
+    }
+  }
+  public static async deleteBatchById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const batchId = req.params.id;
+      const result = validationResult(req);
+      if (!result.isEmpty()) {
+        return next(
+          new AppError(
+            result.array().map((data) => data.msg),
+            401
+          )
+        );
+      }
+      await BatchService.deleteBatchByIdService(res, batchId);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async updateBatchById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const result = validationResult(req);
+      if (!result.isEmpty()) {
+        return next(
+          new AppError(
+            result.array().map((data) => `${data.msg}`),
+            401
+          )
+        );
+      }
+      const body = req.body;
+      const batchId = req.params.id;
+      await BatchService.updateBatchByIdservice(res, batchId, body);
+    } catch (error) {
+      next(error);
     }
   }
 }

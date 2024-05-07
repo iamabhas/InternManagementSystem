@@ -5,7 +5,7 @@ import { validateToken } from "../middleware/apiAuth.middleware";
 import { validateRole } from "../middleware/checkRole.middleware";
 import { restrictRole } from "../middleware/restrictRoles.middleware";
 import { internValidation } from "../middleware/internsValidations.middleware";
-
+import { param } from "express-validator";
 const { ADMIN, MENTOR, USER } = roleConstants;
 
 const leaveManagementRouter = Router();
@@ -31,6 +31,7 @@ leaveManagementRouter.patch(
   validateToken,
   validateRole,
   restrictRole(USER, MENTOR),
+  param("id").exists().isString(),
   leaveApplicationController.verifiedLeave
 );
 
@@ -39,6 +40,7 @@ leaveManagementRouter.patch(
   validateToken,
   validateRole,
   restrictRole(USER, MENTOR),
+  param("id").exists().isString(),
   leaveApplicationController.rejectLeave
 );
 
@@ -47,6 +49,7 @@ leaveManagementRouter.get(
   validateToken,
   validateRole,
   restrictRole(USER, MENTOR),
+  param("id").exists().isString(),
   leaveApplicationController.downloadLeave
 );
 
@@ -72,6 +75,7 @@ leaveManagementRouter.get(
   validateRole,
   restrictRole(MENTOR),
   //   internValidation,
+  param("id").exists().isString(),
   leaveApplicationController.getInternLeaves
 );
 

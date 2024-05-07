@@ -94,10 +94,7 @@ export class LeaveApplicationService {
     return sendResponse(res, 200, `${existsUser?.fullname} Leaves`, data);
   }
 
-  public static async verifiedLeaveService(
-    res: Response,
-    id: string | mongoose.Types.ObjectId
-  ) {
+  public static async verifiedLeaveService(res: Response, id: string) {
     const checkLeave = await LeaveApplication.findOne({ _id: id });
     if (!checkLeave) {
       throw new AppError("Leave Is Expired or Does not Exists", 400);
@@ -124,8 +121,8 @@ export class LeaveApplicationService {
 
   public static async DowloadLeaveService(
     res: Response,
-    id: string | undefined,
-    adminId: string | undefined
+    id: string,
+    adminId: string
   ) {
     const existAdmin = await user.findOne({ _id: adminId });
     const check = existAdmin?.get("role") === ADMIN ? true : false;
@@ -171,10 +168,7 @@ export class LeaveApplicationService {
     res.send(pdf);
   }
 
-  public static async rejectLeaveService(
-    res: Response,
-    id: string | undefined
-  ) {
+  public static async rejectLeaveService(res: Response, id: string) {
     const checkLeave = await LeaveApplication.findOne({ _id: id });
     if (!checkLeave) {
       throw new AppError("Leave Is Expired or Does not Exists", 400);

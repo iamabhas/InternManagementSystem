@@ -56,6 +56,7 @@ const InternDashboard = () => {
             },
           }
         );
+        console.log(response.data.data);
         setBatchData(response.data.data);
       } catch (error) {
         console.log(error);
