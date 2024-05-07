@@ -8,6 +8,7 @@ import internQualificationsRouter from "./internQualifications.routes";
 const { SUCCESS } = statusConstants;
 import AppError from "../utils/errorUtils/appError";
 import { errorHandler } from "../middleware/errorHandler";
+import internRouter from "./user.routes";
 
 export const initializeRoutes = (expressApplication: Application) => {
   //landing route
@@ -21,6 +22,7 @@ export const initializeRoutes = (expressApplication: Application) => {
     adminRouter,
     leaveManagementRouter,
     internQualificationsRouter,
+    internRouter,
   ]);
 
   interface error extends Error {

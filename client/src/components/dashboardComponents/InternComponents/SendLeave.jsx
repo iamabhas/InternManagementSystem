@@ -27,6 +27,7 @@ const SendLeave = () => {
   const [open, setOpen] = React.useState(false);
   const [leavesData, setLeavesData] = React.useState([]);
   const accessToken = useSelector((state) => state.auth.token);
+  const username = useSelector((state) => state.auth.userName);
   const [dateInputs, setDateInputs] = React.useState({
     leaveFromDate: null,
     leaveToDate: null,
@@ -214,7 +215,7 @@ const SendLeave = () => {
 
       <Box sx={{ mt: 2 }}>
         <Typography variant="h5" gutterBottom>
-          Leave History
+          Leave History Of {username}
         </Typography>
         <TableContainer component={Paper} sx={{ borderRadius: 4 }}>
           <Table>
@@ -227,7 +228,7 @@ const SendLeave = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {leavesData.map((leave) => (
+              {[...leavesData].reverse().map((leave) => (
                 <TableRow key={leave.id}>
                   <TableCell>{leave.subject}</TableCell>
                   <TableCell>{formatDate(leave.leaveFromDate)}</TableCell>

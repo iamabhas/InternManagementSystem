@@ -13,4 +13,17 @@ export class UserController {
       return next(new AppError(err.message, 500));
     }
   }
+  public static async getUserInfo(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const authId = req.user.user_id;
+      const queryname: string | any = req.query.name;
+      await UserService.getUserInformation(res, authId, queryname);
+    } catch (err) {
+      next(err);
+    }
+  }
 }

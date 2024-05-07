@@ -155,7 +155,7 @@ const Admin = () => {
               Incoming Applications
             </Typography>
             <List sx={{ maxHeight: 300, overflowY: "auto" }}>
-              {incomingApplications.map((application, index) => (
+              {[...incomingApplications].reverse().map((application, index) => (
                 <ListItem
                   key={index}
                   alignItems="flex-start"
@@ -240,7 +240,7 @@ const Admin = () => {
               Current Interns on Leave
             </Typography>
             <List sx={{ maxHeight: 300, overflowY: "auto" }}>
-              {internsOnLeave.map((intern, index) => (
+              {[...internsOnLeave].reverse().map((intern, index) => (
                 <ListItem
                   key={index}
                   alignItems="flex-start"
