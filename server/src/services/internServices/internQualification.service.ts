@@ -20,6 +20,7 @@ export class InternQualificationService {
       Intern: userId,
     });
     if (checkExistsQualification !== null) {
+      console.log("23");
       await InternQualification.updateOne(
         { _id: checkExistsQualification._id },
         {
@@ -37,7 +38,7 @@ export class InternQualificationService {
       const data = await InternQualification.findOne({
         _id: checkExistsQualification._id,
       });
-      sendResponse(
+      return sendResponse(
         res,
         201,
         "Intern Qualifications Updated successfully",

@@ -6,7 +6,7 @@ import { validateToken } from "../middleware/apiAuth.middleware";
 import { validateRole } from "../middleware/checkRole.middleware";
 import { restrictRole } from "../middleware/restrictRoles.middleware";
 import { param, body } from "express-validator";
-
+import { query } from "express-validator";
 const { USER, MENTOR } = roleConstants;
 const adminRouter = Router();
 
@@ -96,6 +96,7 @@ adminRouter.get(
   validateToken,
   validateRole,
   restrictRole(USER, MENTOR),
+  query("filter").exists(),
   adminController.testGetAll
 );
 

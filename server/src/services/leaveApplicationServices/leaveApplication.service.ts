@@ -239,10 +239,7 @@ export class LeaveApplicationService {
     return sendResponse(res, 201, "Incoming Application", resData);
   }
 
-  public static async getAllInternLeavesService(
-    res: Response,
-    userId: string | mongoose.Types.ObjectId | undefined
-  ) {
+  public static async getAllInternLeavesService(res: Response, userId: string) {
     const findUser = await user.findOne({ _id: userId });
     const data = await LeaveApplication.find({ User: userId });
     if (data.length === 0) {

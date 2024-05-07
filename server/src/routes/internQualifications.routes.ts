@@ -5,7 +5,7 @@ import { validateToken } from "../middleware/apiAuth.middleware";
 import { validateRole } from "../middleware/checkRole.middleware";
 import { restrictRole } from "../middleware/restrictRoles.middleware";
 import { internValidation } from "../middleware/internsValidations.middleware";
-import { query } from "express-validator";
+import { param } from "express-validator";
 const { ADMIN, MENTOR, USER } = roleConstants;
 
 const internQualificationsRouter = Router();
@@ -23,7 +23,7 @@ internQualificationsRouter.get(
   validateToken,
   validateRole,
   internValidation,
-  query("id").notEmpty(),
+  param("id").exists(),
   internQualificationController.getQualificationsByIdController
 );
 
@@ -32,6 +32,7 @@ internQualificationsRouter.get(
   validateToken,
   validateRole,
   restrictRole(USER),
+  param("batchId").exists(),
   internQualificationController.getInternQualificationByBatchController
 );
 
@@ -40,7 +41,8 @@ internQualificationsRouter.get(
   validateToken,
   validateRole,
   restrictRole(USER),
-  query("id").notEmpty(),
+  param("batchId").exists(),
+
   internQualificationController.downloadBatchDataController
 );
 
