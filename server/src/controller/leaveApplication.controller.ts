@@ -32,7 +32,6 @@ export class leaveApplicationController {
   ) {
     try {
       const id = req.user.user_id;
-
       await LeaveApplicationService.getAllApplications(res, id, next);
     } catch (err: any) {
       next(err);
