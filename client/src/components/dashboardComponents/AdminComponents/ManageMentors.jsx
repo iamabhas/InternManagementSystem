@@ -222,14 +222,18 @@ export default function ManageMentors() {
                       {row.Batch?.name ? row.Batch.name : "Not In A Batch"}
                     </TableCell>
                     <TableCell align="center">{row.position}</TableCell>
-                    <Button
-                      sx={{ marginTop: "0.8rem" }}
-                      variant="outlined"
-                      size="small"
-                      onClick={() => handleExpertiseDetails(row)}
-                    >
-                      View
-                    </Button>
+                    <TableCell align="center">
+                      {" "}
+                      <Button
+                        sx={{ marginTop: "0.8rem" }}
+                        variant="outlined"
+                        size="small"
+                        onClick={() => handleExpertiseDetails(row)}
+                      >
+                        View
+                      </Button>
+                    </TableCell>
+
                     <Dialog
                       open={openDialog}
                       onClose={handleCloseDialog}

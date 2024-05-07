@@ -224,7 +224,7 @@ const Admin = () => {
                 : "Approved"}
             </Typography>
             <Typography variant="body2" color="text.primary">
-              Batch : {selectedIntern?.Batch.name}
+              Batch : {selectedIntern?.Batch?.name}
             </Typography>
           </DialogContent>
           <DialogActions>
