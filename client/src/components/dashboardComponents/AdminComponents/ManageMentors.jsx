@@ -28,6 +28,8 @@ import { IoMdAddCircle } from "react-icons/io";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
+import { BACKEND_URL } from "../../../services/helper.js";
+
 export default function ManageMentors() {
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState([]);
@@ -41,14 +43,11 @@ export default function ManageMentors() {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/batchmentor",
-          {
-            headers: {
-              Authorization: accesstoken,
-            },
-          }
-        );
+        const response = await axios.get(`${BACKEND_URL}/api/batchmentor`, {
+          headers: {
+            Authorization: accesstoken,
+          },
+        });
 
         setData(response.data.data);
         console.log(response.data.data);
@@ -84,7 +83,7 @@ export default function ManageMentors() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/batch/mentor",
+        `${BACKEND_URL}/api/batch/mentor`,
         {
           ...inputs,
           BatchId: inputs.BatchId,
@@ -145,14 +144,11 @@ export default function ManageMentors() {
   React.useEffect(() => {
     const fetchBatchName = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/batchdash",
-          {
-            headers: {
-              Authorization: accesstoken,
-            },
-          }
-        );
+        const response = await axios.get(`${BACKEND_URL}/api/batchdash`, {
+          headers: {
+            Authorization: accesstoken,
+          },
+        });
 
         setBatchData(response.data.data);
       } catch (error) {
@@ -233,25 +229,6 @@ export default function ManageMentors() {
                         View
                       </Button>
                     </TableCell>
-
-                    <Dialog
-                      open={openDialog}
-                      onClose={handleCloseDialog}
-                      maxWidth="1"
-                    >
-                      <DialogTitle>Expertise</DialogTitle>
-                      <DialogContent>
-                        <Typography variant="body1" color="text.secondary">
-                          Progamming Language :{" "}
-                          {selectedMentor?.expertise
-                            ? selectedMentor?.expertise
-                            : "Empty"}
-                        </Typography>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={handleCloseDialog}>Close</Button>
-                      </DialogActions>
-                    </Dialog>
                   </TableRow>
                 ))}
             </TableBody>
@@ -268,6 +245,21 @@ export default function ManageMentors() {
         />
       </Box>
 
+      {/*Expertise Dialog*/}
+      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="1">
+        <DialogTitle>Expertise</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" color="text.secondary">
+            Progamming Language :{" "}
+            {selectedMentor?.expertise ? selectedMentor?.expertise : "Empty"}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/*Form Dialog*/}
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>Add Mentor</DialogTitle>
         <DialogContent>

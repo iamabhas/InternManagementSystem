@@ -1,40 +1,37 @@
 version: "3"
 services:
-  react-app:
-    image: react-app
-    stdin_open: true
+  mongo_db:
+    container_name: database_container
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo_db:/data/db
+      - mongo_db:/data/dump
+    networks:
+      - ims
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mongo_db
+    networks:
+      - ims
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     networks:
-      - mern-app
-    depends_on:
-      - api-server
-
-  api-server:
-    image: api-server
-    ports:
-      - "5000:5000"
-    networks:
-      - mern-app
-    depends_on:
-      - mongo
-    volumes:
-      - ./server/.env:/server/.env # Mount the .env file into the api-server container
-
-  mongo:`
-    image: mongo:3.6.19-xenial
-
-    restart: always
-
-    networks:
-      - mern-app
-    volumes:
-      - mongo-data:/data/db
-    ports:
-      - "27017:27017"
+      - ims
 
 networks:
-  mern-app:
+  ims:
     driver: bridge
 
 volumes:
