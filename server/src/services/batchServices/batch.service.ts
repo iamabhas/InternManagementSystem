@@ -336,6 +336,12 @@ export class BatchService {
     if (existsBatch === null || existsBatch.get("name") == null) {
       throw new AppError("Batch Does Not Exists", 401);
     }
+    if (existsBatch.get("endDate") > new Date()) {
+      throw new AppError(
+        "Batch Is Currently Running, Please Contact Mentors And Interns Before Deleting It",
+        401
+      );
+    }
     await Batch.deleteOne({ _id: batchId })
       .then((message) => {
         if (message) {
