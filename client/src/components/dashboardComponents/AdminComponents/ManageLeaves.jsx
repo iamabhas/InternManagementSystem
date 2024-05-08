@@ -4,35 +4,48 @@ import {VscFilePdf, VscPass, VscRemove} from "react-icons/vsc";
 import axios from "axios";
 import {useSelector} from "react-redux";
 import Swal from "sweetalert2";
+import {BACKEND_URL} from "../../../services/helper.js";
+
+//icons import
+import {BsFilterLeft} from "react-icons/bs";
+import {CiCircleRemove} from "react-icons/ci";
+
+//Date imports
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {LocalizationProvider, DatePicker} from "@mui/x-date-pickers";
 import {formatDate} from "../../../utils/dateFormatter.js";
 
-import {BACKEND_URL} from "../../../services/helper.js";
 
 const ManageLeaves = () => {
     const [leaveApplications, setLeaveApplications] = useState([]);
     const accesstoken = useSelector((state) => state.auth.token);
-    React.useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(
-                    `${BACKEND_URL}/api/get-leave-applications`,
-                    {
-                        headers: {
-                            Authorization: accesstoken,
-                        },
-                    }
-                );
+    const [filterDate, setFilterDate] = React.useState({
+        date: null
+    });
 
-                setLeaveApplications(response.data.data);
-                console.log(response.data.data);
-            } catch (error) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: error.response.data.message || "Failed to Fetch Leave!",
-                });
-            }
-        };
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(
+                `${BACKEND_URL}/api/get-leave-applications`,
+                {
+                    headers: {
+                        Authorization: accesstoken,
+                    },
+                }
+            );
+
+            setLeaveApplications(response.data.data);
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: error.response.data.message || "Failed to Fetch Leave!",
+            });
+        }
+    };
+
+    React.useEffect(() => {
+
         fetchData();
     }, [accesstoken]);
 
@@ -155,8 +168,67 @@ const ManageLeaves = () => {
         }
     };
 
+    const handleFilterByDate = async () => {
+        const date = new Date(filterDate.date);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+        try {
+            const response = await axios.get(
+                `${BACKEND_URL}/api/filter-applications-by-date?targetDate=${formattedDate}`,
+                {
+                    headers: {
+                        Authorization: accesstoken,
+                    },
+                }
+            );
+
+            setLeaveApplications(response.data.data);
+        } catch (error) {
+            Swal.fire({
+                title: "No data :(",
+                text: error.response.data.message || "Failed to Filter Date",
+            });
+        }
+    }
+
+    const handleDateChange = (key, date) => {
+        setFilterDate((prev) => ({
+            ...prev,
+            [key]: date,
+        }));
+    };
+
     return (
         <div>
+
+            <Box sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+            }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        label="Filter by Date"
+                        sx={{m: 1}}
+                        fullWidth
+                        value={filterDate.date}
+                        onChange={(date) => {
+                            handleDateChange("date", date)
+                        }}
+                    />
+
+                </LocalizationProvider>
+                <Button color="warning" variant="outlined" startIcon={<BsFilterLeft/>} sx={{m: 0.5}}
+                        onClick={handleFilterByDate} disabled={!filterDate.date}>Filter</Button>
+                <Button color="error" variant="outlined" startIcon={<CiCircleRemove/>} sx={{m: 0.5}}
+                        onClick={() => {
+                            setFilterDate({date: null})
+                            fetchData()
+                        }}>Clear</Button>
+            </Box>
+
             {[...leaveApplications].reverse().map((application) => (
                 <Card
                     key={application._id}
