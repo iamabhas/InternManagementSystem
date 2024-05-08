@@ -16,6 +16,7 @@ import axios from "axios";
 import {BACKEND_URL} from "../../../services/helper.js";
 import {returnMonthName} from "../../../utils/returnMonthName.js";
 
+
 const RegisterQualifications = () => {
     const [open, setOpen] = React.useState(false);
 
@@ -87,7 +88,7 @@ const RegisterQualifications = () => {
     const onSubmit = async (data) => {
         try {
             const response = await axios.post(
-                "http://localhost:5000/api/add-intern-qualifications",
+                `${BACKEND_URL}/api/add-intern-qualifications`,
                 data,
                 {
                     headers: {

@@ -1,6 +1,7 @@
 import {Container, Typography, Paper} from "@mui/material";
 import React from "react";
 import {useSelector} from "react-redux";
+import {BACKEND_URL} from "../../services/helper.js";
 
 import axios from "axios";
 
@@ -12,7 +13,7 @@ const UserProfile = () => {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/profile`, {
+                const response = await axios.get(`${BACKEND_URL}/api/profile`, {
                     headers: {
                         Authorization: token,
                     },

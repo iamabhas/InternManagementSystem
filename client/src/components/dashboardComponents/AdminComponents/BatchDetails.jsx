@@ -80,7 +80,7 @@ const BatchDetails = ({selectComponentState}) => {
             Swal.fire({
                 icon: "error",
                 title: "Error",
-                text: error.message || "DownloadFailed!",
+                text: error.message || "Download Failed!",
             });
         }
     };
