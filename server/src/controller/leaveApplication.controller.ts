@@ -157,6 +157,18 @@ export class leaveApplicationController {
       next(error);
     }
   }
+  public static async filterDate(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const reqDate: any = req.query.targetDate;
+      await LeaveApplicationService.filterDateServices(res, reqDate);
+    } catch (error: any | unknown) {
+      next(error);
+    }
+  }
 }
 
 export default leaveApplicationController;

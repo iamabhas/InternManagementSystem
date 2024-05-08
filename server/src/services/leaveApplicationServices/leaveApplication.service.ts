@@ -247,4 +247,28 @@ export class LeaveApplicationService {
     }
     return sendResponse(res, 201, `${findUser?.fullname} All Leaves`, data);
   }
+
+  public static async filterDateServices(res: Response, sendDate: Date) {
+    const existLeave: any = await LeaveApplication.find({})
+      .populate({
+        path: "Batch",
+        select: " -_id name",
+      })
+      .populate({ path: "User", select: "-_id fullname" });
+
+    let emptyData: Array<any> | any[] = [];
+    existLeave.forEach((data: object | any) => {
+      if (
+        data.sendDate.toLocaleDateString() ===
+        new Date(sendDate).toLocaleDateString()
+      ) {
+        emptyData.push(data);
+      }
+    });
+
+    if (emptyData.length === 0) {
+      throw new AppError(`There are No Leaves for ${sendDate}`, 401);
+    }
+    return sendResponse(res, 201, `${sendDate} Leaves are`, emptyData);
+  }
 }
