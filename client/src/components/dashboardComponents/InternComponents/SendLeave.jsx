@@ -14,7 +14,7 @@ import {
     TableHead,
     TableRow,
     Paper,
-    Typography, DialogContent, DialogActions,
+    Typography, DialogContent
 } from "@mui/material";
 import {RiMailSendLine} from "react-icons/ri";
 import axios from "axios";
@@ -23,6 +23,8 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {useSelector} from "react-redux";
 import {formatDate} from "../../../utils/dateFormatter";
 import GetStatusChip from "../../../utils/GetChipStatus.jsx";
+import {BACKEND_URL} from "../../../services/helper.js";
+
 
 const SendLeave = () => {
     const [open, setOpen] = React.useState(false);
@@ -79,7 +81,7 @@ const SendLeave = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:5000/api/leave-intern-all",
+                    `${BACKEND_URL}/api/leave-intern-all`,
                     {
                         headers: {
                             Authorization: accessToken,
@@ -105,7 +107,7 @@ const SendLeave = () => {
     const onSubmit = async (data) => {
         try {
             const response = await axios.post(
-                "http://localhost:5000/api/send-leave-application",
+                `${BACKEND_URL}/api/send-leave-application`,
                 {
                     ...data,
                     leaveFromDate: dateInputs.leaveFromDate,

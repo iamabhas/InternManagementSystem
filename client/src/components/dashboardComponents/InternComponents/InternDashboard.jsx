@@ -3,7 +3,7 @@ import {Typography, Box, Paper} from "@mui/material";
 import axios from "axios";
 import {useSelector} from "react-redux";
 import {formatDate} from "../../../utils/dateFormatter.js";
-
+import {BACKEND_URL} from "../../../services/helper.js";
 
 export const calculateRemainingDays = (endDate) => {
     endDate = new Date(endDate);
@@ -24,7 +24,7 @@ const InternDashboard = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:5000/api/leave-intern/${userId}`,
+                    `${BACKEND_URL}/api/leave-intern/${userId}`,
                     {
                         headers: {
                             Authorization: accessToken,
@@ -44,7 +44,7 @@ const InternDashboard = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:5000/api/intern-user?name=${username}`,
+                    `${BACKEND_URL}/api/intern-user?name=${username}`,
                     {
                         headers: {
                             Authorization: accessToken,
