@@ -6,6 +6,8 @@ import {useSelector} from "react-redux";
 import Swal from "sweetalert2";
 import {formatDate} from "../../../utils/dateFormatter.js";
 
+import {BACKEND_URL} from "../../../services/helper.js";
+
 const ManageLeaves = () => {
     const [leaveApplications, setLeaveApplications] = useState([]);
     const accesstoken = useSelector((state) => state.auth.token);
@@ -13,7 +15,7 @@ const ManageLeaves = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:5000/api/get-leave-applications",
+                    `${BACKEND_URL}/api/get-leave-applications`,
                     {
                         headers: {
                             Authorization: accesstoken,
@@ -37,7 +39,7 @@ const ManageLeaves = () => {
     const handleDownload = async (applicationId) => {
         try {
             const response = await axios.get(
-                `http://localhost:5000/api/download-leave-application/${applicationId}`,
+                `${BACKEND_URL}/api/download-leave-application/${applicationId}`,
                 {
                     headers: {
                         Authorization: accesstoken,
@@ -68,7 +70,7 @@ const ManageLeaves = () => {
     const handleReject = async (applicationId) => {
         try {
             const response = await axios.patch(
-                `http://localhost:5000/api/reject-leave-application/${applicationId}`,
+                `${BACKEND_URL}/api/reject-leave-application/${applicationId}`,
                 {},
                 {
                     headers: {
@@ -112,7 +114,7 @@ const ManageLeaves = () => {
     const handleVerify = async (applicationId) => {
         try {
             const response = await axios.patch(
-                `http://localhost:5000/api/verify-leave-application/${applicationId}`,
+                `${BACKEND_URL}/api/verify-leave-application/${applicationId}`,
                 {},
                 {
                     headers: {

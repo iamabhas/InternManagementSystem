@@ -39,6 +39,8 @@ import {useDispatch} from "react-redux";
 import {useSelector} from "react-redux";
 import {setBatch} from "../../../redux/batchSelectSlice.js";
 
+import {BACKEND_URL} from "../../../services/helper.js";
+
 export function LinearProgressWithLabel(props) {
     return (
         <Box sx={{display: "flex", alignItems: "center"}}>
@@ -108,7 +110,7 @@ export default function ManageBatch({selectComponentState}) {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/batch", {
+                const response = await axios.get(`${BACKEND_URL}/api/batch`, {
                     headers: {
                         Authorization: accesstoken,
                     },
@@ -126,7 +128,7 @@ export default function ManageBatch({selectComponentState}) {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:5000/api/test?filter=${queryVariable}`,
+                    `${BACKEND_URL}/api/test?filter=${queryVariable}`,
                     {
                         headers: {
                             Authorization: accesstoken,
@@ -150,7 +152,7 @@ export default function ManageBatch({selectComponentState}) {
     const handleSubmit = async () => {
         try {
             const response = await axios.post(
-                "http://localhost:5000/api/batch",
+                `${BACKEND_URL}/api/batch`,
                 inputs,
                 {
                     headers: {

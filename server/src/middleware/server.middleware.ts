@@ -9,6 +9,6 @@ export const initializeMiddlewares = (
 ): void => {
     expressApplication.use(express.json());
     expressApplication.use(morganMiddleware);
-    expressApplication.use(cors(corsOptionsConfig));
+    expressApplication.use(cors());
     expressApplication.use(cookieParser());
 };

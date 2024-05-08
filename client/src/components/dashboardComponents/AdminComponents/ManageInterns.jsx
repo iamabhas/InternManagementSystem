@@ -32,6 +32,7 @@ import {IoFilter} from "react-icons/io5";
 import axios from "axios";
 import {useSelector} from "react-redux";
 import {returnMonthName} from "../../../utils/returnMonthName.js";
+import {BACKEND_URL} from "../../../services/helper.js";
 
 export default function ManageInterns() {
     const [open, setOpen] = React.useState(false);
@@ -47,7 +48,7 @@ export default function ManageInterns() {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:5000/api/batchintern",
+                    `${BACKEND_URL}/api/batchintern`,
                     {
                         headers: {
                             Authorization: accesstoken,
@@ -65,7 +66,7 @@ export default function ManageInterns() {
     const fetchQualificationsDate = async (userId) => {
         try {
             const response = await axios.get(
-                `http://localhost:5000/api/get-qualification/${userId}`,
+                `${BACKEND_URL}/api/get-qualification/${userId}`,
                 {
                     headers: {
                         Authorization: accesstoken,
@@ -97,7 +98,7 @@ export default function ManageInterns() {
         e.preventDefault();
         try {
             const response = await axios.post(
-                "http://localhost:5000/api/batch/intern",
+                `${BACKEND_URL}/api/batch/intern`,
                 {
                     ...inputs,
                     BatchId: inputs.BatchId,
@@ -177,7 +178,7 @@ export default function ManageInterns() {
         const fetchBatchName = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:5000/api/batchdash",
+                    `${BACKEND_URL}/api/batchdash`,
                     {
                         headers: {
                             Authorization: accesstoken,
