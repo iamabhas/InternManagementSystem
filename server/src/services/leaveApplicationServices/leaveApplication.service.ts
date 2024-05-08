@@ -194,7 +194,9 @@ export class LeaveApplicationService {
   }
 
   public static async viewCurrentLeaveService(res: Response) {
-    const allLeave = await LeaveApplication.find({})
+    const allLeave = await LeaveApplication.find({
+      leaveToDate: { $gt: new Date() },
+    })
       .select(
         "-_id  -subject -applicationBody -leaveToDate -leaveFromDate -sendDate "
       )
@@ -206,9 +208,13 @@ export class LeaveApplicationService {
         path: "Batch",
         select: "-_id name",
       });
+
     let data: Array<any> = [];
     allLeave.forEach((leave) => {
-      if (leave.get("approveStatus") && leave.get("approveStatus") === true) {
+      if (
+        leave.get("approveStatus") === true &&
+        leave.get("leaveFromDate") < new Date()
+      ) {
         data.push(leave);
       }
     });
