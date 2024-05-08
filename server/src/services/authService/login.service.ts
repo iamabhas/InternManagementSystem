@@ -23,6 +23,7 @@ export class AuthService {
         400
       );
     }
+
     const existUser = await user.findOne({ username: username });
     if (!existUser) {
       throw new AppError("Username Does Not Match", 401);
