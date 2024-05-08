@@ -7,22 +7,33 @@ services:
     restart: always
     volumes:
       - mongo_db:/data/db
- 
+      - mongo_db:/data/dump
+    networks:
+      - ims
+
   backend:
     build:
       context: ./server
       dockerfile: Dockerfile
     ports:
-      - 5000:5001
+      - "5001:5001"
     depends_on:
       - mongo_db
+    networks:
+      - ims
 
   frontend:
     build:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - "3000:3001"
+      - "3000:3000"
+    networks:
+      - ims
+
+networks:
+  ims:
+    driver: bridge
 
 volumes:
   mongo_db:
