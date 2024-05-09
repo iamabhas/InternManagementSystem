@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Box, Button, Card, CardContent, Typography} from "@mui/material";
+import {Box, Button, Card, CardContent, Typography, Pagination, Grid} from "@mui/material";
 import {VscFilePdf, VscPass, VscRemove} from "react-icons/vsc";
 import axios from "axios";
 import {useSelector} from "react-redux";
@@ -22,6 +22,8 @@ const ManageLeaves = () => {
     const [filterDate, setFilterDate] = React.useState({
         date: null
     });
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 4;
 
     const fetchData = async () => {
         try {
@@ -200,6 +202,18 @@ const ManageLeaves = () => {
         }));
     };
 
+
+    //pagination
+    const count = Math.ceil(leaveApplications.length / itemsPerPage);
+    const handlePageChange = (event, value) => {
+        setCurrentPage(value);
+    };
+
+    const currentData = leaveApplications.slice(
+        (currentPage - 1) * itemsPerPage,
+        (currentPage - 1) * itemsPerPage + itemsPerPage
+    );
+
     return (
         <div>
 
@@ -229,75 +243,69 @@ const ManageLeaves = () => {
                         }}>Clear</Button>
             </Box>
 
-            {[...leaveApplications].reverse().map((application) => (
-                <Card
-                    key={application._id}
-                    variant="outlined"
-                    style={{marginBottom: "20px"}}
-                >
-                    <CardContent>
-                        <Typography variant="h5" component="div">
-                            Subject: {application.subject}
-                        </Typography>
-                        <Typography variant="body1" component="div">
-                            Date: {formatDate(new Date(application.sendDate))}
-                        </Typography>
 
-                        <Typography variant="body1" color="text.secondary">
-                            From :{" "}
-                            {application.User?.fullname
-                                ? application.User.fullname
-                                : "No User"}
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                            Batch:{" "}
-                            {application.Batch?.name ? application.Batch.name : "No Batch"}
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                            Requested Leave from :{" "}
-                            {formatDate(new Date(application.leaveFromDate))} - To:{" "}
-                            {formatDate(new Date(application.leaveToDate))}
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                            Status: {application.approveStatus ? "Approved" : "Pending"}
-                        </Typography>
-                        <Box sx={{display: "flex", alignItems: "center", gap: "1rem"}}>
-                            <Button
-                                sx={{marginTop: "10px"}}
-                                variant="outlined"
-                                color="error"
-                                startIcon={<VscFilePdf style={{fontSize: "1.5rem"}}/>}
-                                onClick={async () => await handleDownload(application._id)}
-                            >
-                                Download as PDF
-                            </Button>
-                            <Button
-                                sx={{
-                                    marginTop: "0.5rem",
-                                    backgroundColor: application.approveStatus
-                                        ? "#10b981"
-                                        : "#f44336",
-                                }}
-                                variant="contained"
-                                startIcon={<VscPass style={{fontSize: "1.5rem"}}/>}
-                                onClick={async () => await handleVerify(application._id)}
-                            >
-                                {application.approveStatus ? "Approved" : "Verify Status"}
-                            </Button>
-                            <Button
-                                sx={{marginTop: "0.5rem"}}
-                                variant="contained"
-                                startIcon={<VscRemove style={{fontSize: "1.5rem"}}/>}
-                                onClick={async () => await handleReject(application._id)}
-                            >
-                                {application.approveStatus === "Approved"
-                                    ? "Approved"
-                                    : "Reject"}
-                            </Button>
-                        </Box>
-                    </CardContent>
-                </Card>
-            ))}
+            <Grid container spacing={2}>
+                {[...currentData].reverse().map((application) => (
+                    <Grid item xs={12} sm={6} key={application._id}>
+                        <Card variant="outlined" sx={{marginBottom: "20px"}}>
+                            <CardContent>
+                                <Typography variant="h5" component="div">
+                                    Subject: {application.subject}
+                                </Typography>
+                                <Typography variant="body1" component="div">
+                                    Date: {formatDate(new Date(application.sendDate))}
+                                </Typography>
+                                <Typography variant="body1" color="text.secondary">
+                                    From: {application.User?.fullname || "No User"}
+                                </Typography>
+                                <Typography variant="body1" color="text.secondary">
+                                    Batch: {application.Batch?.name || "No Batch"}
+                                </Typography>
+                                <Typography variant="body1" color="text.secondary">
+                                    Requested Leave from: {formatDate(new Date(application.leaveFromDate))} -
+                                    To: {formatDate(new Date(application.leaveToDate))}
+                                </Typography>
+                                <Typography variant="body1" color="text.secondary">
+                                    Status: {application.approveStatus ? "Approved" : "Pending"}
+                                </Typography>
+                                <Box sx={{display: "flex", alignItems: "center", gap: "1rem"}}>
+                                    <Button
+                                        sx={{marginTop: "10px"}}
+                                        variant="outlined"
+                                        color="error"
+                                        startIcon={<VscFilePdf style={{fontSize: "1.5rem"}}/>}
+                                        onClick={async () => await handleDownload(application._id)}
+                                    >
+                                        Download as PDF
+                                    </Button>
+                                    <Button
+                                        sx={{
+                                            marginTop: "0.5rem",
+                                            backgroundColor: application.approveStatus ? "#10b981" : "#f44336",
+                                        }}
+                                        variant="contained"
+                                        startIcon={<VscPass style={{fontSize: "1.5rem"}}/>}
+                                        onClick={async () => await handleVerify(application._id)}
+                                    >
+                                        {application.approveStatus ? "Approved" : "Verify Status"}
+                                    </Button>
+                                    <Button
+                                        sx={{marginTop: "0.5rem"}}
+                                        variant="contained"
+                                        startIcon={<VscRemove style={{fontSize: "1.5rem"}}/>}
+                                        onClick={async () => await handleReject(application._id)}
+                                    >
+                                        {application.approveStatus === "Approved" ? "Approved" : "Reject"}
+                                    </Button>
+                                </Box>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
+            <Box sx={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+                <Pagination count={count} page={currentPage} onChange={handlePageChange}/>
+            </Box>
         </div>
     );
 };
