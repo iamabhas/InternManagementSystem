@@ -20,6 +20,8 @@ import {
   TableRow,
   TablePagination,
   LinearProgress,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
 
 //date imports
@@ -29,6 +31,8 @@ import { formatDate } from "../../../utils/dateFormatter.js";
 
 //icons imports
 import { IoMdAddCircle } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
+import { BiDetail } from "react-icons/bi";
 
 //package imports
 import axios from "axios";
@@ -278,8 +282,7 @@ export default function ManageBatch({ selectComponentState }) {
                 <TableCell align="center">Start Date</TableCell>
                 <TableCell align="center">End Date</TableCell>
                 <TableCell align="center">Progress</TableCell>
-                <TableCell align="center">Details</TableCell>
-                <TableCell align="center">Action</TableCell>
+                <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -311,23 +314,28 @@ export default function ManageBatch({ selectComponentState }) {
                       />
                     </TableCell>
                     <TableCell align="center">
-                      <Button
+                      <Tooltip
+                        title="View Details"
                         onClick={() => {
                           dispatch(setBatch(row));
                           selectComponentState("BatchDetails");
                         }}
+                        color="primary"
                       >
-                        View
-                      </Button>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="outlined"
-                        color="error"
+                        <IconButton>
+                          <BiDetail />
+                        </IconButton>
+                      </Tooltip>
+
+                      <Tooltip
+                        title="Delete"
                         onClick={() => handleDelete(row._id)}
+                        color="error"
                       >
-                        Delete
-                      </Button>
+                        <IconButton>
+                          <MdDelete />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
