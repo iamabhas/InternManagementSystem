@@ -7,13 +7,15 @@ interface response {
   status: string;
   message: string;
   data?: any;
+  dataLen?: any;
 }
 
 export const sendResponse = (
   res: Response,
   statusCode: HttpStatusCode,
   message: string,
-  data: any = null
+  data: any = null,
+  dataLen: any = null
 ) => {
   const response: response = {
     status: testStatusCode(statusCode),
@@ -21,6 +23,7 @@ export const sendResponse = (
   };
   if (data && data !== null) {
     response.data = data;
+    response.dataLen = dataLen;
   }
 
   return res.status(statusCode).json(response);

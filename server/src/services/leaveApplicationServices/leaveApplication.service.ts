@@ -71,10 +71,20 @@ export class LeaveApplicationService {
       .populate({ path: "User", select: "-_id fullname" })
       .skip(skip)
       .limit(size);
+
+    const countData = await LeaveApplication.find({}).countDocuments();
+    const totalPage = Math.ceil(countData / size);
+
     if (!applications) {
       throw new AppError("Leave Application Cannot Be Fetched", 403);
     }
-    sendResponse(res, 201, "Data Fetches SuccessFully", applications);
+    sendResponse(
+      res,
+      201,
+      "Data Fetches SuccessFully",
+      applications,
+      totalPage
+    );
   }
 
   public static async getLeaveApplicationByUserId(

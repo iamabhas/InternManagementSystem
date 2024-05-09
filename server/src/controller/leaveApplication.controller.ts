@@ -33,7 +33,7 @@ export class leaveApplicationController {
     try {
       const id = req.user.user_id;
       const page = req.query.page ? parseInt(req.query.page as string) : 1;
-      const size = req.query.size ? parseInt(req.query.size as string) : 3;
+      const size = req.query.size ? parseInt(req.query.size as string) : 4;
       const pagination = {
         page,
         size,

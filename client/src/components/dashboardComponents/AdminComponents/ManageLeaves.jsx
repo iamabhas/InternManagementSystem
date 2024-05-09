@@ -27,6 +27,7 @@ import { formatDate } from "../../../utils/dateFormatter.js";
 const ManageLeaves = () => {
   const [leaveApplications, setLeaveApplications] = useState([]);
   const accesstoken = useSelector((state) => state.auth.token);
+  const [totalPage, setTotalPage] = useState(4);
   const [filterDate, setFilterDate] = React.useState({
     date: null,
   });
@@ -50,7 +51,10 @@ const ManageLeaves = () => {
         }
       );
 
+      console.log("Leave");
+      console.log("Response Data:", response.data);
       setLeaveApplications(response.data.data);
+      setTotalPage(response.data.dataLen);
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -334,7 +338,7 @@ const ManageLeaves = () => {
       </Grid>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <Pagination
-          count={leaveApplications.length }
+          count={totalPage}
           page={pagination.page}
           onChange={handlePageChange}
           color="primary"
