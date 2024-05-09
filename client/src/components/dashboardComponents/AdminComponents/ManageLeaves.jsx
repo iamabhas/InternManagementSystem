@@ -334,7 +334,7 @@ const ManageLeaves = () => {
       </Grid>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <Pagination
-          count={leaveApplications.length }
+          count={leaveApplications.length - 1}
           page={pagination.page}
           onChange={handlePageChange}
           color="primary"
