@@ -41,6 +41,7 @@ const Admin = () => {
         });
 
         const unfilteredData = response.data.data;
+        console.log("Unfiltered Data: ", unfilteredData);
         const filteredData = unfilteredData.filter((uf) => {
           return uf.Interns > 0 || uf.Mentors > 0;
         });

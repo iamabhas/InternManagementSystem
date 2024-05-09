@@ -68,7 +68,7 @@ const ManageLeaves = () => {
     fetchData();
   }, [accesstoken, pagination]);
 
-  const handleDownload = async (application, applicationId) => {
+  const handleDownload = async (applicationId) => {
     try {
       const response = await axios.get(
         `${BACKEND_URL}/api/download-leave-application/${applicationId}`,
