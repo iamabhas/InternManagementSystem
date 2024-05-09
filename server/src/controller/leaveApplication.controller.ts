@@ -32,7 +32,18 @@ export class leaveApplicationController {
   ) {
     try {
       const id = req.user.user_id;
-      await LeaveApplicationService.getAllApplications(res, id, next);
+      const page = req.query.page ? parseInt(req.query.page as string) : 1;
+      const size = req.query.size ? parseInt(req.query.size as string) : 3;
+      const pagination = {
+        page,
+        size,
+      };
+      await LeaveApplicationService.getAllApplications(
+        res,
+        id,
+        next,
+        pagination
+      );
     } catch (err: any) {
       next(err);
     }
@@ -151,8 +162,18 @@ export class leaveApplicationController {
     next: NextFunction
   ) {
     try {
+      const page = req.query.page ? parseInt(req.query.page as string) : 1;
+      const size = req.query.size ? parseInt(req.query.size as string) : 5;
+      const pagination = {
+        page,
+        size,
+      };
       const authId = req.user.user_id;
-      await LeaveApplicationService.getAllInternLeavesService(res, authId);
+      await LeaveApplicationService.getAllInternLeavesService(
+        res,
+        authId,
+        pagination
+      );
     } catch (error) {
       next(error);
     }

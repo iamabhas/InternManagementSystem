@@ -58,14 +58,19 @@ export class LeaveApplicationService {
   public static async getAllApplications(
     res: Response,
     userId: mongoose.Types.ObjectId | string,
-    next: NextFunction
+    next: NextFunction,
+    pagination: object | any
   ) {
+    const { page, size } = pagination;
+    const skip = (page - 1) * size;
     const applications = await LeaveApplication.find({})
       .populate({
         path: "Batch",
         select: " -_id name",
       })
-      .populate({ path: "User", select: "-_id fullname" });
+      .populate({ path: "User", select: "-_id fullname" })
+      .skip(skip)
+      .limit(size);
     if (!applications) {
       throw new AppError("Leave Application Cannot Be Fetched", 403);
     }
@@ -250,9 +255,17 @@ export class LeaveApplicationService {
     return sendResponse(res, 201, "Incoming Application", resData);
   }
 
-  public static async getAllInternLeavesService(res: Response, userId: string) {
+  public static async getAllInternLeavesService(
+    res: Response,
+    userId: string,
+    pagination: object | any
+  ) {
+    const { page, size } = pagination;
+    const skip = (page - 1) * size;
     const findUser = await user.findOne({ _id: userId });
-    const data = await LeaveApplication.find({ User: userId });
+    const data = await LeaveApplication.find({ User: userId })
+      .skip(skip)
+      .limit(size);
     if (data.length === 0) {
       throw new AppError("The Intern Has No Leaves", 401);
     }

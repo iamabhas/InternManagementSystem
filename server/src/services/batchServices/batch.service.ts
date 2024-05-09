@@ -210,10 +210,18 @@ export class BatchService {
     return sendResponse(res, 200, "Batch Fetches SuccessFully", existBatch);
   }
 
-  public static async getAllInternService(res: Response) {
+  public static async getAllInternService(
+    res: Response,
+    pagination: object | any
+  ) {
+    const { page, size } = pagination;
+    const skip = (page - 1) * size;
+
     const internList = await user
       .find({ role: "intern" })
-      .populate({ path: "Batch", select: "-_id name" });
+      .populate({ path: "Batch", select: "-_id name" })
+      .skip(skip)
+      .limit(size);
 
     if (!internList || internList === null || undefined) {
       throw new AppError("Error Fetching Intern List", 401);
@@ -335,6 +343,12 @@ export class BatchService {
     const existsBatch = await Batch.findOne({ _id: batchId });
     if (existsBatch === null || existsBatch.get("name") == null) {
       throw new AppError("Batch Does Not Exists", 401);
+    }
+    if (existsBatch.get("endDate") > new Date()) {
+      throw new AppError(
+        "Batch Is Currently Running, Please Contact Mentors And Interns Before Deleting It",
+        401
+      );
     }
     await Batch.deleteOne({ _id: batchId })
       .then((message) => {
