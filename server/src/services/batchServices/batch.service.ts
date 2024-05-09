@@ -20,69 +20,69 @@ export class BatchService {
     if (!batchList) {
       throw new AppError("Batch Cannot be Fetched", 401);
     }
-    const computeInternSize = await Batch.aggregate([
-      {
-        $unwind: {
-          path: "$interns",
-        },
-      },
-      {
-        $group: {
-          _id: "$_id",
-          numberOfInterns: {
-            $sum: 1,
-          },
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          averageNumberOfInterns: {
-            $avg: "$numberOfInterns",
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          averageNumberOfInterns: 1,
-        },
-      },
-    ]);
+    // const computeInternSize = await Batch.aggregate([
+    //   {
+    //     $unwind: {
+    //       path: "$interns",
+    //     },
+    //   },
+    //   {
+    //     $group: {
+    //       _id: "$_id",
+    //       numberOfInterns: {
+    //         $sum: 1,
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $group: {
+    //       _id: null,
+    //       averageNumberOfInterns: {
+    //         $avg: "$numberOfInterns",
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 0,
+    //       averageNumberOfInterns: 1,
+    //     },
+    //   },
+    // ]);
 
-    const ListOfInterns = await Batch.aggregate([
-      {
-        $addFields: {
-          numberOfInterns: {
-            $size: "$interns",
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          name: 1,
-          numberOfInterns: 1,
-        },
-      },
-    ]);
+    // const ListOfInterns = await Batch.aggregate([
+    //   {
+    //     $addFields: {
+    //       numberOfInterns: {
+    //         $size: "$interns",
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 0,
+    //       name: 1,
+    //       numberOfInterns: 1,
+    //     },
+    //   },
+    // ]);
 
-    const ListOfMentors = await Batch.aggregate([
-      {
-        $addFields: {
-          numberOfMentor: {
-            $size: "$mentor",
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          name: 1,
-          numberOfMentor: 1,
-        },
-      },
-    ]);
+    // const ListOfMentors = await Batch.aggregate([
+    //   {
+    //     $addFields: {
+    //       numberOfMentor: {
+    //         $size: "$mentor",
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 0,
+    //       name: 1,
+    //       numberOfMentor: 1,
+    //     },
+    //   },
+    // ]);
 
     let data: Array<any> = [];
 

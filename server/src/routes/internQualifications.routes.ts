@@ -42,7 +42,6 @@ internQualificationsRouter.get(
   validateRole,
   restrictRole(USER),
   param("batchId").exists(),
-
   internQualificationController.downloadBatchDataController
 );
 
