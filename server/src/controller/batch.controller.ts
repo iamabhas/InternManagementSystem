@@ -48,7 +48,13 @@ export class BatchController {
     next: NextFunction
   ) {
     try {
-      await BatchService.getAllInternService(res);
+      const page = req.query.page ? parseInt(req.query.page as string) : 1;
+      const size = req.query.size ? parseInt(req.query.size as string) : 5;
+      const pagination = {
+        page,
+        size,
+      };
+      await BatchService.getAllInternService(res, pagination);
     } catch (err: any) {
       next(err);
     }
@@ -60,7 +66,7 @@ export class BatchController {
     next: NextFunction
   ) {
     try {
-      const id: string | mongoose.Types.ObjectId | undefined = req.params.id;
+      const id: string | mongoose.Types.ObjectId = req.params.id;
       await BatchService.getInternByID(res, id);
     } catch (err: any) {
       next(err);

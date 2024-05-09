@@ -210,10 +210,18 @@ export class BatchService {
     return sendResponse(res, 200, "Batch Fetches SuccessFully", existBatch);
   }
 
-  public static async getAllInternService(res: Response) {
+  public static async getAllInternService(
+    res: Response,
+    pagination: object | any
+  ) {
+    const { page, size } = pagination;
+    const skip = (page - 1) * size;
+
     const internList = await user
       .find({ role: "intern" })
-      .populate({ path: "Batch", select: "-_id name" });
+      .populate({ path: "Batch", select: "-_id name" })
+      .skip(skip)
+      .limit(size);
 
     if (!internList || internList === null || undefined) {
       throw new AppError("Error Fetching Intern List", 401);
