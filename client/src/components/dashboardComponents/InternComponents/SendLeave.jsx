@@ -15,7 +15,6 @@ import {
   TableRow,
   Paper,
   Typography,
-  Pagination,
   DialogContent,
 } from "@mui/material";
 import { RiMailSendLine } from "react-icons/ri";
@@ -34,10 +33,6 @@ const SendLeave = () => {
   const username = useSelector((state) => state.auth.userName);
   const [applicationBody, setApplicationBody] = React.useState("");
   const [applicationDialog, setApplicationDialog] = React.useState(false);
-  const [pagination, setPagination] = React.useState({
-    page: 1,
-    size: 5,
-  });
   const [dateInputs, setDateInputs] = React.useState({
     leaveFromDate: null,
     leaveToDate: null,
@@ -55,14 +50,6 @@ const SendLeave = () => {
     },
     mode: "onBlur",
   });
-
-  const handlePageChange = (event, value) => {
-    console.log("New page:", value);
-    setPagination((prev) => ({
-      ...prev,
-      page: value,
-    }));
-  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -97,10 +84,6 @@ const SendLeave = () => {
             headers: {
               Authorization: accessToken,
             },
-            params: {
-              page: pagination.page,
-              size: pagination.size,
-            },
           }
         );
         setLeavesData(response.data.data);
@@ -109,7 +92,7 @@ const SendLeave = () => {
       }
     };
     fetchData();
-  }, [accessToken, pagination]);
+  }, [accessToken]);
 
   const handleDateChange = (key, date) => {
     setDateInputs((prev) => ({
@@ -291,15 +274,6 @@ const SendLeave = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-        <Pagination
-          count={leavesData.length}
-          page={pagination.page}
-          onChange={handlePageChange}
-          color="primary"
-          sx={{ margin: "20px" }}
-        />
       </Box>
     </div>
   );

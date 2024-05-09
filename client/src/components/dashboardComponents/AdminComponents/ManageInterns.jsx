@@ -17,7 +17,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Pagination,
+  TablePagination,
   Grid,
   FormControl,
   InputLabel,
@@ -39,31 +39,17 @@ export default function ManageInterns() {
   const [detailOpen, setDetailOpen] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [qualificationsData, setQualificationsData] = React.useState([]);
-
+  const [page, setPage] = React.useState(0);
   const [BatchData, setBatchData] = React.useState([]);
-
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const accesstoken = useSelector((state) => state.auth.token);
-  const [pagination, setPagination] = React.useState({
-    page: 1,
-    size: 5,
-  });
-  const handlePageChange = (event, value) => {
-    console.log("New page:", value);
-    setPagination((prev) => ({
-      ...prev,
-      page: value,
-    }));
-  };
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${BACKEND_URL}/api/batchintern`, {
           headers: {
             Authorization: accesstoken,
-          },
-          params: {
-            page: pagination.page,
-            size: pagination.size,
           },
         });
         setData(response.data.data);
@@ -72,7 +58,7 @@ export default function ManageInterns() {
       }
     };
     fetchData();
-  }, [accesstoken, pagination]);
+  }, [setData]);
 
   const fetchQualificationsDate = async (userId) => {
     try {
@@ -168,6 +154,15 @@ export default function ManageInterns() {
     setDetailOpen(false);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
   const handleChange = (e) => {
     setInputs((prev) => ({
       ...prev,
@@ -234,45 +229,48 @@ export default function ManageInterns() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {[...data].reverse().map((row) => (
-                <TableRow
-                  key={row?._id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {row?.fullname}
-                  </TableCell>
-                  <TableCell align="center">{row?.username}</TableCell>
-                  <TableCell align="center">{row?.phoneNo}</TableCell>
-                  <TableCell align="center">{row?.email}</TableCell>
-                  <TableCell align="center">
-                    {row?.Batch?.name
-                      ? row?.Batch?.name
-                      : "Not Assign In Any Batch"}
-                  </TableCell>
-                  <TableCell align="center">
-                    <Button
-                      onClick={() => {
-                        handleDetailOpen();
-                        fetchQualificationsDate(row._id);
-                      }}
-                    >
-                      View
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {[...data]
+                .reverse()
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => (
+                  <TableRow
+                    key={row?._id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {row?.fullname}
+                    </TableCell>
+                    <TableCell align="center">{row?.username}</TableCell>
+                    <TableCell align="center">{row?.phoneNo}</TableCell>
+                    <TableCell align="center">{row?.email}</TableCell>
+                    <TableCell align="center">
+                      {row?.Batch?.name
+                        ? row?.Batch?.name
+                        : "Not Assign In Any Batch"}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        onClick={() => {
+                          handleDetailOpen();
+                          fetchQualificationsDate(row._id);
+                        }}
+                      >
+                        View
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-        <Pagination
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 15]}
+          component="div"
           count={data.length}
-          page={pagination.page}
-          onChange={handlePageChange}
-          color="primary"
-          sx={{ margin: "20px" }}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
 

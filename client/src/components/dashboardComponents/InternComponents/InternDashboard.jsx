@@ -132,18 +132,10 @@ const InternDashboard = () => {
           {data.map((data) => {
             return (
               <Paper key={data._id} elevation={3} sx={{ p: 2, m: 2 }}>
-                <Typography>
-                  {data.leaveToDate > new Date() && data.approvedStatus
-                    ? data.subject
-                    : "Leaves Is Already Finished"}
-                </Typography>
+                <Typography>{data.subject}</Typography>
 
                 <Typography color="textSecondary">
-                  ({" "}
-                  {calculateRemainingDays(data.leaveToDate) > 0
-                    ? "Days remaining "
-                    : "No Remaining Days"}{" "}
-                  )
+                  ( {calculateRemainingDays(data.leaveToDate)} Days remaining )
                 </Typography>
               </Paper>
             );
