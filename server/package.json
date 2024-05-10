@@ -4,8 +4,7 @@
   "description": "",
   "main": "dist/index.ts",
   "scripts": {
-    "install": "npm ci",
-    "build": "npm run install && tsc",
+    "build": "tsc",
     "start": "node dist/index.js",
     "start:dev": "nodemon -r dotenv/config src/index.ts",
     "test": "jest"
