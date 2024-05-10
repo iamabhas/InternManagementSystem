@@ -3,407 +3,407 @@ import PropTypes from "prop-types";
 
 //mui imports
 import {
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Box,
-  Typography,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TablePagination,
-  LinearProgress,
-  Tooltip,
-  IconButton,
+    Button,
+    TextField,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Box,
+    Typography,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TablePagination,
+    LinearProgress,
+    Tooltip,
+    IconButton,
 } from "@mui/material";
 
 //date imports
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { formatDate } from "../../../utils/dateFormatter.js";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {LocalizationProvider, DatePicker} from "@mui/x-date-pickers";
+import {formatDate} from "../../../utils/dateFormatter.js";
 
 //icons imports
-import { IoMdAddCircle } from "react-icons/io";
-import { MdDelete } from "react-icons/md";
-import { BiDetail } from "react-icons/bi";
+import {IoMdAddCircle} from "react-icons/io";
+import {MdDelete} from "react-icons/md";
+import {MdRemoveRedEye} from "react-icons/md";
 
 //package imports
 import axios from "axios";
 import Swal from "sweetalert2";
 
 //redux imports
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { setBatch } from "../../../redux/batchSelectSlice.js";
+import {useDispatch} from "react-redux";
+import {useSelector} from "react-redux";
+import {setBatch} from "../../../redux/batchSelectSlice.js";
 
-import { BACKEND_URL } from "../../../services/helper.js";
+import {BACKEND_URL} from "../../../services/helper.js";
 
 export function LinearProgressWithLabel(props) {
-  return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Box sx={{ width: "100%", mr: 1 }}>
-        <LinearProgress variant="determinate" {...props} />
-      </Box>
-      <Box sx={{ minWidth: 35 }}>
-        <Typography variant="body2" color="text.secondary">{`${Math.round(
-          props.value
-        )}%`}</Typography>
-      </Box>
-    </Box>
-  );
+    return (
+        <Box sx={{display: "flex", alignItems: "center"}}>
+            <Box sx={{width: "100%", mr: 1}}>
+                <LinearProgress variant="determinate" {...props} />
+            </Box>
+            <Box sx={{minWidth: 35}}>
+                <Typography variant="body2" color="text.secondary">{`${Math.round(
+                    props.value
+                )}%`}</Typography>
+            </Box>
+        </Box>
+    );
 }
 
 LinearProgressWithLabel.propTypes = {
-  value: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
 };
 
 export const calculateProgress = (startDate, endDate) => {
-  if (new Date(startDate) > new Date()) {
-    return 0;
-  }
-  startDate = new Date(startDate);
-  endDate = new Date(endDate);
-  let today = new Date();
+    if (new Date(startDate) > new Date()) {
+        return 0;
+    }
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
+    let today = new Date();
 
-  let quotient = Math.abs(today - startDate);
-  let divider = Math.abs(endDate - startDate);
-  let finalProgress = Math.round((quotient / divider) * 100);
+    let quotient = Math.abs(today - startDate);
+    let divider = Math.abs(endDate - startDate);
+    let finalProgress = Math.round((quotient / divider) * 100);
 
-  if (finalProgress >= 100) {
-    return 100;
-  } else {
-    return finalProgress;
-  }
+    if (finalProgress >= 100) {
+        return 100;
+    } else {
+        return finalProgress;
+    }
 };
 
-export default function ManageBatch({ selectComponentState }) {
-  const [inputs, setInputs] = React.useState({
-    name: "",
-    startDate: null,
-    endDate: null,
-  });
-
-  const [open, setOpen] = React.useState(false);
-  const [data, setData] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const accesstoken = useSelector((state) => state.auth.token);
-  const dispatch = useDispatch();
-
-  const handleChange = (e) => {
-    setInputs((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleDateChange = (key, date) => {
-    setInputs((prev) => ({
-      ...prev,
-      [key]: date,
-    }));
-  };
-
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${BACKEND_URL}/api/batch`, {
-          headers: {
-            Authorization: accesstoken,
-          },
-        });
-        setData(response.data.data);
-        console.log(response.data.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`${BACKEND_URL}/api/batch/${id}`, {
-        headers: {
-          Authorization: accesstoken,
-        },
-      });
-
-      setData((prevData) => prevData.filter((batch) => batch._id !== id));
-
-      Swal.fire({
-        icon: "success",
-        title: "Deleted",
-        text: "Batch Deleted Successfully!",
-      });
-    } catch (error) {
-      console.error("Error deleting batch:", error);
-      Swal.fire({
-        icon: "Oops...",
-        title: "Are you Sure you want to Delete This Batch?",
-        text: error.response.data.message || "Failed to delete batch!",
-      });
-    }
-  };
-
-  const handleTest = (queryVariable) => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${BACKEND_URL}/api/test?filter=${queryVariable}`,
-          {
-            headers: {
-              Authorization: accesstoken,
-            },
-          }
-        );
-
-        setData(response.data.data);
-        console.log(response.data.data);
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: error.response.data.message || "No Ongoing Batches",
-        });
-      }
-    };
-    fetchData();
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const response = await axios.post(`${BACKEND_URL}/api/batch`, inputs, {
-        headers: {
-          Authorization: accesstoken,
-        },
-      });
-
-      console.log(response.data.data);
-      setData((prevData) => [...prevData, response.data.data]);
-
-      setInputs({
+export default function ManageBatch({selectComponentState}) {
+    const [inputs, setInputs] = React.useState({
         name: "",
         startDate: null,
         endDate: null,
-      });
-      handleClose();
+    });
 
-      Swal.fire({
-        icon: "success",
-        title: "Registered",
-        text: "Batch Registered Successfully!",
-      });
-    } catch (error) {
-      console.log(error);
-      setOpen(false);
-      console.error("Error adding batch:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error.response.data.message || "Failed to register batch!",
-      });
-    }
-  };
+    const [open, setOpen] = React.useState(false);
+    const [data, setData] = React.useState([]);
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const accesstoken = useSelector((state) => state.auth.token);
+    const dispatch = useDispatch();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+    const handleChange = (e) => {
+        setInputs((prev) => ({
+            ...prev,
+            [e.target.name]: e.target.value,
+        }));
+    };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+    const handleDateChange = (key, date) => {
+        setInputs((prev) => ({
+            ...prev,
+            [key]: date,
+        }));
+    };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`${BACKEND_URL}/api/batch`, {
+                    headers: {
+                        Authorization: accesstoken,
+                    },
+                });
+                setData(response.data.data);
+                console.log(response.data.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, []);
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`${BACKEND_URL}/api/batch/${id}`, {
+                headers: {
+                    Authorization: accesstoken,
+                },
+            });
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+            setData((prevData) => prevData.filter((batch) => batch._id !== id));
 
-  return (
-    <React.Fragment>
-      <Typography variant="h4" sx={{ m: 2 }} style={{ textAlign: "center" }}>
-        Manage Batches
-      </Typography>
-      <Box textAlign="center" sx={{ m: 4 }}>
-        {" "}
-        <Button
-          variant="outlined"
-          onClick={handleClickOpen}
-          color="success"
-          startIcon={<IoMdAddCircle />}
-        >
-          Add Batch
-        </Button>
-      </Box>
+            Swal.fire({
+                icon: "success",
+                title: "Deleted",
+                text: "Batch Deleted Successfully!",
+            });
+        } catch (error) {
+            console.error("Error deleting batch:", error);
+            Swal.fire({
+                icon: "Oops...",
+                title: "Are you Sure you want to Delete This Batch?",
+                text: error.response.data.message || "Failed to delete batch!",
+            });
+        }
+    };
 
-      <Box textAlign="center">
-        <Button
-          variant="outlined"
-          color="warning"
-          sx={{ m: 1 }}
-          onClick={() => handleTest("all")}
-        >
-          All Batches
-        </Button>
-        <Button
-          variant="outlined"
-          color="warning"
-          sx={{ m: 1 }}
-          onClick={() => handleTest("completed")}
-        >
-          Completed Batches
-        </Button>
-        <Button
-          variant="outlined"
-          color="warning"
-          sx={{ m: 1 }}
-          onClick={() => handleTest("ongoing")}
-        >
-          Non-Completed Batches
-        </Button>
-      </Box>
+    const handleTest = (queryVariable) => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(
+                    `${BACKEND_URL}/api/test?filter=${queryVariable}`,
+                    {
+                        headers: {
+                            Authorization: accesstoken,
+                        },
+                    }
+                );
 
-      <Box textAlign="center" sx={{ m: 5 }}>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Batch Name</TableCell>
-                <TableCell align="center">Start Date</TableCell>
-                <TableCell align="center">End Date</TableCell>
-                <TableCell align="center">Progress</TableCell>
-                <TableCell align="center">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {[...data]
-                .reverse()
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => (
-                  <TableRow
-                    key={row._id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="center">
-                      {formatDate(row.startDate)}
-                    </TableCell>
-                    <TableCell align="center">
-                      {formatDate(row.endDate)}
-                    </TableCell>
-                    <TableCell align="center">
-                      <LinearProgressWithLabel
-                        color={
-                          calculateProgress(row.startDate, row.endDate) === 100
-                            ? "success"
-                            : "error"
-                        }
-                        value={calculateProgress(row.startDate, row.endDate)}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <Tooltip
-                        title="View Details"
-                        onClick={() => {
-                          dispatch(setBatch(row));
-                          selectComponentState("BatchDetails");
-                        }}
-                        color="primary"
-                      >
-                        <IconButton>
-                          <BiDetail />
-                        </IconButton>
-                      </Tooltip>
+                setData(response.data.data);
+                console.log(response.data.data);
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: error.response.data.message || "No Ongoing Batches",
+                });
+            }
+        };
+        fetchData();
+    };
 
-                      <Tooltip
-                        title="Delete"
-                        onClick={() => handleDelete(row._id)}
-                        color="error"
-                      >
-                        <IconButton>
-                          <MdDelete />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 15]}
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Box>
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post(`${BACKEND_URL}/api/batch`, inputs, {
+                headers: {
+                    Authorization: accesstoken,
+                },
+            });
 
-      <Dialog open={open} onClose={handleClose} fullWidth>
-        <Box component="form" noValidate onSubmit={handleSubmit}>
-          <DialogTitle>Add Batch</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              required
-              margin="dense"
-              id="name"
-              name="name"
-              onChange={handleChange}
-              value={inputs.name}
-              label="Batch Name"
-              type="email"
-              fullWidth
-            />
+            console.log(response.data.data);
+            setData((prevData) => [...prevData, response.data.data]);
 
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Start Date"
-                sx={{ m: 1 }}
-                fullWidth
-                value={inputs.startDate}
-                onChange={(date) => handleDateChange("startDate", date)}
-              />
+            setInputs({
+                name: "",
+                startDate: null,
+                endDate: null,
+            });
+            handleClose();
 
-              <DatePicker
-                label="End Date"
-                sx={{ m: 1 }}
-                value={inputs.endDate}
-                onChange={(date) => handleDateChange("endDate", date)}
-              />
-            </LocalizationProvider>
-            <Box textAlign="center" sx={{ m: 1 }}>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleSubmit}
-              >
-                Add Batch
-              </Button>
+            Swal.fire({
+                icon: "success",
+                title: "Registered",
+                text: "Batch Registered Successfully!",
+            });
+        } catch (error) {
+            console.log(error);
+            setOpen(false);
+            console.error("Error adding batch:", error);
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: error.response.data.message || "Failed to register batch!",
+            });
+        }
+    };
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
+
+    return (
+        <React.Fragment>
+            <Typography variant="h4" sx={{m: 2}} style={{textAlign: "center"}}>
+                Manage Batches
+            </Typography>
+            <Box textAlign="center" sx={{m: 4}}>
+                {" "}
+                <Button
+                    variant="outlined"
+                    onClick={handleClickOpen}
+                    color="success"
+                    startIcon={<IoMdAddCircle/>}
+                >
+                    Add Batch
+                </Button>
             </Box>
-          </DialogContent>
 
-          <DialogActions>
-            <Button onClick={handleClose} color="error">
-              Cancel
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
-    </React.Fragment>
-  );
+            <Box textAlign="center">
+                <Button
+                    variant="outlined"
+                    color="warning"
+                    sx={{m: 1}}
+                    onClick={() => handleTest("all")}
+                >
+                    All Batches
+                </Button>
+                <Button
+                    variant="outlined"
+                    color="warning"
+                    sx={{m: 1}}
+                    onClick={() => handleTest("completed")}
+                >
+                    Completed Batches
+                </Button>
+                <Button
+                    variant="outlined"
+                    color="warning"
+                    sx={{m: 1}}
+                    onClick={() => handleTest("ongoing")}
+                >
+                    Non-Completed Batches
+                </Button>
+            </Box>
+
+            <Box textAlign="center" sx={{m: 5}}>
+                <TableContainer component={Paper}>
+                    <Table aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Batch Name</TableCell>
+                                <TableCell align="center">Start Date</TableCell>
+                                <TableCell align="center">End Date</TableCell>
+                                <TableCell align="center">Progress</TableCell>
+                                <TableCell align="center">Actions</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {[...data]
+                                .reverse()
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((row) => (
+                                    <TableRow
+                                        key={row._id}
+                                        sx={{"&:last-child td, &:last-child th": {border: 0}}}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {row.name}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {formatDate(row.startDate)}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {formatDate(row.endDate)}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <LinearProgressWithLabel
+                                                color={
+                                                    calculateProgress(row.startDate, row.endDate) === 100
+                                                        ? "success"
+                                                        : "error"
+                                                }
+                                                value={calculateProgress(row.startDate, row.endDate)}
+                                            />
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Tooltip
+                                                title="View Details"
+                                                onClick={() => {
+                                                    dispatch(setBatch(row));
+                                                    selectComponentState("BatchDetails");
+                                                }}
+                                                color="primary"
+                                            >
+                                                <IconButton>
+                                                    <MdRemoveRedEye/>
+                                                </IconButton>
+                                            </Tooltip>
+
+                                            <Tooltip
+                                                title="Delete"
+                                                onClick={() => handleDelete(row._id)}
+                                                color="error"
+                                            >
+                                                <IconButton>
+                                                    <MdDelete/>
+                                                </IconButton>
+                                            </Tooltip>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 15]}
+                    component="div"
+                    count={data.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </Box>
+
+            <Dialog open={open} onClose={handleClose} fullWidth>
+                <Box component="form" noValidate onSubmit={handleSubmit}>
+                    <DialogTitle>Add Batch</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="name"
+                            name="name"
+                            onChange={handleChange}
+                            value={inputs.name}
+                            label="Batch Name"
+                            type="email"
+                            fullWidth
+                        />
+
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Start Date"
+                                sx={{m: 1}}
+                                fullWidth
+                                value={inputs.startDate}
+                                onChange={(date) => handleDateChange("startDate", date)}
+                            />
+
+                            <DatePicker
+                                label="End Date"
+                                sx={{m: 1}}
+                                value={inputs.endDate}
+                                onChange={(date) => handleDateChange("endDate", date)}
+                            />
+                        </LocalizationProvider>
+                        <Box textAlign="center" sx={{m: 1}}>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleSubmit}
+                            >
+                                Add Batch
+                            </Button>
+                        </Box>
+                    </DialogContent>
+
+                    <DialogActions>
+                        <Button onClick={handleClose} color="error">
+                            Cancel
+                        </Button>
+                    </DialogActions>
+                </Box>
+            </Dialog>
+        </React.Fragment>
+    );
 }
