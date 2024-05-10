@@ -11,3 +11,6 @@ Dockerfile
 
 .dockerignore
 
+/tests
+
+jest.config.ts
