@@ -92,14 +92,6 @@ adminRouter.get(
     BatchController.getAllDashBoard
 );
 
-adminRouter.get(
-    "/test",
-    validateToken,
-    validateRole,
-    restrictRole(USER, MENTOR),
-    query("filter").exists(),
-    adminController.testGetAll
-);
 
 adminRouter.delete(
     "/batch/:id",
