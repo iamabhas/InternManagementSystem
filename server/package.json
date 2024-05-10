@@ -5,8 +5,9 @@
   "main": "dist/index.ts",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node src/index.js",
     "start:dev": "nodemon -r dotenv/config src/index.ts",
+    "start:production": "node dist/index.js",
     "test": "jest"
   },
   "keywords": [],
@@ -28,8 +29,7 @@
     "nodemon": "^3.1.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.4",
-    "winston": "^3.13.0"
+    "typescript": "^5.4.4"
   },
   "dependencies": {
     "@vinejs/vine": "^2.0.0",
@@ -47,6 +47,7 @@
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.13",
     "puppeteer": "^22.7.1",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "winston": "^3.13.0"
   }
 }
