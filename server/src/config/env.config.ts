@@ -10,8 +10,7 @@ if (isNotLoaded) {
   throw result.error;
 }
 
-const envPath = "/opt/render/project/src/server/.env";
-dotenv.config({ path: envPath });
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 const envConfig = {
   serverPort: process.env.SERVER_PORT,
