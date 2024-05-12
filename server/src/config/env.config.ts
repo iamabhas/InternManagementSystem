@@ -10,11 +10,13 @@ if (isNotLoaded) {
   throw result.error;
 }
 
-dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+// dotenv.config({ path: path.resolve(__dirname, "../config/.env") });
 
 const envConfig = {
   serverPort: process.env.SERVER_PORT,
   clientPort: process.env.CLIENT_PORT,
+  redisUrl: process.env.REDIS_URL,
+  nodeEnvironment: process.env.NODE_ENV,
   mongodbConnectionString: process.env.MONGODB_CONNECTION_STRING,
   accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
   smtpUsername: process.env.USER,
