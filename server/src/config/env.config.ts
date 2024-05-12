@@ -1,15 +1,17 @@
 import * as dotenv from "dotenv";
 import Logger from "../lib/logger";
 
-const result = dotenv.config();
+// dotenv.config({ path: path.resolve(__dirname, "../config/.env") });
+
+const envPath = "/opt/render/project/src/server/.env";
+const result = dotenv.config({ path: envPath });
+
 const isNotLoaded = result.error;
 
 if (isNotLoaded) {
   Logger.error(`'.env' file could not be loaded : ${result.error}`);
   throw result.error;
 }
-
-// dotenv.config({ path: path.resolve(__dirname, "../config/.env") });
 
 const envConfig = {
   serverPort: process.env.SERVER_PORT,
