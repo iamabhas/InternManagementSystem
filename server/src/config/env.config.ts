@@ -10,7 +10,7 @@ if (isNotLoaded) {
   throw result.error;
 }
 
-dotenv.config({ path: path.resolve(__dirname, "../config/.env") });
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 const envConfig = {
   serverPort: process.env.SERVER_PORT,
