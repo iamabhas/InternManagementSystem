@@ -5,9 +5,9 @@
   "main": "dist/index.ts",
   "scripts": {
     "build": "tsc",
-    "start": "node src/index.js",
-    "start:dev": "nodemon -r dotenv/config src/index.ts",
-    "start:production": "node -r dotenv/config dist/index.js",
+    "start": "node src/index.ts",
+    "start:dev": "nodemon src/index.ts",
+    "start:production": "node dist/index.js",
     "test": "jest"
   },
   "keywords": [],
