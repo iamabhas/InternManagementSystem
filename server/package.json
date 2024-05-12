@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node src/index.js",
     "start:dev": "nodemon -r dotenv/config src/index.ts",
-    "start:production": "node dist/index.js",
+    "start:production": "node -r dotenv/config dist/index.js",
     "test": "jest"
   },
   "keywords": [],
