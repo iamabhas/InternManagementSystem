@@ -120,7 +120,7 @@ export default function Dashboard() {
   const dispatch = useDispatch();
 
   //Reducer Data
-  const username = useSelector((state) => state.auth.userName);
+  const username = useSelector((state) => state.auth.userName) || "Anonymous";
   const role = useSelector((state) => state.auth.role);
 
   //onClick functions
