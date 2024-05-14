@@ -46,6 +46,30 @@ class adminController {
         }
     }
 
+    public static async fetchBatchByFilter(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) {
+        try {
+            const result = validationResult(req);
+
+            if (!result.isEmpty()) {
+                return next(
+                    new AppError(
+                        result.array().map((data) => data.msg),
+                        401
+                    )
+                );
+            }
+            const check = req.query.filter;
+            await BatchService.fetchBatchByFilterService(res, check);
+            console.log(check);
+        } catch (err: any | unknown) {
+            next(err);
+        }
+    }
+
 }
 
 export default adminController;

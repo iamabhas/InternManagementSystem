@@ -92,6 +92,15 @@ adminRouter.get(
     BatchController.getAllDashBoard
 );
 
+adminRouter.get(
+    "/filterBatch",
+    validateToken,
+    validateRole,
+    restrictRole(USER, MENTOR),
+    query("filter").exists(),
+    adminController.fetchBatchByFilter
+);
+
 
 adminRouter.delete(
     "/batch/:id",
