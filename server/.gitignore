@@ -14,3 +14,5 @@ Dockerfile
 /tests
 
 jest.config.ts
+
+.cache
