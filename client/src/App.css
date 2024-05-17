@@ -24,3 +24,33 @@
   align-items: center;
   flex-direction: column;
 }
+
+.flex-component-space{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.landing-page {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3)),
+    url(https://quietrev.com/wp-content/uploads/2017/07/Group-Work-That-Works_SOURCE_istockphoto.jpg);
+  background-position: center;
+  position: fixed;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.flex-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-navbar {
+  padding: 1rem;
+  background-color: #1976d2;
+}

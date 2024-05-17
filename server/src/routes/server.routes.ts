@@ -1,7 +1,14 @@
 import { Application } from "express";
-import testRouter from "./test.routes";
 import { statusConstants } from "../constants/statusConstants";
-const { ERROR, SUCCESS } = statusConstants;
+import userRouter from "./auth.routes";
+import adminRouter from "./admin.routes";
+import leaveManagementRouter from "./leaveManagement.routes";
+import internQualificationsRouter from "./internQualifications.routes";
+
+const { SUCCESS } = statusConstants;
+import AppError from "../utils/errorUtils/appError";
+import { errorHandler } from "../middleware/errorHandler";
+import internRouter from "./user.routes";
 
 export const initializeRoutes = (expressApplication: Application) => {
   //landing route
@@ -10,10 +17,22 @@ export const initializeRoutes = (expressApplication: Application) => {
   });
 
   //app routes
-  expressApplication.use("/api/", [testRouter]);
+  expressApplication.use("/api/", [
+    userRouter,
+    adminRouter,
+    leaveManagementRouter,
+    internQualificationsRouter,
+    internRouter,
+  ]);
 
-  //error route
-  expressApplication.get("*", (_, res) => {
-    res.json({ status: ERROR, message: "Endpoint does not exist" });
+  interface error extends Error {
+    status?: any;
+    statusCode?: any;
+  }
+
+  expressApplication.all("*", (req, res, next) => {
+    next(new AppError(`Cannot find ${req.originalUrl}`, 404));
   });
+
+  expressApplication.use(errorHandler);
 };
